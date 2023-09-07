@@ -71,6 +71,11 @@ static PT_THREAD (protothread_core_0(struct pt *pt))
     static int i ;
     static uint32_t keypad ;
 
+    // State machine variables for debouncing
+    static enum { NoPressed, MaybePressed, Pressed, MaybeNoPressed } state = NoPressed ;
+    static int possible_key = -1 ;
+    static int comfirmed_key = -1 ;
+
     while(1) {
 
         gpio_put(LED, !gpio_get(LED)) ;
@@ -98,6 +103,43 @@ static PT_THREAD (protothread_core_0(struct pt *pt))
         }
         // Otherwise, indicate invalid/non-pressed buttons
         else (i=-1) ;
+
+        // Debounce the button
+        switch (state) {
+            case NoPressed:
+                if (i != -1) {
+                    state = MaybePressed ;
+                    possible_key = i ;
+                }
+                break ;
+            case MaybePressed:
+                if (i == possible_key) {
+                    state = Pressed ;
+                    confirmed_key = i ;
+                }
+                else {
+                    state = NoPressed ;
+                }
+                break ;
+            case Pressed:
+                if (i != confirmed_key) {
+                    state = MaybeNoPressed ;
+                }
+                break ;
+            case MaybeNoPressed:
+                if (i != confirmed_key) {
+                    state = NoPressed ;
+                    comfirmed_key = -1 ;
+                }
+                else {
+                    state = Pressed ;
+                }
+                break ;
+        }
+
+        // Overwrite i with confirmed key,
+        // To avoid changes to original code
+        i = confirmed_key ;
 
         // Write key to VGA
         if (i != prev_key) {
