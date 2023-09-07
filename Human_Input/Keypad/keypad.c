@@ -74,7 +74,7 @@ static PT_THREAD (protothread_core_0(struct pt *pt))
     // State machine variables for debouncing
     static enum { NoPressed, MaybePressed, Pressed, MaybeNoPressed } state = NoPressed ;
     static int possible_key = -1 ;
-    static int comfirmed_key = -1 ;
+    static int confirmed_key = -1 ;
 
     while(1) {
 
@@ -129,7 +129,7 @@ static PT_THREAD (protothread_core_0(struct pt *pt))
             case MaybeNoPressed:
                 if (i != confirmed_key) {
                     state = NoPressed ;
-                    comfirmed_key = -1 ;
+                    confirmed_key = -1 ;
                 }
                 else {
                     state = Pressed ;
