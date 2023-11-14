@@ -1,0 +1,24 @@
+{
+    "name": "Pico-dev",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".",
+        "args": { 
+            "VARIANT": "buster"
+        }
+    },
+    "settings": { 
+        "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "extensions": [
+        "ms-vscode.cpptools-extension-pack",
+        "github.copilot"
+    ],
+    "runArgs": [
+        "--privileged"  // Necessary for USB access (e.g., for debugging)
+    ],
+    "mounts": [
+        "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+    ],
+    "postCreateCommand": "mkdir -p build && cd build && cmake .."
+}

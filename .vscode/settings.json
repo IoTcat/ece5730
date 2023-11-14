@@ -1,0 +1,11 @@
+{
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/**",
+        "${env:PICO_SDK_PATH}/src/**"
+    ],
+    "C_Cpp.intelliSenseEngine": "default",
+    "cmake.configureSettings": {
+        "PICO_SDK_PATH": "${env:PICO_SDK_PATH}"
+    },
+    "cmake.buildTask": true,
+}
