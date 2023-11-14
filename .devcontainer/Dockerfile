@@ -1,5 +1,5 @@
 # Use a Microsoft C++ base image
-FROM mcr.microsoft.com/vscode/devcontainers/cpp
+FROM mcr.microsoft.com/vscode/devcontainers/cpp:0-debian-11
 
 # Install necessary tools for Pico development
 RUN apt-get update && apt-get install -y \
