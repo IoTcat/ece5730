@@ -20,5 +20,6 @@
     "mounts": [
         "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
     ],
+    // "initializeCommand": "find ~/.ssh/ -type f -exec grep -l 'PRIVATE' {} \\; | xargs ssh-add",
     "postCreateCommand": "mkdir -p build && cd build && cmake .."
 }

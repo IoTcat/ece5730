@@ -8,4 +8,5 @@
         "PICO_SDK_PATH": "${env:PICO_SDK_PATH}"
     },
     "cmake.buildTask": true,
+    "cmake.configureOnOpen": false,
 }
