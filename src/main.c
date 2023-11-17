@@ -518,6 +518,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       // }
       if(fix15abs(a.y - b.y) < fix15abs(a.radius + b.radius)){
         collide_function(&a, &b);
+        move_balls(&a, &b);
       }
       
       // for (int i = 0; i < NUM_OF_BOIDS_ON_CORE0; i++){
