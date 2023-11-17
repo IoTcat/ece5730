@@ -168,12 +168,12 @@ void drawBall(ball* b) {
 
 
 
-// Draw the boundaries
-void drawArena(char color) {
-  drawVLine(100, 100, 280, color) ;
-  drawVLine(540, 100, 280, color) ;
-  drawHLine(100, 100, 440, color) ;
-  drawHLine(100, 380, 440, color) ;
+// Draw the Boundary
+void drawBoundary() {
+  const char color = WHITE ;
+  drawVLine(50, 100, 350, color) ;
+  drawVLine(590, 100, 350, color) ;
+  drawHLine(50, 450, 540, color) ;
 }
 
 // Detect wallstrikes, update velocity and position
@@ -489,7 +489,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         drawRect(fix2int15(boids[i].x), fix2int15(boids[i].y), 2, 2, color); 
       }
       // draw the boundaries
-      drawArena(wallMode?BLACK:WHITE) ;
+      drawBoundary();
       // delay in accordance with frame rate
       spare_time = FRAME_RATE - (time_us_32() - begin_time) ;
 
