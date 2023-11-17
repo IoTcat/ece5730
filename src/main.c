@@ -503,12 +503,13 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       drawBall(&a, a.color);
       drawBall(&b, b.color);
 
+      move_balls(&a, &b);
+      
       for (int i = 0; i < NUM_OF_BOIDS_ON_CORE0; i++){
         // erase boid
         drawRect(fix2int15(boids[i].x), fix2int15(boids[i].y), 2, 2, BLACK);
         // update boid's position and velocity
         update_boid(i);
-        move_balls(&a, &b);
         // draw the boid at its new position
         drawRect(fix2int15(boids[i].x), fix2int15(boids[i].y), 2, 2, color); 
       }
