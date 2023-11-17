@@ -53,6 +53,7 @@ typedef signed int fix15 ;
 #define float2fix(a) ((fix15)((a) * 32768.0))
 #define fix2float(a) ((float)(a) / 32768.0)
 #define sqrtfix(a) (float2fix(sqrt(fix2float(a))))
+#define fix15abs(a) ((a) < 0 ? -(a) : (a))
 
 // uS per frame
 #define FRAME_RATE 33000
