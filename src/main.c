@@ -1,6 +1,7 @@
 
 /**
- * Hunter Adams (vha3@cornell.edu)
+ * YenHsing Li (yl2924@cornell.edu)
+ * Yimian Liu (yl996@cornell.edu)
  * 
  * This demonstration animates two balls bouncing about the screen.
  * Through a serial interface, the user can change the ball color.
@@ -113,6 +114,18 @@ static inline fix15 max(fix15 a, fix15 b) {
 static inline fix15 min(fix15 a, fix15 b) {
   return (a > b ) ? b : a;
 }
+
+
+// Ball struct
+typedef struct ball{
+  fix15 x;
+  fix15 y;
+  fix15 vx;
+  fix15 vy;
+  fix15 radius;
+  char color;
+}ball;
+
 
 
 // Boid struct
@@ -424,6 +437,15 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       // draw the predator at its new position
       drawRect(fix2int15(predator.x), fix2int15(predator.y), 4, 4, predatorMode?RED:BLACK);
 
+
+      // Define the coordinates of the starting and ending points of the line
+      int startX = 10;
+      int startY = 20;
+      int endX = 100;
+      int endY = 200;
+
+      // Call the drawLine() function to draw the line
+      drawLine(startX, startY, endX, endY, BLACK);
 
       for (int i = 0; i < NUM_OF_BOIDS_ON_CORE0; i++){
         // erase boid
