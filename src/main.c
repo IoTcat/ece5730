@@ -516,7 +516,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       // } else {
         
       // }
-      if (sqrtfix(multfix15(fix15abs(a.y - b.y), fix15abs(a.y - b.y)) + multfix15(fix15abs(a.x - b.x), fix15abs(a.x - b.x))) < (a.radius + b.radius)) {
+      if (sqrtfix(multfix15((a.y - b.y), (a.y - b.y)) + multfix15((a.x - b.x), (a.x - b.x))) < (a.radius + b.radius)) {
       // if(multfix15((a.x - b.x), (a.x - b.x)) + multfix15((a.y - b.y), (a.y - b.y)) < multfix15((a.radius + b.radius), (a.radius + b.radius))){
 
         collide_function(&a, &b);
