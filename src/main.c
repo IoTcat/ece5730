@@ -470,12 +470,21 @@ static PT_THREAD (protothread_anim(struct pt *pt))
 
       // initilize two balls, a and b, a is at the top of the screen, b is at the bottom
       a.x = int2fix15(320);
-      a.y = int2fix15(240);
+      a.y = int2fix15(100);
       a.vx = int2fix15(0);
-      a.vy = int2fix15(10);
+      a.vy = int2fix15(-10);
       a.radius = int2fix15(10);
       a.mass = int2fix15(100);
       a.color = color;
+      //initialize ball b, b is at the bottom of the rect
+      b.x = int2fix15(320);
+      b.y = int2fix15(370);
+      b.vx = int2fix15(0);
+      b.vy = int2fix15(0);
+      b.radius = int2fix15(10);
+      b.mass = int2fix15(100);
+      b.color = color;
+      
 
       drawBall(&a);
       drawBall(&b);
