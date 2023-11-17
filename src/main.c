@@ -508,7 +508,10 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       drawBall(&b, b.color);
 
       move_balls(&a, &b);
-      collide_function(&a, &b);
+
+      if((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y) < (a.radius + b.radius)*(a.radius + b.radius)){
+        collide_function(&a, &b);
+      }
       
       // for (int i = 0; i < NUM_OF_BOIDS_ON_CORE0; i++){
       //   // erase boid
