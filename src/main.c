@@ -520,9 +520,9 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       // if(multfix15((a.x - b.x), (a.x - b.x)) + multfix15((a.y - b.y), (a.y - b.y)) < multfix15((a.radius + b.radius), (a.radius + b.radius))){
 
         collide_function(&a, &b);
-        for(int i = 0 ; i < 10; i++){
-          move_balls(&a, &b);
-        }
+        // for(int i = 0 ; i < 10; i++){
+        //   move_balls(&a, &b);
+        // }
         
       }
       
