@@ -167,7 +167,7 @@ void initBalls(){
     a.x = int2fix15(320);
     a.y = int2fix15(100);
     a.vx = int2fix15(0);
-    a.vy = int2fix15(-10);
+    a.vy = int2fix15(1);
     a.radius = int2fix15(10);
     a.mass = int2fix15(100);
     a.color = color;
