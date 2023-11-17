@@ -516,7 +516,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       // } else {
         
       // }
-      if((a.y - b.y) < (a.radius + b.radius)){
+      if(fix15abs(a.y - b.y) < fix15abs(a.radius + b.radius)){
         collide_function(&a, &b);
       }
       
