@@ -140,6 +140,8 @@ typedef struct boid{
 // Array of boids
 boid boids[NUM_OF_BOIDS];
 boid predator;
+ball a;
+ball b;
 
 char str[40];
 
@@ -159,7 +161,10 @@ void initBoids(){
   predator.vy = int2fix15((rand() % (MAX_SPEED - MIN_SPEED) + MIN_SPEED) - (MAX_SPEED + MIN_SPEED)*(rand()%2));
 }
 
-
+// Draw the ball
+void drawBall(ball* b) {
+  drawCircle(fix2int15(b->x), fix2int15(b->y), fix2int15(b->radius), b->color) ;
+}
 
 
 
@@ -462,6 +467,18 @@ static PT_THREAD (protothread_anim(struct pt *pt))
 
       // Call the drawLine() function to draw the line
       drawLine(startX, startY, endX, endY, BLACK);
+
+      // initilize two balls, a and b, a is at the top of the screen, b is at the bottom
+      a.x = int2fix15(320);
+      a.y = int2fix15(240);
+      a.vx = int2fix15(0);
+      a.vy = int2fix15(10);
+      a.radius = int2fix15(10);
+      a.mass = int2fix15(100);
+      a.color = color;
+
+      drawBall(&a);
+      drawBall(&b);
 
       for (int i = 0; i < NUM_OF_BOIDS_ON_CORE0; i++){
         // erase boid
