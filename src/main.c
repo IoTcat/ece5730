@@ -123,6 +123,7 @@ typedef struct ball{
   fix15 vx;
   fix15 vy;
   fix15 radius;
+  fix15 mass;
   char color;
 }ball;
 
@@ -204,6 +205,21 @@ void wallsAndEdges(fix15* x, fix15* y, fix15* vx, fix15* vy)
   }
 }
 
+void collide_function(ball* a, ball* b){
+  fix15 dx = a->x - b->x;
+  fix15 dy = a->y - b->y;
+  fix15 dvx = a->vx - b->vx;
+  fix15 dvy = a->vy - b->vy;
+  fix15 dvdr = multfix15(dx, dvx) + multfix15(dy, dvy);
+  fix15 dist = multfix15(dx, dx) + multfix15(dy, dy);
+  fix15 J = multfix15(2, multfix15(a->mass, b->mass)) * dvdr / ((a->mass + b->mass) * dist);
+  fix15 Jx = multfix15(J, dx / dist);
+  fix15 Jy = multfix15(J, dy / dist);
+  a->vx -= multfix15(Jx, b->mass);
+  a->vy -= multfix15(Jy, b->mass);
+  b->vx += multfix15(Jx, a->mass);
+  b->vy += multfix15(Jy, a->mass);
+}
 
 //limit speed
 void limit_speed(fix15* vx, fix15* vy){
