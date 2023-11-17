@@ -162,8 +162,8 @@ void initBoids(){
 }
 
 // Draw the ball
-void drawBall(ball* b) {
-  drawCircle(fix2int15(b->x), fix2int15(b->y), fix2int15(b->radius), b->color) ;
+void drawBall(ball* b, char color) {
+  drawCircle(fix2int15(b->x), fix2int15(b->y), fix2int15(b->radius), color) ;
 }
 
 
@@ -245,16 +245,16 @@ void limit_speed(fix15* vx, fix15* vy){
 
 void move_balls(ball* a, ball* b){
   // erase the balls
-  drawBall(a);
-  drawBall(b);
+  drawBall(a, BLACK);
+  drawBall(b, BLACK);
   // update the balls' position and velocity
   a->x += a->vx;
   a->y += a->vy;
   b->x += b->vx;
   b->y += b->vy;
   // draw the balls at their new position
-  drawBall(a);
-  drawBall(b);
+  drawBall(a, WHITE);
+  drawBall(b, WHITE);
 }
 
 // Update boid
@@ -500,8 +500,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       b.color = color;
       
 
-      drawBall(&a);
-      drawBall(&b);
+      drawBall(&a, a.color);
+      drawBall(&b, b.color);
 
       for (int i = 0; i < NUM_OF_BOIDS_ON_CORE0; i++){
         // erase boid
