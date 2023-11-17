@@ -238,8 +238,8 @@ void collide_function(ball* a, ball* b){
   fix15 dvdr = multfix15(dx, dvx) + multfix15(dy, dvy);
   fix15 dist = multfix15(dx, dx) + multfix15(dy, dy);
   fix15 J = multfix15(2, multfix15(a->mass, b->mass)) * dvdr / ((a->mass + b->mass) * dist);
-  fix15 Jx = multfix15(J, dx / dist);
-  fix15 Jy = multfix15(J, dy / dist);
+  fix15 Jx = divfix(multfix15(J, dx), dist);
+  fix15 Jy = divfix(multfix15(J, dy), dist);
   a->vx -= multfix15(Jx, b->mass);
   a->vy -= multfix15(Jy, b->mass);
   b->vx += multfix15(Jx, a->mass);
@@ -634,14 +634,14 @@ static PT_THREAD (protothread_anim1(struct pt *pt))
       begin_time = time_us_32() ;  
 
 
-      for (int i = NUM_OF_BOIDS_ON_CORE0; i < NUM_OF_BOIDS; i++){
-        // erase boid
-        drawRect(fix2int15(boids[i].x), fix2int15(boids[i].y), 2, 2, BLACK);
-        // update boid's position and velocity
-        update_boid(i);
-        // draw the boid at its new position
-        drawRect(fix2int15(boids[i].x), fix2int15(boids[i].y), 2, 2, color); 
-      }
+      // for (int i = NUM_OF_BOIDS_ON_CORE0; i < NUM_OF_BOIDS; i++){
+      //   // erase boid
+      //   drawRect(fix2int15(boids[i].x), fix2int15(boids[i].y), 2, 2, BLACK);
+      //   // update boid's position and velocity
+      //   update_boid(i);
+      //   // draw the boid at its new position
+      //   drawRect(fix2int15(boids[i].x), fix2int15(boids[i].y), 2, 2, color); 
+      // }
 
 
       // // delay in accordance with frame rate
