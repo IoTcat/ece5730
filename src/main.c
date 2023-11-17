@@ -509,7 +509,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
 
       move_balls(&a, &b);
 
-      if((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y) < (a.radius + b.radius)*(a.radius + b.radius)){
+      if(fix15_mul((a.x - b.x), (a.x - b.x)) + fix15_mul((a.y - b.y), (a.y - b.y)) < fix15_mul((a.radius + b.radius), (a.radius + b.radius))){
         collide_function(&a, &b);
       }
       
