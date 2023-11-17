@@ -243,6 +243,20 @@ void limit_speed(fix15* vx, fix15* vy){
   }
 }
 
+void move_balls(ball* a, ball* b){
+  // erase the balls
+  drawBall(a);
+  drawBall(b);
+  // update the balls' position and velocity
+  a->x += a->vx;
+  a->y += a->vy;
+  b->x += b->vx;
+  b->y += b->vy;
+  // draw the balls at their new position
+  drawBall(a);
+  drawBall(b);
+}
+
 // Update boid
 void update_boid(int i){
 
@@ -494,6 +508,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         drawRect(fix2int15(boids[i].x), fix2int15(boids[i].y), 2, 2, BLACK);
         // update boid's position and velocity
         update_boid(i);
+        move_balls(&a, &b);
         // draw the boid at its new position
         drawRect(fix2int15(boids[i].x), fix2int15(boids[i].y), 2, 2, color); 
       }
