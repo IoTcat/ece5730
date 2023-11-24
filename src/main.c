@@ -169,6 +169,22 @@ void collide_function(ball* a, ball* b){
   b->vy += multfix15(Jy, a->type->mass);
 }
 
+//bounce back if ball hit the boundary
+void bounce_function(ball* b){
+  if(hitBottom(b->y + b->type->radius)){
+    b->y = int2fix15(BOX_BOTTOM - b->type->radius);
+    b->vy = -b->vy >> 2;
+  }
+  if(hitLeft(b->x - b->type->radius)){
+    b->x = int2fix15(BOX_LEFT + b->type->radius);
+    b->vx = -b->vx >> 2;
+  }
+  if(hitRight(b->x + b->type->radius)){
+    b->x = int2fix15(BOX_RIGHT - b->type->radius);
+    b->vx = -b->vx >> 2;
+  }
+}
+
 void move_balls(ball* b){
   // erase ball
   drawBall(b, BLACK);
@@ -185,21 +201,7 @@ void move_balls(ball* b){
   drawBall(b, b->type->color);
 }
 
-//bounce back if ball hit the boundary
-void bounce_function(ball* b){
-  if(hitBottom(b->y + b->type->radius)){
-    b->y = int2fix15(BOX_BOTTOM - b->type->radius);
-    b->vy = -b->vy >> 2;
-  }
-  if(hitLeft(b->x - b->type->radius)){
-    b->x = int2fix15(BOX_LEFT + b->type->radius);
-    b->vx = -b->vx >> 2;
-  }
-  if(hitRight(b->x + b->type->radius)){
-    b->x = int2fix15(BOX_RIGHT - b->type->radius);
-    b->vx = -b->vx >> 2;
-  }
-}
+
 
 // Animation on core 0
 static PT_THREAD (protothread_anim(struct pt *pt))
