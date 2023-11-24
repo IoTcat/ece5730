@@ -238,7 +238,7 @@ void collide_function(ball* a, ball* b){
   fix15 dvy = a->vy - b->vy;
   fix15 dvdr = multfix15(dx, dvx) + multfix15(dy, dvy);
   fix15 dist = multfix15(dx, dx) + multfix15(dy, dy);
-  fix15 J = divfix(multfix15(multfix15(2, multfix15(a->mass, b->mass)), dvdr), multfix15((a->mass + b->mass), dist));
+  fix15 J = divfix(multfix15(multfix15(int2fix15(2), multfix15(a->mass, b->mass)), dvdr), multfix15((a->mass + b->mass), dist));
   fix15 Jx = divfix(multfix15(J, dx), dist);
   fix15 Jy = divfix(multfix15(J, dy), dist);
   a->vx -= multfix15(Jx, b->mass);
@@ -516,11 +516,15 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       // } else {
         
       // }
-      if(fix15abs(a.y - b.y) < fix15abs(a.radius + b.radius)){
-        // collide_function(&a, &b);
-        for(int i = 0 ; i < 10; i++){
-          move_balls(&a, &b);
-        }
+      // if (sqrtfix(multfix15((a.y - b.y), (a.y - b.y)) + multfix15((a.x - b.x), (a.x - b.x))) < (a.radius + b.radius)) {
+      // if(multfix15((a.x - b.x), (a.x - b.x)) + multfix15((a.y - b.y), (a.y - b.y)) < multfix15((a.radius + b.radius), (a.radius + b.radius))){
+
+        if(fix15abs(a.x - b.x) < a.radius + b.radius && fix15abs(a.y - b.y) < a.radius + b.radius){
+
+        collide_function(&a, &b);
+        // for(int i = 0 ; i < 10; i++){
+        //   move_balls(&a, &b);
+        // }
         
       }
       
