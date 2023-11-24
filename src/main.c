@@ -72,7 +72,7 @@ typedef signed int fix15 ;
 #define MAX_NUM_OF_BALLS 4
 #define MAX_NUM_OF_BALLS_ON_CORE0 2
 
-#define GRAVITY 0.01
+#define GRAVITY 0.05
 
 
 // Wall detection
@@ -177,6 +177,7 @@ void move_balls(ball* b){
   // update ball's position and velocity
   b->x += b->vx;
   b->y += b->vy;
+  
   // draw the ball at its new position
   drawBall(b, b->type->color);
 }
@@ -185,15 +186,15 @@ void move_balls(ball* b){
 void bounce_function(ball* b){
   if(hitBottom(b->y + b->type->radius)){
     // b->y = int2fix15(BOX_BOTTOM - b->type->radius);
-    b->vy = -b->vy;
+    b->vy = -b->vy >> 2;
   }
   if(hitLeft(b->x - b->type->radius)){
     // b->x = int2fix15(BOX_LEFT + b->type->radius);
-    b->vx = -b->vx;
+    b->vx = -b->vx >> 2;
   }
   if(hitRight(b->x + b->type->radius)){
     // b->x = int2fix15(BOX_RIGHT - b->type->radius);
-    b->vx = -b->vx;
+    b->vx = -b->vx >> 2;
   }
 }
 
