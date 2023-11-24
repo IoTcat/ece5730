@@ -69,6 +69,8 @@ typedef signed int fix15 ;
 
 #define DROP_Y 30
 
+#define MAX_VELOCITY_THAT_EQUALS_ZERO float2fix15(0.01)
+
 #define MAX_NUM_OF_BALLS 4
 #define MAX_NUM_OF_BALLS_ON_CORE0 2
 
@@ -176,11 +178,11 @@ void bounce_function(ball* b){
     b->vy = -b->vy >> 2;
   }
   if(hitLeft(b->x - b->type->radius)){
-    b->x = int2fix15(BOX_LEFT + b->type->radius);
+    b->x = int2fix15(BOX_LEFT) + b->type->radius;
     b->vx = -b->vx >> 2;
   }
   if(hitRight(b->x + b->type->radius)){
-    b->x = int2fix15(BOX_RIGHT - b->type->radius);
+    b->x = int2fix15(BOX_RIGHT) - b->type->radius;
     b->vx = -b->vx >> 2;
   }
 }
@@ -193,6 +195,14 @@ void move_balls(ball* b){
   
   // bounce back if ball hit the boundary
   bounce_function(b);
+  
+  // avoid vibration
+  if(fix15abs(b->vx) < MAX_VELOCITY_THAT_EQUALS_ZERO){
+    b->vx = int2fix15(0);
+  }
+  if(fix15abs(b->vy) < MAX_VELOCITY_THAT_EQUALS_ZERO){
+    b->vy = int2fix15(0);
+  }
   
   // update ball's position and velocity
   b->x += b->vx;
