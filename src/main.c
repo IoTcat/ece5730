@@ -258,7 +258,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
 
 
       setTextColor2(WHITE, BLACK) ;
-      sprintf(str, "%d", MAX_NUM_OF_BALLS_ON_CORE0); 
+      // sprintf(str, "%d", MAX_NUM_OF_BALLS_ON_CORE0); 
+      sprintf(str, "%f", fix2float15(balls[0].vy));
       setCursor(65, 0) ;
       setTextSize(1) ;
       writeString("Score:") ;
