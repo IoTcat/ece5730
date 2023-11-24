@@ -76,10 +76,10 @@ typedef signed int fix15 ;
 
 
 // Wall detection
-#define hitBottom(b) (b>int2fix15(380))
-#define hitTop(b) (b<int2fix15(100))
-#define hitLeft(a) (a<int2fix15(100))
-#define hitRight(a) (a>int2fix15(540))
+#define hitBottom(b) (b>int2fix15(BOX_BOTTOM))
+#define hitTop(b) (b<int2fix15(BOX_TOP))
+#define hitLeft(a) (a<int2fix15(BOX_LEFT))
+#define hitRight(a) (a>int2fix15(BOX_RIGHT))
 
 
 // Ball types struct
@@ -91,7 +91,7 @@ typedef struct ball_type{
 
 
 // Ball types array
-static const ball_type ball_types[3] = {
+static ball_type ball_types[3] = {
   {int2fix15(10), int2fix15(100), RED},
   {int2fix15(20), int2fix15(400), GREEN},
   {int2fix15(30), int2fix15(900), BLUE}
@@ -181,6 +181,26 @@ void move_balls(ball* b){
   drawBall(b, b->type->color);
 }
 
+//bounce back if ball hit the boundary
+void bounce_function(ball* b){
+  if(hitBottom(b->y + b->type->radius)){
+    b->y = int2fix15(BOX_BOTTOM - b->type->radius);
+    b->vy = -b->vy;
+  }
+  if(hitTop(b->y - b->type->radius)){
+    b->y = int2fix15(BOX_TOP + b->type->radius);
+    b->vy = -b->vy;
+  }
+  if(hitLeft(b->x - b->type->radius)){
+    b->x = int2fix15(BOX_LEFT + b->type->radius);
+    b->vx = -b->vx;
+  }
+  if(hitRight(b->x + b->type->radius)){
+    b->x = int2fix15(BOX_RIGHT - b->type->radius);
+    b->vx = -b->vx;
+  }
+}
+
 // Animation on core 0
 static PT_THREAD (protothread_anim(struct pt *pt))
 {
@@ -200,6 +220,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
 
       for (int i = 0; i < MAX_NUM_OF_BALLS_ON_CORE0; i++){
         move_balls(&balls[i]);
+        bounce_function(&balls[i]);
       }
 
 
@@ -216,6 +237,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
           break;
         }
       }
+      
 
       // draw the boundaries
       drawBoundary();
