@@ -172,16 +172,16 @@ void collide_function(ball* a, ball* b){
 //bounce back if ball hit the boundary
 void bounce_function(ball* b){
   if(hitBottom(b->y + b->type->radius)){
-    b->y = int2fix15(BOX_BOTTOM - b->type->radius);
-    b->vy = -b->vy >> 2;
+    // b->y = int2fix15(BOX_BOTTOM - b->type->radius);
+    b->vy = -b->vy;
   }
   if(hitLeft(b->x - b->type->radius)){
-    b->x = int2fix15(BOX_LEFT + b->type->radius);
-    b->vx = -b->vx >> 2;
+    // b->x = int2fix15(BOX_LEFT + b->type->radius);
+    b->vx = -b->vx;
   }
   if(hitRight(b->x + b->type->radius)){
-    b->x = int2fix15(BOX_RIGHT - b->type->radius);
-    b->vx = -b->vx >> 2;
+    // b->x = int2fix15(BOX_RIGHT - b->type->radius);
+    b->vx = -b->vx;
   }
 }
 
@@ -193,6 +193,9 @@ void move_balls(ball* b){
   // update ball's position and velocity
   b->x += b->vx;
   b->y += b->vy;
+  
+  // add friction
+  b->vx = multfix15(b->vx, float2fix15(0.99));
   
   // bounce back if ball hit the boundary
   bounce_function(b);
