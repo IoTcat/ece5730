@@ -543,36 +543,36 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       spare_time = FRAME_RATE - (time_us_32() - begin_time) ;
 
 
-      setTextColor2(WHITE, BLACK) ;
-      // sprintf(str, "%d",NUM_OF_BOIDS);
-      sprintf(str, "%f",fix2float15(a.y));
-      setCursor(65, 0) ;
-      setTextSize(1) ;
-      writeString("Number of boids:") ;
-      writeString(str) ;
+      // setTextColor2(WHITE, BLACK) ;
+      // // sprintf(str, "%d",NUM_OF_BOIDS);
+      // sprintf(str, "%f",fix2float15(a.y));
+      // setCursor(65, 0) ;
+      // setTextSize(1) ;
+      // writeString("Number of boids:") ;
+      // writeString(str) ;
 
-      // sprintf(str, "%d",FRAME_RATE);
-      sprintf(str, "%f",fix2float15(b.y));
-      setCursor(65, 10) ;
-      writeString("Frame rate:") ;
-      writeString(str) ;
+      // // sprintf(str, "%d",FRAME_RATE);
+      // sprintf(str, "%f",fix2float15(b.y));
+      // setCursor(65, 10) ;
+      // writeString("Frame rate:") ;
+      // writeString(str) ;
 
-      setCursor(65, 20) ;
-      writeString("Elapsed time:") ;
-      // sprintf(str, "%d",time_us_32()/1000000);
-      sprintf(str, "%f",fix2float15(a.vy));
-      writeString(str) ;
+      // setCursor(65, 20) ;
+      // writeString("Elapsed time:") ;
+      // // sprintf(str, "%d",time_us_32()/1000000);
+      // sprintf(str, "%f",fix2float15(a.vy));
+      // writeString(str) ;
 
-      setCursor(65, 30) ;
-      writeString("Spare time 0:") ;
-      // sprintf(str, "%d",spare_time);
-      sprintf(str, "%f",fix2float15(b.vy));
-      writeString(str) ;
+      // setCursor(65, 30) ;
+      // writeString("Spare time 0:") ;
+      // // sprintf(str, "%d",spare_time);
+      // sprintf(str, "%f",fix2float15(b.vy));
+      // writeString(str) ;
 
-      setCursor(65, 40) ;
-      writeString("Spare time 1:") ;
-      sprintf(str, "%d",g_core1_spare_time);
-      writeString(str) ;
+      // setCursor(65, 40) ;
+      // writeString("Spare time 1:") ;
+      // sprintf(str, "%d",g_core1_spare_time);
+      // writeString(str) ;
 
       if(!uiRefreshDone){
         printf("\x1b[2J\x1b[1;1H");
