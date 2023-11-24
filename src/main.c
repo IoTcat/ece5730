@@ -187,10 +187,6 @@ void bounce_function(ball* b){
     b->y = int2fix15(BOX_BOTTOM - b->type->radius);
     b->vy = -b->vy;
   }
-  if(hitTop(b->y - b->type->radius)){
-    b->y = int2fix15(BOX_TOP + b->type->radius);
-    b->vy = -b->vy;
-  }
   if(hitLeft(b->x - b->type->radius)){
     b->x = int2fix15(BOX_LEFT + b->type->radius);
     b->vx = -b->vx;
