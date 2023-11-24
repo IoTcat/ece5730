@@ -233,7 +233,7 @@ void wallsAndEdges(fix15* x, fix15* y, fix15* vx, fix15* vy)
 
 //add a gravity function to the balls
 void gravity(ball* b){
-  b->vy += int2fix15(1);
+  b->vy += float2fix15(0.01);
 }
 
 
