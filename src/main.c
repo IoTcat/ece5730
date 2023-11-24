@@ -172,16 +172,16 @@ void collide_function(ball* a, ball* b){
 //bounce back if ball hit the boundary
 void bounce_function(ball* b){
   if(hitBottom(b->y + b->type->radius)){
-    // b->y = int2fix15(BOX_BOTTOM - b->type->radius);
-    b->vy = -b->vy;
+    b->y = int2fix15(BOX_BOTTOM - b->type->radius);
+    b->vy = -b->vy >> 2;
   }
   if(hitLeft(b->x - b->type->radius)){
-    // b->x = int2fix15(BOX_LEFT + b->type->radius);
-    b->vx = -b->vx;
+    b->x = int2fix15(BOX_LEFT + b->type->radius);
+    b->vx = -b->vx >> 2;
   }
   if(hitRight(b->x + b->type->radius)){
-    // b->x = int2fix15(BOX_RIGHT - b->type->radius);
-    b->vx = -b->vx;
+    b->x = int2fix15(BOX_RIGHT - b->type->radius);
+    b->vx = -b->vx >> 2;
   }
 }
 
@@ -190,17 +190,14 @@ void move_balls(ball* b){
   drawBall(b, BLACK);
   // update ball's position and velocity
   gravity_function(b);
-  // update ball's position and velocity
-  b->x += b->vx;
-  b->y += b->vy;
-  
-  // add friction
-  b->vx = multfix15(b->vx, float2fix15(0.99));
-  b->vy = multfix15(b->vy, float2fix15(0.99));
   
   // bounce back if ball hit the boundary
   bounce_function(b);
   
+  // update ball's position and velocity
+  b->x += b->vx;
+  b->y += b->vy;
+
   // draw the ball at its new position
   drawBall(b, b->type->color);
 }
