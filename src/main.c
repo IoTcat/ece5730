@@ -178,6 +178,9 @@ void move_balls(ball* b){
   b->x += b->vx;
   b->y += b->vy;
   
+  // bounce back if ball hit the boundary
+  bounce_function(b);
+  
   // draw the ball at its new position
   drawBall(b, b->type->color);
 }
@@ -185,15 +188,15 @@ void move_balls(ball* b){
 //bounce back if ball hit the boundary
 void bounce_function(ball* b){
   if(hitBottom(b->y + b->type->radius)){
-    // b->y = int2fix15(BOX_BOTTOM - b->type->radius);
+    b->y = int2fix15(BOX_BOTTOM - b->type->radius);
     b->vy = -b->vy >> 2;
   }
   if(hitLeft(b->x - b->type->radius)){
-    // b->x = int2fix15(BOX_LEFT + b->type->radius);
+    b->x = int2fix15(BOX_LEFT + b->type->radius);
     b->vx = -b->vx >> 2;
   }
   if(hitRight(b->x + b->type->radius)){
-    // b->x = int2fix15(BOX_RIGHT - b->type->radius);
+    b->x = int2fix15(BOX_RIGHT - b->type->radius);
     b->vx = -b->vx >> 2;
   }
 }
@@ -217,7 +220,6 @@ static PT_THREAD (protothread_anim(struct pt *pt))
 
       for (int i = 0; i < MAX_NUM_OF_BALLS_ON_CORE0; i++){
         move_balls(&balls[i]);
-        bounce_function(&balls[i]);
       }
 
 
