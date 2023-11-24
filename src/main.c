@@ -196,6 +196,7 @@ void move_balls(ball* b){
   
   // add friction
   b->vx = multfix15(b->vx, float2fix15(0.99));
+  b->vy = multfix15(b->vy, float2fix15(0.99));
   
   // bounce back if ball hit the boundary
   bounce_function(b);
