@@ -231,6 +231,13 @@ void wallsAndEdges(fix15* x, fix15* y, fix15* vx, fix15* vy)
   }
 }
 
+//add a gravity function to the balls
+void gravity(ball* b){
+  b->vy += int2fix15(1);
+}
+
+
+
 void collide_function(ball* a, ball* b){
   fix15 dx = a->x - b->x;
   fix15 dy = a->y - b->y;
@@ -273,6 +280,10 @@ void move_balls(ball* a, ball* b){
   a->y += a->vy;
   b->x += b->vx;
   b->y += b->vy;
+  
+  //call gravity function 
+  gravity(a);
+  gravity(b);
   // draw the balls at their new position
   drawBall(a, WHITE);
   drawBall(b, WHITE);
