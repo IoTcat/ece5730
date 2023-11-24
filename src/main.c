@@ -540,25 +540,29 @@ static PT_THREAD (protothread_anim(struct pt *pt))
 
 
       setTextColor2(WHITE, BLACK) ;
-      sprintf(str, "%d",NUM_OF_BOIDS);
+      // sprintf(str, "%d",NUM_OF_BOIDS);
+      sprintf(str, "%d",fix2int15(a.y));
       setCursor(65, 0) ;
       setTextSize(1) ;
       writeString("Number of boids:") ;
       writeString(str) ;
 
-      sprintf(str, "%d",FRAME_RATE);
+      // sprintf(str, "%d",FRAME_RATE);
+      sprintf(str, "%d",fix2int15(b.y));
       setCursor(65, 10) ;
       writeString("Frame rate:") ;
       writeString(str) ;
 
       setCursor(65, 20) ;
       writeString("Elapsed time:") ;
-      sprintf(str, "%d",time_us_32()/1000000);
+      // sprintf(str, "%d",time_us_32()/1000000);
+      sprintf(str, "%d",fix2int15(a.vy));
       writeString(str) ;
 
       setCursor(65, 30) ;
       writeString("Spare time 0:") ;
-      sprintf(str, "%d",spare_time);
+      // sprintf(str, "%d",spare_time);
+      sprintf(str, "%d",fix2int15(b.vy));
       writeString(str) ;
 
       setCursor(65, 40) ;
