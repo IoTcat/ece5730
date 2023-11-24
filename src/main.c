@@ -172,7 +172,7 @@ void collide_function(ball* a, ball* b){
 //bounce back if ball hit the boundary
 void bounce_function(ball* b){
   if(hitBottom(b->y + b->type->radius)){
-    b->y = int2fix15(BOX_BOTTOM - b->type->radius << 1);
+    b->y = int2fix15(int2fix15(BOX_BOTTOM) - b->type->radius);
     b->vy = -b->vy >> 2;
   }
   if(hitLeft(b->x - b->type->radius)){
