@@ -81,9 +81,9 @@ typedef signed int fix15 ;
 #define GRAVITY 0.05
 
 #define JOSTICK_UP 13
-#define JOSTICK_DOWN 14
-#define JOSTICK_LEFT 15
-#define JOSTICK_RIGHT 21
+#define JOSTICK_DOWN 12
+#define JOSTICK_LEFT 11
+#define JOSTICK_RIGHT 10
 
 
 // Wall detection
