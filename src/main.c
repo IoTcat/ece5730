@@ -380,6 +380,10 @@ int main(){
   set_sys_clock_khz(sys_clock, true);
   stdio_init_all() ;
 
+  // initialize VGA
+  initVGA() ;
+
+  
   // init joystick gpio
   gpio_init(JOSTICK_UP);
   gpio_init(JOSTICK_DOWN);
@@ -399,9 +403,6 @@ int main(){
   gpio_set_irq_enabled_with_callback(JOSTICK_RIGHT, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &right_joystick_callback);
   
   
-
-  // initialize VGA
-  initVGA() ;
 
   // start core 1 
   multicore_reset_core1();
