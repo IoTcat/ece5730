@@ -126,7 +126,7 @@ ball balls[MAX_NUM_OF_BALLS];
 
 char str[40];
 int g_core1_spare_time = 0;
-bool g_is_left_pressed = false;
+bool g_is_left_pressed = true;
 bool g_is_right_pressed = false;
 bool g_is_up_pressed = false;
 bool g_is_down_pressed = false;
