@@ -119,8 +119,47 @@ typedef struct ball{
   ball_type* type;
 }ball;
 
-// Ball array
-ball balls[MAX_NUM_OF_BALLS];
+// Ball linked list
+typedef struct node {
+  ball data;
+  struct node* next;
+} node;
+
+node* head = NULL;
+
+// Function to insert a ball at the beginning of the linked list
+void insertBall(ball data) {
+  node* newNode = (node*)malloc(sizeof(node));
+  newNode->data = data;
+  newNode->next = head;
+  head = newNode;
+}
+
+// Function to delete a ball from the linked list
+void deleteBall(ball data) {
+  node* current = head;
+  node* previous = NULL;
+
+  // Traverse the linked list to find the ball to delete
+  while (current != NULL) {
+    if (current->data.x == data.x && current->data.y == data.y) {
+      // Ball found, delete it
+      if (previous == NULL) {
+        // Ball is the head of the linked list
+        head = current->next;
+      } else {
+        // Ball is not the head of the linked list
+        previous->next = current->next;
+      }
+      free(current);
+      return;
+    }
+    previous = current;
+    current = current->next;
+  }
+}
+
+
 
 
 
@@ -134,6 +173,12 @@ void initBall(ball* a, fix15 init_x, ball_type* type){
   a->vx = int2fix15(0);
   a->vy = int2fix15(0);
   a->type = type;
+}
+
+void initBallNode(fix15 init_x, ball_type* type){
+  ball a;
+  initBall(&a, init_x, type);
+  insertBall(a);
 }
 
 // Draw the ball
@@ -232,27 +277,52 @@ static PT_THREAD (protothread_anim(struct pt *pt))
     static int begin_time ;
     static int spare_time ;
     
-    initBall(&balls[0], int2fix15(200), &ball_types[0]);
-    initBall(&balls[1], int2fix15(400), &ball_types[1]);
-    
+    initBallNode(int2fix15(200), &ball_types[0]);
+
     while(1) {
       // Measure time at start of thread
       begin_time = time_us_32() ;    
 
-      for (int i = 0; i < MAX_NUM_OF_BALLS_ON_CORE0; i++){
-        move_balls(&balls[i]);
+      // for (int i = 0; i < MAX_NUM_OF_BALLS_ON_CORE0; i++){
+      //   move_balls(&balls[i]);
+      // }
+
+      // move balls
+      node* current = head;
+      while (current != NULL) {
+        move_balls(&current->data);
+        current = current->next;
       }
 
 
+
       // collision detection
-      for (int i = 0; i < MAX_NUM_OF_BALLS_ON_CORE0; i++){
+      // for (int i = 0; i < MAX_NUM_OF_BALLS_ON_CORE0; i++){
+      //   bool collided = false;
+      //   for (int j = i + 1; j < MAX_NUM_OF_BALLS_ON_CORE0; j++){
+      //     if(fix15abs(balls[i].x - balls[j].x) < balls[i].type->radius + balls[j].type->radius && fix15abs(balls[i].y - balls[j].y) < balls[i].type->radius + balls[j].type->radius){
+      //       collide_function(&balls[i], &balls[j]);
+      //       collided = true;
+      //     }
+      //   }
+      //   if(collided){
+      //     break;
+      //   }
+      // }
+
+      // collision detection
+      node* current1 = head;
+      while (current1 != NULL) {
+        node* current2 = current1->next;
         bool collided = false;
-        for (int j = i + 1; j < MAX_NUM_OF_BALLS_ON_CORE0; j++){
-          if(fix15abs(balls[i].x - balls[j].x) < balls[i].type->radius + balls[j].type->radius && fix15abs(balls[i].y - balls[j].y) < balls[i].type->radius + balls[j].type->radius){
-            collide_function(&balls[i], &balls[j]);
+        while (current2 != NULL) {
+          if(fix15abs(current1->data.x - current2->data.x) < current1->data.type->radius + current2->data.type->radius && fix15abs(current1->data.y - current2->data.y) < current1->data.type->radius + current2->data.type->radius){
+            collide_function(&current1->data, &current2->data);
             collided = true;
           }
+          current2 = current2->next;
         }
+        current1 = current1->next;
         if(collided){
           break;
         }
@@ -266,8 +336,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
 
 
       setTextColor2(WHITE, BLACK) ;
-      // sprintf(str, "%d", MAX_NUM_OF_BALLS_ON_CORE0); 
-      sprintf(str, "%f", fix2float15(balls[0].vy));
+      sprintf(str, "%f", fix2float15(head->data.vy));
       setCursor(65, 0) ;
       setTextSize(1) ;
       writeString("Score:") ;
