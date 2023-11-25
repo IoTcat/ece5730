@@ -13,6 +13,10 @@
  *  - GPIO 19 ---> 330 ohm resistor ---> VGA Green
  *  - GPIO 20 ---> 330 ohm resistor ---> VGA Blue
  *  - RP2040 GND ---> VGA GND
+ *  - GPIO13 ---> joystick up ---> 330 ohm resistor ---> GND
+ *  - GPIO14 ---> joystick down ---> 330 ohm resistor ---> GND
+ *  - GPIO15 ---> joystick left ---> 330 ohm resistor ---> GND
+ *  - GPIO21 ---> joystick right ---> 330 ohm resistor ---> GND
  *
  * RESOURCES USED
  *  - PIO state machines 0, 1, and 2 on PIO instance 0
@@ -76,6 +80,11 @@ typedef signed int fix15 ;
 
 #define GRAVITY 0.05
 
+#define JOSTICK_UP 13
+#define JOSTICK_DOWN 14
+#define JOSTICK_LEFT 15
+#define JOSTICK_RIGHT 21
+
 
 // Wall detection
 #define hitBottom(b) (b>int2fix15(BOX_BOTTOM))
@@ -117,6 +126,10 @@ ball balls[MAX_NUM_OF_BALLS];
 
 char str[40];
 int g_core1_spare_time = 0;
+bool g_is_left_pressed = false;
+bool g_is_right_pressed = false;
+bool g_is_up_pressed = false;
+bool g_is_down_pressed = false;
 
 
 //init balls
@@ -265,7 +278,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       writeString("Score:") ;
       writeString(str) ;
 
-      sprintf(str, "%d",FRAME_RATE);
+      // sprintf(str, "%d",FRAME_RATE);
+      sprintf(str, "%d",g_is_left_pressed);
       setCursor(65, 10) ;
       writeString("Frame rate:") ;
       writeString(str) ;
@@ -335,6 +349,26 @@ void core1_main(){
 
 }
 
+
+// callback function for joystick 
+void left_joystick_callback(uint gpio, uint32_t events){
+  if(events & GPIO_IRQ_EDGE_RISE){
+    g_is_left_pressed = true;
+  }
+  if(events & GPIO_IRQ_EDGE_FALL){
+    g_is_left_pressed = false;
+  }
+}
+
+void right_joystick_callback(uint gpio, uint32_t events){
+  if(events & GPIO_IRQ_EDGE_RISE){
+    g_is_right_pressed = true;
+  }
+  if(events & GPIO_IRQ_EDGE_FALL){
+    g_is_right_pressed = false;
+  }
+}
+
 // ========================================
 // === main
 // ========================================
@@ -344,6 +378,25 @@ int main(){
   const uint32_t sys_clock = 250000;
   set_sys_clock_khz(sys_clock, true);
   stdio_init_all() ;
+
+  // init joystick gpio
+  gpio_init(JOSTICK_UP);
+  gpio_init(JOSTICK_DOWN);
+  gpio_init(JOSTICK_LEFT);
+  gpio_init(JOSTICK_RIGHT);
+  gpio_set_dir(JOSTICK_UP, GPIO_IN);
+  gpio_set_dir(JOSTICK_DOWN, GPIO_IN);
+  gpio_set_dir(JOSTICK_LEFT, GPIO_IN);
+  gpio_set_dir(JOSTICK_RIGHT, GPIO_IN);
+  // pull down
+  gpio_pull_down(JOSTICK_UP);
+  gpio_pull_down(JOSTICK_DOWN);
+  gpio_pull_down(JOSTICK_LEFT);
+  gpio_pull_down(JOSTICK_RIGHT);
+
+  gpio_set_irq_enabled_with_callback(JOSTICK_LEFT, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &left_joystick_callback);
+  gpio_set_irq_enabled_with_callback(JOSTICK_RIGHT, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &right_joystick_callback);
+  
   
 
   // initialize VGA
