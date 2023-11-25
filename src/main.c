@@ -394,10 +394,10 @@ int main(){
   gpio_set_dir(JOSTICK_LEFT, GPIO_IN);
   gpio_set_dir(JOSTICK_RIGHT, GPIO_IN);
   // pull down
-  gpio_pull_down(JOSTICK_UP);
-  gpio_pull_down(JOSTICK_DOWN);
-  gpio_pull_down(JOSTICK_LEFT);
-  gpio_pull_down(JOSTICK_RIGHT);
+  gpio_pull_up(JOSTICK_UP);
+  gpio_pull_up(JOSTICK_DOWN);
+  gpio_pull_up(JOSTICK_LEFT);
+  gpio_pull_up(JOSTICK_RIGHT);
 
   gpio_set_irq_enabled_with_callback(JOSTICK_LEFT, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &left_joystick_callback);
   gpio_set_irq_enabled_with_callback(JOSTICK_RIGHT, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &right_joystick_callback);
