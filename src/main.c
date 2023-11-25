@@ -126,7 +126,7 @@ ball balls[MAX_NUM_OF_BALLS];
 
 char str[40];
 int g_core1_spare_time = 0;
-bool g_is_left_pressed = true;
+bool g_is_left_pressed = false;
 bool g_is_right_pressed = false;
 bool g_is_up_pressed = false;
 bool g_is_down_pressed = false;
@@ -352,12 +352,13 @@ void core1_main(){
 
 // callback function for joystick 
 void left_joystick_callback(uint gpio, uint32_t events){
-  if(events & GPIO_IRQ_EDGE_RISE){
-    g_is_left_pressed = true;
-  }
-  if(events & GPIO_IRQ_EDGE_FALL){
-    g_is_left_pressed = false;
-  }
+  g_is_left_pressed = true;
+  // if(events & GPIO_IRQ_EDGE_RISE){
+  //   g_is_left_pressed = true;
+  // }
+  // if(events & GPIO_IRQ_EDGE_FALL){
+  //   g_is_left_pressed = false;
+  // }
 }
 
 void right_joystick_callback(uint gpio, uint32_t events){
