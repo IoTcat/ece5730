@@ -374,10 +374,6 @@ int main(){
   gpio_pull_up(JOSTICK_LEFT);
   gpio_pull_up(JOSTICK_RIGHT);
 
-  // gpio_set_irq_enabled_with_callback(JOSTICK_LEFT, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &left_joystick_callback);
-  // gpio_set_irq_enabled_with_callback(JOSTICK_RIGHT, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true, &right_joystick_callback);
-  
-  
 
   // start core 1 
   multicore_reset_core1();
