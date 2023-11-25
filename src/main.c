@@ -14,9 +14,9 @@
  *  - GPIO 20 ---> 330 ohm resistor ---> VGA Blue
  *  - RP2040 GND ---> VGA GND
  *  - GPIO13 ---> joystick up ---> 330 ohm resistor ---> GND
- *  - GPIO14 ---> joystick down ---> 330 ohm resistor ---> GND
- *  - GPIO15 ---> joystick left ---> 330 ohm resistor ---> GND
- *  - GPIO21 ---> joystick right ---> 330 ohm resistor ---> GND
+ *  - GPIO12 ---> joystick down ---> 330 ohm resistor ---> GND
+ *  - GPIO11 ---> joystick left ---> 330 ohm resistor ---> GND
+ *  - GPIO10 ---> joystick right ---> 330 ohm resistor ---> GND
  *
  * RESOURCES USED
  *  - PIO state machines 0, 1, and 2 on PIO instance 0
@@ -126,11 +126,6 @@ ball balls[MAX_NUM_OF_BALLS];
 
 char str[40];
 int g_core1_spare_time = 0;
-bool g_is_left_pressed = false;
-bool g_is_right_pressed = false;
-bool g_is_up_pressed = false;
-bool g_is_down_pressed = false;
-
 
 //init balls
 void initBall(ball* a, fix15 init_x, ball_type* type){
@@ -279,7 +274,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       writeString(str) ;
 
       // sprintf(str, "%d",FRAME_RATE);
-      sprintf(str, "%d",g_is_left_pressed);
+      sprintf(str, "%d",/* get gpio left value */gpio_get(JOSTICK_LEFT));
       setCursor(65, 10) ;
       writeString("Frame rate:") ;
       writeString(str) ;
@@ -349,26 +344,6 @@ void core1_main(){
 
 }
 
-
-// callback function for joystick 
-void left_joystick_callback(uint gpio, uint32_t events){
-  g_is_left_pressed = true;
-  // if(events & GPIO_IRQ_EDGE_RISE){
-  //   g_is_left_pressed = true;
-  // }
-  // if(events & GPIO_IRQ_EDGE_FALL){
-  //   g_is_left_pressed = false;
-  // }
-}
-
-void right_joystick_callback(uint gpio, uint32_t events){
-  if(events & GPIO_IRQ_EDGE_RISE){
-    g_is_right_pressed = true;
-  }
-  if(events & GPIO_IRQ_EDGE_FALL){
-    g_is_right_pressed = false;
-  }
-}
 
 // ========================================
 // === main
