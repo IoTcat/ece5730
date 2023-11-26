@@ -253,10 +253,10 @@ void move_balls(ball* b){
   
   // avoid vibration
   if(fix15abs(b->vx) < MAX_VELOCITY_THAT_EQUALS_ZERO){
-    b->vx = int2fix15(0);
+    b->vx = 0;
   }
   if(fix15abs(b->vy) < MAX_VELOCITY_THAT_EQUALS_ZERO){
-    b->vy = int2fix15(-3);
+    b->vy = 0;
   }
   
   // update ball's position and velocity
