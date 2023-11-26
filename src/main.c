@@ -296,7 +296,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       fix15 v_sum = int2fix15(0);
       while (current != NULL) {
         move_balls(&current->data);
-        v_sum += absfix15(current->data.vx) + absfix15(current->data.vy);
+        v_sum += absfix15(current->data.vx) < MAX_VELOCITY_THAT_EQUALS_ZERO ? int2fix15(0) : current->data.vx;
+        v_sum += absfix15(current->data.vy) < MAX_VELOCITY_THAT_EQUALS_ZERO ? int2fix15(0) : current->data.vy;
         current = current->next;
       }
 
