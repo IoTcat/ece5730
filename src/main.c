@@ -356,7 +356,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       writeString(str) ;
 
       // sprintf(str, "%d",FRAME_RATE);
-      sprintf(str, "%d",/* get gpio left value */gpio_get(JOSTICK_LEFT));
+      // sprintf(str, "%d",/* get gpio left value */gpio_get(JOSTICK_LEFT));
+      sprintf(str, "%f", fix2float15(v_sum));
       setCursor(65, 10) ;
       writeString("Frame rate:") ;
       writeString(str) ;
