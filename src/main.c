@@ -109,6 +109,8 @@ static ball_type ball_types[3] = {
 };
 
 
+enum play_state {DROP, COLLIDE, GAME_OVER};
+
 
 // Ball struct
 typedef struct ball{
@@ -291,11 +293,19 @@ static PT_THREAD (protothread_anim(struct pt *pt))
 
       // move balls
       node* current = head;
+      fix15 v_sum = int2fix15(0);
       while (current != NULL) {
         move_balls(&current->data);
+        v_sum += absfix15(current->data.vx) + absfix15(current->data.vy);
         current = current->next;
       }
 
+      // check if all balls are stopped
+      if(v_sum == int2fix15(0)){
+        // all balls are stopped
+        // add a new ball
+        initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
+      }
 
 
       // collision detection
