@@ -302,7 +302,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       }
 
       // check if all balls are stopped
-      if(v_sum == int2fix15(0)){
+      if(v_sum < MAX_VELOCITY_THAT_EQUALS_ZERO){
         // all balls are stopped
         // add a new ball
         initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
