@@ -235,7 +235,7 @@ bool overlaps(ball* a, ball* b) {
     fix15 dx = a->x - b->x;
     fix15 dy = a->y - b->y;
 
-    if(absfix15(dx) + absfix15(dy) > a->type->radius + b->type->radius){
+    if((absfix15(dx) + absfix15(dy) > ((a->type->radius + b->type->radius)<<1))){
       return false;
     }
 
