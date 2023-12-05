@@ -260,7 +260,7 @@ void collide_function(ball* a, ball* b){
     fix15 dot_product = multfix15(dx , dvx) + multfix15(dy , dvy);
     //print dvx
     printf("dvx: %d\n", fix2int15(dvx));
-    printf("a.mass = %d\n", fix2int15(a->type->mass);
+    printf("a.mass = %d\n", fix2int15(a->type->mass));
     printf("b.mass = %d\n", fix2int15(b->type->mass));
     printf("a.vx = %d\n", fix2int15(a->vx));
     printf("b.vx = %d\n", fix2int15(b->vx));
