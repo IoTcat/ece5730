@@ -89,8 +89,8 @@ typedef signed int fix15 ;
 // Wall detection
 #define hitBottom(b) (b>int2fix15(BOX_BOTTOM))
 #define hitTop(b) (b<int2fix15(BOX_TOP))
-#define hitLeft(a) (a<int2fix15(BOX_LEFT))
-#define hitRight(a) (a>int2fix15(BOX_RIGHT))
+#define hitLeft(a) (a<=int2fix15(BOX_LEFT))
+#define hitRight(a) (a>=int2fix15(BOX_RIGHT))
 
 
 // Ball types struct
