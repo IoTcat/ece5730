@@ -273,6 +273,10 @@ void collide_function(ball* a, ball* b){
     fix15 factor2 = divfix(multfix15(divfix(multfix15(int2fix15(2) , m1) , M) , dot_product) , dist_squared);
     b->vx += multfix15(factor2 , dx);
     b->vy += multfix15(factor2 , dy);
+    b->x += b->vx;
+    b->y += b->vy;
+    a->x += a->vx;
+    a->y += a->vy;
 }
 
 //bounce back if ball hit the boundary
