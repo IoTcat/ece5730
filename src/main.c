@@ -258,11 +258,11 @@ void collide_function(ball* a, ball* b){
     fix15 dot_product = multfix15(dx , dvx) + multfix15(dy , dvy);
 
     // New velocities
-    fix15 factor1 = divfix(multfix15(divfix(multfix15(int2fix15(2) , m2) , M) , dot_product) , dist_squared+int2fix15(1));
+    fix15 factor1 = (multfix15(divfix(multfix15(int2fix15(2) , m2) , M) , dot_product));
     a->vx -= multfix15(factor1 , dx);
     a->vy -= multfix15(factor1 , dy);
 
-    fix15 factor2 = divfix(multfix15(divfix(multfix15(int2fix15(2) , m1) , M) , dot_product) , dist_squared + int2fix15(1));
+    fix15 factor2 = (multfix15(divfix(multfix15(int2fix15(2) , m1) , M) , dot_product) );
     b->vx += multfix15(factor2 , dx);
     b->vy += multfix15(factor2 , dy);
 }
