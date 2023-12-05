@@ -241,7 +241,7 @@ bool overlaps(ball* a, ball* b) {
       printf("dx_square: %d\n", fix2int15(dx_square));
       printf("dy_square: %d\n", fix2int15(dy_square));
     }
-    return condition // Check if circles overlap
+    return condition; // Check if circles overlap
 }
 
 void collide_function(ball* a, ball* b){
