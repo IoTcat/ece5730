@@ -89,8 +89,8 @@ typedef signed int fix15 ;
 // Wall detection
 #define hitBottom(b) (b>int2fix15(BOX_BOTTOM))
 #define hitTop(b) (b<int2fix15(BOX_TOP))
-#define hitLeft(a) (a<=int2fix15(BOX_LEFT))
-#define hitRight(a) (a>=int2fix15(BOX_RIGHT))
+#define hitLeft(a) (a<int2fix15(BOX_LEFT))
+#define hitRight(a) (a>int2fix15(BOX_RIGHT))
 
 
 // Ball types struct
@@ -304,11 +304,11 @@ void bounce_function(ball* b){
     // b->vy = 0;
   }
   if(hitLeft(b->x - b->type->radius)){
-    b->x -= b->vx; //int2fix15(BOX_LEFT) + b->type->radius;
+    b->x -= b->vx << 1; //int2fix15(BOX_LEFT) + b->type->radius;
     b->vx = -b->vx >> 2;
   }
   if(hitRight(b->x + b->type->radius)){
-    b->x -= b->vx; //int2fix15(BOX_RIGHT) - b->type->radius;
+    b->x -= b->vx << 1; //int2fix15(BOX_RIGHT) - b->type->radius;
     b->vx = -b->vx >> 2;
   }
 }
