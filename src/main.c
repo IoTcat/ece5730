@@ -317,7 +317,7 @@ void move_balls(ball* b){
   // erase ball
   drawBall(b, BLACK);
   // update ball's position and velocity
-  // gravity_function(b);
+  gravity_function(b);
   
   // bounce back if ball hit the boundary
   bounce_function(b);
