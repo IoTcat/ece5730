@@ -103,7 +103,7 @@ typedef struct ball_type{
 
 // Ball types array
 static ball_type ball_types[3] = {
-  {int2fix15(30), int2fix15(100), RED},
+  {int2fix15(20), int2fix15(100), RED},
   {int2fix15(30), int2fix15(400), GREEN},
   {int2fix15(10), int2fix15(900), BLUE}
 };
@@ -257,7 +257,11 @@ void collide_function(ball* a, ball* b){
     // Dot product of velocity difference and position difference
     fix15 dot_product = multfix15(dx , dvx) + multfix15(dy , dvy);
     //print dvx
-    printf("%d\n", fix2int15(dvx));
+    printf("dvx: %d\n", fix2int15(dvx));
+    printf("a.mass = %d\n", fix2int15(a->type->mass));
+    printf("b.mass = %d\n", fix2int15(b->type->mass));
+    printf("a.vx = %d\n", fix2int15(a->vx));
+    printf("b.vx = %d\n", fix2int15(b->vx));
     if(absfix15(dvx) > int2fix15(1000)){
       printf("dvx is too large\n");
       while(1){
