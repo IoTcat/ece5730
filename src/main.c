@@ -233,9 +233,15 @@ bool overlaps(ball* a, ball* b) {
     fix15 dy = a->y - b->y;
     fix15 dx_square = multfix15(dx, dx);
     fix15 dy_square = multfix15(dy, dy);
-    fix15 distance = sqrtfix(dx_square+ dy_square); // Euclidean distance between the centers
-
-    return distance < (a->type->radius + b->type->radius); // Check if circles overlap
+    fix15 distance = sqrtfix(dx_square + dy_square); // Euclidean distance between the centers
+    bool condition = distance < (a->type->radius + b->type->radius);
+    if(condition){
+      printf("dx: %d\n", fix2int15(dx));
+      printf("dy: %d\n", fix2int15(dy));
+      printf("dx_square: %d\n", fix2int15(dx_square));
+      printf("dy_square: %d\n", fix2int15(dy_square));
+    }
+    return condition // Check if circles overlap
 }
 
 void collide_function(ball* a, ball* b){
