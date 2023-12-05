@@ -173,7 +173,7 @@ void initBall(ball* a, fix15 init_x, ball_type* type){
   a->x = init_x;
   a->y = int2fix15(DROP_Y);
   a->vx = int2fix15(rand() % 2 - 1);
-  a->vy = int2fix15(1);
+  a->vy = int2fix15(10);
   a->type = type;
 }
 
