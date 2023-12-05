@@ -239,11 +239,11 @@ bool overlaps(ball* a, ball* b) {
 }
 
 void collide_function(ball* a, ball* b){
-    // fix15 m1 = multfix15(a->type->radius, a->type->radius); // Mass is based on the square of the radius
-    // fix15 m2 = multfix15(b->type->radius, b->type->radius); // Same for ball b
+    fix15 m1 = multfix15(a->type->radius, a->type->radius); // Mass is based on the square of the radius
+    fix15 m2 = multfix15(b->type->radius, b->type->radius); // Same for ball b
     // fix15 M = m1 + m2;
-    fix15 m1 = a->type->mass;
-    fix15 m2 = b->type->mass;
+    // fix15 m1 = a->type->mass;
+    // fix15 m2 = b->type->mass;
     fix15 M = m1+ m2;
 
     // Calculate distance squared between a and b
