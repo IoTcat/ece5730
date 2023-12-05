@@ -172,7 +172,7 @@ int g_core1_spare_time = 0;
 void initBall(ball* a, fix15 init_x, ball_type* type){
   a->x = init_x;
   a->y = int2fix15(DROP_Y);
-  a->vx = 0;//int2fix15(rand() % 2 - 1);
+  a->vx = int2fix15(rand() % 2 - 1);
   a->vy = int2fix15(0);
   a->type = type;
 }
@@ -324,7 +324,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
     
     initBallNode(int2fix15(200), &ball_types[0]);
     initBallNode(int2fix15(400), &ball_types[1]);
-    initBallNode(int2fix15(200), &ball_types[2]);
+    initBallNode(int2fix15(300), &ball_types[2]);
 
     while(1) {
       // Measure time at start of thread
