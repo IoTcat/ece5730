@@ -227,6 +227,17 @@ void gravity_function(ball* b){
 // }
 
 //code reference: https://scipython.com/blog/two-dimensional-collisions/
+
+bool overlaps(ball* a, ball* b) {
+    fix15 dx = a->x - b->x;
+    fix15 dy = a->y - b->y;
+    fix15 dx_square = multfix15(dx, dx);
+    fix15 dy_square = multfix15(dy, dy);
+    fix15 distance = sqrtfix(dx_square+ dy_square); // Euclidean distance between the centers
+
+    return distance < (a->type->radius + b->type->radius); // Check if circles overlap
+}
+
 void collide_function(ball* a, ball* b){
     // fix15 m1 = multfix15(a->type->radius, a->type->radius); // Mass is based on the square of the radius
     // fix15 m2 = multfix15(b->type->radius, b->type->radius); // Same for ball b
@@ -361,7 +372,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         node* current2 = current1->next;
         bool collided = false;
         while (current2 != NULL) {
-          if(fix15abs(current1->data.x - current2->data.x) < current1->data.type->radius + current2->data.type->radius && fix15abs(current1->data.y - current2->data.y) < current1->data.type->radius + current2->data.type->radius){
+          // if(fix15abs(current1->data.x - current2->data.x) < current1->data.type->radius + current2->data.type->radius && fix15abs(current1->data.y - current2->data.y) < current1->data.type->radius + current2->data.type->radius){
+          if(overlaps(&current1->data, &current2->data)){
             collide_function(&current1->data, &current2->data);
             collided = true;
           }
