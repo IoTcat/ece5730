@@ -324,7 +324,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
     
     initBallNode(int2fix15(200), &ball_types[0]);
     initBallNode(int2fix15(400), &ball_types[1]);
-    initBallNode(int2fix15(300), &ball_types[2]);
+    initBallNode(int2fix15(200), &ball_types[2]);
 
     while(1) {
       // Measure time at start of thread
