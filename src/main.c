@@ -103,9 +103,9 @@ typedef struct ball_type{
 
 // Ball types array
 static ball_type ball_types[3] = {
-  {int2fix15(20), int2fix15(100), RED},
-  {int2fix15(30), int2fix15(400), GREEN},
-  {int2fix15(10), int2fix15(900), BLUE}
+  {int2fix15(20), int2fix15(400), RED},
+  {int2fix15(30), int2fix15(900), GREEN},
+  {int2fix15(10), int2fix15(100), BLUE}
 };
 
 
@@ -239,8 +239,10 @@ bool overlaps(ball* a, ball* b) {
 }
 
 void collide_function(ball* a, ball* b){
-    fix15 m1 = multfix15(a->type->radius, a->type->radius); // Mass is based on the square of the radius
-    fix15 m2 = multfix15(b->type->radius, b->type->radius); // Same for ball b
+    // fix15 m1 = multfix15(a->type->radius, a->type->radius); // Mass is based on the square of the radius
+    // fix15 m2 = multfix15(b->type->radius, b->type->radius); // Same for ball b
+    fix15 m1 = a->type->mass;
+    fix15 m2 = b->type->mass;
     fix15 M = m1+ m2;
 
     // Calculate distance squared between a and b
@@ -258,7 +260,7 @@ void collide_function(ball* a, ball* b){
     fix15 dot_product = multfix15(dx , dvx) + multfix15(dy , dvy);
     //print dvx
     printf("dvx: %d\n", fix2int15(dvx));
-    printf("a.mass = %d\n", fix2int15(a->type->mass));
+    printf("a.mass = %d\n", fix2int15(a->type->mass);
     printf("b.mass = %d\n", fix2int15(b->type->mass));
     printf("a.vx = %d\n", fix2int15(a->vx));
     printf("b.vx = %d\n", fix2int15(b->vx));
