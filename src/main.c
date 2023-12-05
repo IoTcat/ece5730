@@ -257,7 +257,7 @@ void collide_function(ball* a, ball* b){
     // Dot product of velocity difference and position difference
     fix15 dot_product = multfix15(dx , dvx) + multfix15(dy , dvy);
     //print dvx
-    printf("%d\n", dvx);
+    printf("%d\n", fix2int15(dvx));
     if(absfix15(dvx) > int2fix15(1000)){
       printf("dvx is too large\n");
       while(1){
