@@ -172,7 +172,7 @@ int g_core1_spare_time = 0;
 void initBall(ball* a, fix15 init_x, ball_type* type){
   a->x = init_x;
   a->y = int2fix15(DROP_Y);
-  a->vx = int2fix15(rand() % 2 - 1);
+  a->vx = 0;//int2fix15(rand() % 2 - 1);
   a->vy = int2fix15(0);
   a->type = type;
 }
@@ -249,7 +249,7 @@ void collide_function(ball* a, ball* b){
     // Calculate distance squared between a and b
     fix15 dx = a->x - b->x;
     fix15 dy = a->y - b->y;
-    fix15 dist_squared = sqrtfix( multfix15(dx,dx) + multfix15(dy,dy) );
+    fix15 dist_squared = multfix15(dx,dx) + multfix15(dy,dy);
 
     // Relative velocity
     fix15 dvx = a->vx - b->vx;
