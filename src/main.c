@@ -328,13 +328,13 @@ void move_balls(ball* b){
     b->vx = 0;
   } else {
     // friction
-    b->vx = b->vx > 0 ? b->vx - float2fix15(0.01) : b->vx + float2fix15(0.01);
+    b->vx = b->vx > 0 ? b->vx - float2fix15(0.1) : b->vx + float2fix15(0.1);
   }
   if(fix15abs(b->vy) < MAX_VELOCITY_THAT_EQUALS_ZERO){
     b->vy = 0;
   } else {
     // friction
-    b->vy = b->vy > 0 ? b->vy - float2fix15(0.01) : b->vy + float2fix15(0.01);
+    b->vy = b->vy > 0 ? b->vy - float2fix15(0.1) : b->vy + float2fix15(0.1);
   }
   
   // update ball's position and velocity
