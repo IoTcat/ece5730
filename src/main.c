@@ -207,7 +207,6 @@ void drawBoundary() {
 //add a gravity function to the balls
 void gravity_function(ball* b){
   if(hitBottom(b->y + b->type->radius)){
-    b->vy = 0;
     return;
   }
   b->vy += float2fix15(GRAVITY);
