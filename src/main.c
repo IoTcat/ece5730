@@ -173,7 +173,7 @@ void initBall(ball* a, fix15 init_x, ball_type* type){
   a->x = init_x;
   a->y = int2fix15(DROP_Y);
   a->vx = int2fix15(rand() % 2 - 1);
-  a->vy = int2fix15(0);
+  a->vy = int2fix15(1);
   a->type = type;
 }
 
@@ -289,10 +289,10 @@ void move_balls(ball* b){
   // erase ball
   drawBall(b, BLACK);
   // update ball's position and velocity
-  gravity_function(b);
+  // gravity_function(b);
   
   // bounce back if ball hit the boundary
-  // bounce_function(b);
+  bounce_function(b);
   
   // avoid vibration
   if(fix15abs(b->vx) < MAX_VELOCITY_THAT_EQUALS_ZERO){
