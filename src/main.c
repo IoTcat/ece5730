@@ -304,11 +304,11 @@ void bounce_function(ball* b){
     // b->vy = 0;
   }
   if(hitLeft(b->x - b->type->radius)){
-    b->x = int2fix15(BOX_LEFT) + b->type->radius;
+    b->x -= b->vx; //int2fix15(BOX_LEFT) + b->type->radius;
     b->vx = -b->vx >> 2;
   }
   if(hitRight(b->x + b->type->radius)){
-    b->x = int2fix15(BOX_RIGHT) - b->type->radius;
+    b->x -= b->vx; //int2fix15(BOX_RIGHT) - b->type->radius;
     b->vx = -b->vx >> 2;
   }
 }
