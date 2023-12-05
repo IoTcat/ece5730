@@ -235,7 +235,7 @@ bool overlaps(ball* a, ball* b) {
     fix15 dy_square = multfix15(dy, dy);
     fix15 distance = sqrtfix(dx_square+ dy_square); // Euclidean distance between the centers
 
-    return fix15abs(distance) < fix15abs(a->type->radius + b->type->radius); // Check if circles overlap
+    return distance < (a->type->radius + b->type->radius); // Check if circles overlap
 }
 
 void collide_function(ball* a, ball* b){
@@ -292,7 +292,7 @@ void move_balls(ball* b){
   gravity_function(b);
   
   // bounce back if ball hit the boundary
-  bounce_function(b);
+  // bounce_function(b);
   
   // avoid vibration
   if(fix15abs(b->vx) < MAX_VELOCITY_THAT_EQUALS_ZERO){
