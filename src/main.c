@@ -300,7 +300,7 @@ void collide_function(ball* a, ball* b){
 void bounce_function(ball* b){
   if(hitBottom(b->y + b->type->radius)){
     b->y = int2fix15(BOX_BOTTOM) - b->type->radius;
-    b->vy = -b->vy >> 2;
+    b->vy = -b->vy;
     // b->vy = 0;
   }
   if(hitLeft(b->x - b->type->radius)){
