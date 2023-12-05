@@ -322,12 +322,19 @@ void move_balls(ball* b){
   // bounce back if ball hit the boundary
   bounce_function(b);
   
+  
   // avoid vibration
   if(fix15abs(b->vx) < MAX_VELOCITY_THAT_EQUALS_ZERO){
     b->vx = 0;
+  } else {
+    // friction
+    b->vx = b->vx > 0 ? b->vx - float2fix15(0.01) : b->vx + float2fix15(0.01);
   }
   if(fix15abs(b->vy) < MAX_VELOCITY_THAT_EQUALS_ZERO){
     b->vy = 0;
+  } else {
+    // friction
+    b->vy = b->vy > 0 ? b->vy - float2fix15(0.01) : b->vy + float2fix15(0.01);
   }
   
   // update ball's position and velocity
