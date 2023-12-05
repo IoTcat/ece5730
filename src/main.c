@@ -256,13 +256,13 @@ void collide_function(ball* a, ball* b){
 
     // Dot product of velocity difference and position difference
     fix15 dot_product = multfix15(dx , dvx) + multfix15(dy , dvy);
-
+    printf("%d\n", dot_product);
     // New velocities
-    fix15 factor1 = (multfix15(divfix(multfix15(int2fix15(2) , m2) , M) , dot_product));
+    fix15 factor1 = divfix(multfix15(divfix(multfix15(int2fix15(2) , m2) , M) , dot_product) , dist_squared);
     a->vx -= multfix15(factor1 , dx);
     a->vy -= multfix15(factor1 , dy);
 
-    fix15 factor2 = (multfix15(divfix(multfix15(int2fix15(2) , m1) , M) , dot_product) );
+    fix15 factor2 = divfix(multfix15(divfix(multfix15(int2fix15(2) , m1) , M) , dot_product) , dist_squared);
     b->vx += multfix15(factor2 , dx);
     b->vy += multfix15(factor2 , dy);
 }
