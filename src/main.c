@@ -243,12 +243,12 @@ bool overlaps(ball* a, ball* b) {
     fix15 dy_square = multfix15(dy, dy);
     fix15 distance = sqrtfix(dx_square + dy_square); // Euclidean distance between the centers
     bool condition = distance < (a->type->radius + b->type->radius);
-    if(condition){
-      printf("dx: %d\n", fix2int15(dx));
-      printf("dy: %d\n", fix2int15(dy));
-      printf("dx_square: %d\n", fix2int15(dx_square));
-      printf("dy_square: %d\n", fix2int15(dy_square));
-    }
+    // if(condition){
+    //   printf("dx: %d\n", fix2int15(dx));
+    //   printf("dy: %d\n", fix2int15(dy));
+    //   printf("dx_square: %d\n", fix2int15(dx_square));
+    //   printf("dy_square: %d\n", fix2int15(dy_square));
+    // }
     return condition; // Check if circles overlap
 }
 
@@ -273,17 +273,17 @@ void collide_function(ball* a, ball* b){
     // Dot product of velocity difference and position difference
     fix15 dot_product = multfix15(dx , dvx) + multfix15(dy , dvy);
     //print dvx
-    printf("dvx: %d\n", fix2int15(dvx));
-    printf("a.mass = %d\n", fix2int15(a->type->mass));
-    printf("b.mass = %d\n", fix2int15(b->type->mass));
-    printf("a.vx = %d\n", fix2int15(a->vx));
-    printf("b.vx = %d\n", fix2int15(b->vx));
-    if(absfix15(dvx) > int2fix15(1000)){
-      printf("dvx is too large\n");
-      while(1){
+    // printf("dvx: %d\n", fix2int15(dvx));
+    // printf("a.mass = %d\n", fix2int15(a->type->mass));
+    // printf("b.mass = %d\n", fix2int15(b->type->mass));
+    // printf("a.vx = %d\n", fix2int15(a->vx));
+    // printf("b.vx = %d\n", fix2int15(b->vx));
+    // if(absfix15(dvx) > int2fix15(1000)){
+    //   printf("dvx is too large\n");
+    //   while(1){
         
-      };
-    }
+    //   };
+    // }
     // printf("%d\n", dot_product);
     // New velocities
     fix15 factor1 = divfix(multfix15(divfix(multfix15(int2fix15(2) , m2) , M) , dot_product) , dist_squared);
@@ -410,7 +410,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         node* current2 = head;
         while (current2 != current1 && current2 != NULL) {
           // if(fix15abs(current1->data.x - current2->data.x) < current1->data.type->radius + current2->data.type->radius && fix15abs(current1->data.y - current2->data.y) < current1->data.type->radius + current2->data.type->radius){
-          printf("%d\n", overlaps(&current1->data, &current2->data));
+          // printf("%d\n", overlaps(&current1->data, &current2->data));
           if(overlaps(&current1->data, &current2->data)){
             collide_function(&current1->data, &current2->data);
           }
