@@ -373,6 +373,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         bool collided = false;
         while (current2 != NULL) {
           // if(fix15abs(current1->data.x - current2->data.x) < current1->data.type->radius + current2->data.type->radius && fix15abs(current1->data.y - current2->data.y) < current1->data.type->radius + current2->data.type->radius){
+          printf("%d\n", overlaps(&current1->data, &current2->data));
           if(overlaps(&current1->data, &current2->data)){
             collide_function(&current1->data, &current2->data);
             collided = true;
