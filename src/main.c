@@ -231,6 +231,11 @@ void gravity_function(ball* b){
 bool overlaps(ball* a, ball* b) {
     fix15 dx = a->x - b->x;
     fix15 dy = a->y - b->y;
+
+    if(absfix15(dx) + absfix15(dy) > a->type->radius + b->type->radius){
+      return false;
+    }
+
     fix15 dx_square = multfix15(dx, dx);
     fix15 dy_square = multfix15(dy, dy);
     fix15 distance = sqrtfix(dx_square + dy_square); // Euclidean distance between the centers
