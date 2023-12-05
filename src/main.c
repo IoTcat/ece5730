@@ -249,7 +249,7 @@ void collide_function(ball* a, ball* b){
     // Calculate distance squared between a and b
     fix15 dx = a->x - b->x;
     fix15 dy = a->y - b->y;
-    fix15 dist_squared = multfix15(dx,dx) + multfix15(dy,dy);
+    fix15 dist_squared = sqrtfix( multfix15(dx,dx) + multfix15(dy,dy) );
 
     // Relative velocity
     fix15 dvx = a->vx - b->vx;
