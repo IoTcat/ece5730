@@ -210,20 +210,48 @@ void gravity_function(ball* b){
 }
 
 
+// void collide_function(ball* a, ball* b){
+//   fix15 dx = a->x - b->x;
+//   fix15 dy = a->y - b->y;
+//   fix15 dvx = a->vx - b->vx;
+//   fix15 dvy = a->vy - b->vy;
+//   fix15 dvdr = multfix15(dx, dvx) + multfix15(dy, dvy);
+//   fix15 dist = multfix15(dx, dx) + multfix15(dy, dy);
+//   fix15 J = divfix(multfix15(multfix15(int2fix15(2), multfix15(a->type->mass, b->type->mass)), dvdr), multfix15((a->type->mass + b->type->mass), dist));
+//   fix15 Jx = divfix(multfix15(J, dx), dist);
+//   fix15 Jy = divfix(multfix15(J, dy), dist);
+//   a->vx -= multfix15(Jx, b->type->mass);
+//   a->vy -= multfix15(Jy, b->type->mass);
+//   b->vx += multfix15(Jx, a->type->mass);
+//   b->vy += multfix15(Jy, a->type->mass);
+// }
+
+//code reference: https://scipython.com/blog/two-dimensional-collisions/
 void collide_function(ball* a, ball* b){
-  fix15 dx = a->x - b->x;
-  fix15 dy = a->y - b->y;
-  fix15 dvx = a->vx - b->vx;
-  fix15 dvy = a->vy - b->vy;
-  fix15 dvdr = multfix15(dx, dvx) + multfix15(dy, dvy);
-  fix15 dist = multfix15(dx, dx) + multfix15(dy, dy);
-  fix15 J = divfix(multfix15(multfix15(int2fix15(2), multfix15(a->type->mass, b->type->mass)), dvdr), multfix15((a->type->mass + b->type->mass), dist));
-  fix15 Jx = divfix(multfix15(J, dx), dist);
-  fix15 Jy = divfix(multfix15(J, dy), dist);
-  a->vx -= multfix15(Jx, b->type->mass);
-  a->vy -= multfix15(Jy, b->type->mass);
-  b->vx += multfix15(Jx, a->type->mass);
-  b->vy += multfix15(Jy, a->type->mass);
+    fix15 m1 = multfix15(a->type->radius, a->type->radius); // Mass is based on the square of the radius
+    fix15 m2 = multfix15(b->type->radius, b->type->radius); // Same for ball b
+    fix15 M = m1 + m2;
+
+    // Calculate distance squared between a and b
+    fix15 dx = a->x - b->x;
+    fix15 dy = a->y - b->y;
+    fix15 dist_squared = multfix15(dx,dx) + multfix15(dy,dy);
+
+    // Relative velocity
+    fix15 dvx = a->vx - b->vx;
+    fix15 dvy = a->vy - b->vy;
+
+    // Dot product of velocity difference and position difference
+    fix15 dot_product = multfix15(dx , dvx) + multfix15(dy , dvy);
+
+    // New velocities
+    fix15 factor1 = divfix(multfix15(divfix(multfix15(2 , m2) , M) , dot_product) , dist_squared);
+    a->vx -= multfix15(factor1 , dx);
+    a->vy -= multfix15(factor1 , dy);
+
+    fix15 factor2 = divfix(multfix15(divfix(multfix15(2 , m1) , M) , dot_product) , dist_squared);
+    b->vx += multfix15(factor2 , dx);
+    b->vy += multfix15(factor2 , dy);
 }
 
 //bounce back if ball hit the boundary
