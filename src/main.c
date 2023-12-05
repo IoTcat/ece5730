@@ -303,15 +303,15 @@ void move_balls(ball* b){
   // gravity_function(b);
   
   // bounce back if ball hit the boundary
-  bounce_function(b);
+  // bounce_function(b);
   
   // avoid vibration
-  if(fix15abs(b->vx) < MAX_VELOCITY_THAT_EQUALS_ZERO){
-    b->vx = 0;
-  }
-  if(fix15abs(b->vy) < MAX_VELOCITY_THAT_EQUALS_ZERO){
-    b->vy = 0;
-  }
+  // if(fix15abs(b->vx) < MAX_VELOCITY_THAT_EQUALS_ZERO){
+  //   b->vx = 0;
+  // }
+  // if(fix15abs(b->vy) < MAX_VELOCITY_THAT_EQUALS_ZERO){
+  //   b->vy = 0;
+  // }
   
   // update ball's position and velocity
   b->x += b->vx;
