@@ -254,6 +254,22 @@ bool overlaps(ball* a, ball* b) {
     return condition; // Check if circles overlap
 }
 
+
+void avoid_overlap(ball* a, ball* b){
+  drawBall(b, BLACK);
+  drawBall(a, BLACK);
+  fix15 dx = a->x - b->x;
+  fix15 dy = a->y - b->y;
+  fix15 distance = sqrtfix(multfix15(dx, dx) + multfix15(dy, dy));
+  fix15 overlap = (a->type->radius + b->type->radius) - distance;
+  fix15 dx_unit = divfix(dx, distance);
+  fix15 dy_unit = divfix(dy, distance);
+  a->x += multfix15(dx_unit, overlap);
+  a->y += multfix15(dy_unit, overlap);
+  drawBall(b, b->type->color);
+  drawBall(a, a->type->color);
+}
+
 void collide_function(ball* a, ball* b){
     // fix15 m1 = multfix15(a->type->radius, a->type->radius); // Mass is based on the square of the radius
     // fix15 m2 = multfix15(b->type->radius, b->type->radius); // Same for ball b
@@ -425,6 +441,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
           // if(fix15abs(current1->data.x - current2->data.x) < current1->data.type->radius + current2->data.type->radius && fix15abs(current1->data.y - current2->data.y) < current1->data.type->radius + current2->data.type->radius){
           // printf("%d\n", overlaps(&current1->data, &current2->data));
           if(overlaps(&current1->data, &current2->data)){
+            avoid_overlap(&current1->data, &current2->data);
             collide_function(&current1->data, &current2->data);
           }
           current2 = current2->next;
