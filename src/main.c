@@ -119,6 +119,7 @@ typedef struct ball{
   fix15 vx;
   fix15 vy;
   ball_type* type;
+  bool gravity;
 }ball;
 
 // Ball linked list
@@ -175,6 +176,7 @@ void initBall(ball* a, fix15 init_x, ball_type* type){
   a->vx = int2fix15(0);//int2fix15(rand() % 2 - 1);
   a->vy = int2fix15(10);
   a->type = type;
+  a->gravity = true;
 }
 
 void initBallNode(fix15 init_x, ball_type* type){
@@ -297,6 +299,8 @@ void collide_function(ball* a, ball* b){
     b->y += b->vy;
     a->x += a->vx;
     a->y += a->vy;
+    a->gravity = false;
+    b->gravity = false;
 }
 
 //bounce back if ball hit the boundary
@@ -320,7 +324,8 @@ void move_balls(ball* b){
   // erase ball
   drawBall(b, BLACK);
   // update ball's position and velocity
-  // gravity_function(b);
+  if(b->gravity) gravity_function(b);
+  b->gravity = true;
   
   // bounce back if ball hit the boundary
   bounce_function(b);
