@@ -306,6 +306,9 @@ void collide_function(ball* a, ball* b){
     a->y += a->vy;
     a->gravity = false;
     b->gravity = false;
+
+    drawBall(b, b->type->color);
+    drawBall(a, a->type->color);
 }
 
 //bounce back if ball hit the boundary
