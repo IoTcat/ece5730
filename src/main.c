@@ -323,7 +323,7 @@ void move_balls(ball* b){
   // gravity_function(b);
   
   // bounce back if ball hit the boundary
-  // bounce_function(b);
+  bounce_function(b);
   
   
   // avoid vibration
