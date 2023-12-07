@@ -24,12 +24,12 @@
 #define MAX_NUM_OF_BALLS 4
 #define MAX_NUM_OF_BALLS_ON_CORE0 2
 
-#define GRAVITY_MENU 0.11
+#define GRAVITY_MENU 0.08
 #define FRICTION_MENU 0.005
 #define GRAVITY_1 0.11
-#define FRICTION_1 0.02
+#define FRICTION_1 0.03
 #define GRAVITY_2 0
-#define FRICTION_2 0.02
+#define FRICTION_2 0.04
 
 #define JOSTICK_UP 13
 #define JOSTICK_DOWN 12

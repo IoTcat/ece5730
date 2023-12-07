@@ -14,7 +14,7 @@ int g_bgm = 1;
 struct list_Item menu_list[3] = {
     {"START", BLACK, WHITE, 270, 140, 3},
     {"MODE 1", WHITE, BLACK, 270, 180, 3},
-    {"BGM ON  ", WHITE, BLACK, 270, 220, 3},
+    {"BGM ON ", WHITE, BLACK, 270, 220, 3},
 };
 
 void update_menu() {
@@ -61,7 +61,7 @@ int menu_select() {
         if (g_bgm == 0) {
             strcpy(menu_list[2].str, "BGM OFF");
         } else {
-            strcpy(menu_list[2].str, "BGM ON  ");
+            strcpy(menu_list[2].str, "BGM ON ");
         }
         return 0;
     }
