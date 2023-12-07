@@ -49,12 +49,31 @@ void avoid_overlap(ball* a, ball* b){
   fix15 dy_unit = divfix(dy, distance);
   fix15 dx_all = multfix15(dx_unit, overlap);
   fix15 dy_all = multfix15(dy_unit, overlap); 
-  a->x += multfix15(dx_all, fm1);
-  a->y += multfix15(dy_all, fm1);
-  b->x -= multfix15(dx_all, (int2fix15(1) - fm1));
-  b->y -= multfix15(dy_all, (int2fix15(1) - fm1));
-  drawBall(b, b->type->color);
-  drawBall(a, a->type->color);
+  fix15 dx_a = multfix15(dx_all, fm1);
+    fix15 dy_a = multfix15(dy_all, fm1);
+    fix15 dx_b = multfix15(dx_all, (int2fix15(1) - fm1));
+    fix15 dy_b = multfix15(dy_all, (int2fix15(1) - fm1));
+
+    if(dx_a < MAX_VELOCITY_THAT_EQUALS_ZERO || dx_a > -MAX_VELOCITY_THAT_EQUALS_ZERO || dy_a < MAX_VELOCITY_THAT_EQUALS_ZERO || dy_a > -MAX_VELOCITY_THAT_EQUALS_ZERO){
+      drawBall(a, BLACK);
+    }
+    if(dx_b < MAX_VELOCITY_THAT_EQUALS_ZERO || dx_b > -MAX_VELOCITY_THAT_EQUALS_ZERO || dy_b < MAX_VELOCITY_THAT_EQUALS_ZERO || dy_b > -MAX_VELOCITY_THAT_EQUALS_ZERO){
+      drawBall(b, BLACK);
+    }
+
+
+    a->x += dx_a;
+    a->y += dy_a;
+    b->x -= dx_b;
+    b->y -= dy_b;
+
+    if(dx_a < MAX_VELOCITY_THAT_EQUALS_ZERO || dx_a > -MAX_VELOCITY_THAT_EQUALS_ZERO || dy_a < MAX_VELOCITY_THAT_EQUALS_ZERO || dy_a > -MAX_VELOCITY_THAT_EQUALS_ZERO){
+      drawBall(a, a->type->color);
+    }
+    if(dx_b < MAX_VELOCITY_THAT_EQUALS_ZERO || dx_b > -MAX_VELOCITY_THAT_EQUALS_ZERO || dy_b < MAX_VELOCITY_THAT_EQUALS_ZERO || dy_b > -MAX_VELOCITY_THAT_EQUALS_ZERO){
+      drawBall(b, b->type->color);
+    }
+
 }
 
 
