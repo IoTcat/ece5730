@@ -160,9 +160,6 @@ void move_balls(ball* b){
   gravity_function(b);
   b->gravity = true;
   
-  // bounce back if ball hit the boundary
-  bounce_function(b);
-  
   
   // avoid vibration
   if(fix15abs(b->vx) < MAX_VELOCITY_THAT_EQUALS_ZERO){

@@ -55,6 +55,8 @@
 #include "components/ball_physics.c"
 #include "components/box_physics.c"
 
+#include "components/display.c"
+#include "components/menu.c"
 
 
 
@@ -62,14 +64,11 @@
 
 
 
-enum play_state {MENU, PREPARE, PLAYING, GAME_OVER};
-enum play_state g_play_state = PLAYING;
 
+enum play_state {MENU, PLAYING, GAME_OVER};
+enum play_state g_play_state = MENU;
 
-
-char str[40];
 int g_core1_spare_time = 0;
-
 
 
 // Animation on core 0
@@ -99,14 +98,20 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       // move balls
       node* current = head;
       fix15 v_sum = int2fix15(0);
-      while (current != NULL) {
-        move_balls(&current->data);
-        if(hitTop(current->data.y) && current->data.vy < 0){
-          g_play_state = GAME_OVER;
+      if(g_play_state == PLAYING || g_play_state == MENU){
+        while (current != NULL) {
+          if(g_play_state == PLAYING){
+            bounce_function(&current->data);
+          }
+          move_balls(&current->data);
+          if(hitTop(current->data.y) && current->data.vy < 0){
+            g_play_state = GAME_OVER;
+            counter = 0;
+          }
+          v_sum += absfix15(current->data.vx) < MAX_VELOCITY_THAT_EQUALS_ZERO ? int2fix15(0) : absfix15(current->data.vx);
+          v_sum += absfix15(current->data.vy) < MAX_VELOCITY_THAT_EQUALS_ZERO ? int2fix15(0) : absfix15(current->data.vy);
+          current = current->next;
         }
-        v_sum += absfix15(current->data.vx) < MAX_VELOCITY_THAT_EQUALS_ZERO ? int2fix15(0) : absfix15(current->data.vx);
-        v_sum += absfix15(current->data.vy) < MAX_VELOCITY_THAT_EQUALS_ZERO ? int2fix15(0) : absfix15(current->data.vy);
-        current = current->next;
       }
 
       // check if all balls are stopped
@@ -115,11 +120,26 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         // add a new ball
         // initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
       }
-      if(counter == 30){
+      if((g_play_state == PLAYING || g_play_state == MENU) && counter == 30){
         // add a new ball
         initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
         //add the score by the type of spawned balls
         total_score += head->data.type->score;
+        counter = 0;
+      }
+
+      if(g_play_state == GAME_OVER && counter == 300){
+        // remove all balls
+        node* current = head;
+        while (current != NULL) {
+          node* next = current->next;
+          deleteBall(current->data);
+          current = next;
+        }
+        // reset score
+        total_score = 0;
+        // reset game state
+        g_play_state = MENU;
         counter = 0;
       }
 
@@ -173,37 +193,46 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       spare_time = FRAME_RATE - (time_us_32() - begin_time) ;
 
 
-      setTextColor2(WHITE, BLACK) ;
-      sprintf(str, "%d", total_score);
-      setCursor(65, 0) ;
-      setTextSize(1) ;
-      writeString("Score:") ;
-      writeString(str) ;
+      struct list_Item left_list[6] = {
+        {"", WHITE, BLACK, 65, 0, 1},
+        {"", WHITE, BLACK, 65, 10, 1},
+        {"", WHITE, BLACK, 65, 20, 1},
+        {"", WHITE, BLACK, 65, 30, 1},
+        {"", WHITE, BLACK, 65, 40, 1},
+        {"", WHITE, BLACK, 65, 50, 1},
+      };
 
-      // sprintf(str, "%d",FRAME_RATE);
-      // sprintf(str, "%d",/* get gpio left value */gpio_get(JOSTICK_LEFT));
-      sprintf(str, "%f", fix2float15(v_sum));
-      setCursor(65, 10) ;
-      writeString("Frame rate:") ;
-      writeString(str) ;
 
-      setCursor(65, 20) ;
-      writeString("Elapsed time:") ;
-      // sprintf(str, "%d",time_us_32()/1000000);
-      sprintf(str, "%d", g_play_state);
-      writeString(str) ;
-
-      setCursor(65, 30) ;
-      writeString("Spare time 0:") ;
-      sprintf(str, "%d",spare_time);
-      writeString(str) ;
-
-      setCursor(65, 40) ;
-      writeString("Spare time 1:") ;
-      sprintf(str, "%d",g_core1_spare_time);
-      writeString(str) ;
 
       
+
+      sprintf(left_list[0].str, "Score: %d", total_score);
+      sprintf(left_list[1].str, "Play State: %d", g_play_state);
+      sprintf(left_list[2].str, "Time Elapsed: %d", time_us_32()/1000000);
+      sprintf(left_list[3].str, "V_sum: %f", fix2float15(v_sum));
+      sprintf(left_list[4].str, "Spare Time 0: %d", spare_time);
+      sprintf(left_list[5].str, "Spare Time 1: %d", g_core1_spare_time);
+
+
+      printList(left_list, 6);
+      
+
+      if(g_play_state == MENU){
+        menu_display();
+      }
+      
+      if(g_play_state == GAME_OVER){
+        struct list_Item game_over_list[1] = {
+          {"GAME OVER", WHITE, BLACK, 100, 100, 5},
+        };
+        printList(game_over_list, 1);
+      }
+
+      menu_display();
+
+
+
+
       PT_YIELD_usec(spare_time) ;
      // NEVER exit while
     } // END WHILE(1)
