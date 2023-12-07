@@ -145,6 +145,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
               merge_function(&current1->data, &current2->data);
               // remove the second ball
               // deleteBall(current2->data);
+              current2 = current2->next;
               continue;
             }
             avoid_overlap(&current1->data, &current2->data);
