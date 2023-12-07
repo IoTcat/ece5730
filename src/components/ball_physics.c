@@ -128,9 +128,13 @@ void collide_function(ball* a, ball* b){
     b->vx += multfix15(factor2 , dx);
     b->vy += multfix15(factor2 , dy);
 
-  // erase ball
-  drawBall(b, BLACK);
-  drawBall(a, BLACK);
+
+    if(a->vx < MAX_VELOCITY_THAT_EQUALS_ZERO || a->vx > -MAX_VELOCITY_THAT_EQUALS_ZERO || a->vy < MAX_VELOCITY_THAT_EQUALS_ZERO || a->vy > -MAX_VELOCITY_THAT_EQUALS_ZERO){
+      drawBall(a, BLACK);
+    }
+    if(b->vx < MAX_VELOCITY_THAT_EQUALS_ZERO || b->vx > -MAX_VELOCITY_THAT_EQUALS_ZERO || b->vy < MAX_VELOCITY_THAT_EQUALS_ZERO || b->vy > -MAX_VELOCITY_THAT_EQUALS_ZERO){
+      drawBall(b, BLACK);
+    }
 
     b->x += b->vx;
     b->y += b->vy;
@@ -139,8 +143,12 @@ void collide_function(ball* a, ball* b){
     a->gravity = false;
     b->gravity = false;
 
-    drawBall(b, b->type->color);
-    drawBall(a, a->type->color);
+    if(a->vx < MAX_VELOCITY_THAT_EQUALS_ZERO || a->vx > -MAX_VELOCITY_THAT_EQUALS_ZERO || a->vy < MAX_VELOCITY_THAT_EQUALS_ZERO || a->vy > -MAX_VELOCITY_THAT_EQUALS_ZERO){
+      drawBall(a, a->type->color);
+    }
+    if(b->vx < MAX_VELOCITY_THAT_EQUALS_ZERO || b->vx > -MAX_VELOCITY_THAT_EQUALS_ZERO || b->vy < MAX_VELOCITY_THAT_EQUALS_ZERO || b->vy > -MAX_VELOCITY_THAT_EQUALS_ZERO){
+      drawBall(b, b->type->color);
+    }
 }
 
 
