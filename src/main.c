@@ -91,9 +91,6 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       // Measure time at start of thread
       begin_time = time_us_32() ;    
       counter += 1;
-      // for (int i = 0; i < MAX_NUM_OF_BALLS_ON_CORE0; i++){
-      //   move_balls(&balls[i]);
-      // }
 
       // move balls
       node* current = head;
@@ -141,21 +138,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         // reset game state
         g_play_state = MENU;
         counter = 0;
+        clearScreen();
       }
-
-      // collision detection
-      // for (int i = 0; i < MAX_NUM_OF_BALLS_ON_CORE0; i++){
-      //   bool collided = false;
-      //   for (int j = i + 1; j < MAX_NUM_OF_BALLS_ON_CORE0; j++){
-      //     if(fix15abs(balls[i].x - balls[j].x) < balls[i].type->radius + balls[j].type->radius && fix15abs(balls[i].y - balls[j].y) < balls[i].type->radius + balls[j].type->radius){
-      //       collide_function(&balls[i], &balls[j]);
-      //       collided = true;
-      //     }
-      //   }
-      //   if(collided){
-      //     break;
-      //   }
-      // }
 
       // collision detection
       node* current1 = head;
@@ -183,12 +167,14 @@ static PT_THREAD (protothread_anim(struct pt *pt))
           }
           current2 = current2->next;
         }
+
         current1 = current1->next;
       }
       
+      if(g_play_state == PLAYING){
+        drawBoundary();
+      }
 
-      // draw the boundaries
-      drawBoundary();
       // delay in accordance with frame rate
       spare_time = FRAME_RATE - (time_us_32() - begin_time) ;
 
