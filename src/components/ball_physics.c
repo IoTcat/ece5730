@@ -37,14 +37,22 @@ bool overlaps(ball* a, ball* b) {
 void avoid_overlap(ball* a, ball* b){
   drawBall(b, BLACK);
   drawBall(a, BLACK);
+  fix15 m1 = a->type->mass;
+  fix15 m2 = b->type->mass;
+  fix15 M = m1+ m2;
+  fix15 fm1 = divfix(m1, M);
   fix15 dx = a->x - b->x;
   fix15 dy = a->y - b->y;
   fix15 distance = sqrtfix(multfix15(dx, dx) + multfix15(dy, dy));
   fix15 overlap = (a->type->radius + b->type->radius) - distance;
   fix15 dx_unit = divfix(dx, distance);
   fix15 dy_unit = divfix(dy, distance);
-  a->x += multfix15(dx_unit, overlap);
-  a->y += multfix15(dy_unit, overlap);
+  fix15 dx_all = multfix15(dx_unit, overlap);
+    fix15 dy_all = multfix15(dy_unit, overlap); 
+    a->x += multfix15(dx_all, fm1);
+    a->y += multfix15(dy_all, fm1);
+    b->x -= multfix15(dx_all, (int2fix15(1) - fm1));
+    b->y -= multfix15(dy_all, (int2fix15(1) - fm1));
   drawBall(b, b->type->color);
   drawBall(a, a->type->color);
 }
