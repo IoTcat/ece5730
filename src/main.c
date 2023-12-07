@@ -58,6 +58,8 @@
 #include "components/display.c"
 #include "components/menu.c"
 
+#include "components/gpio.c"
+
 
 
 
@@ -150,7 +152,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       }
 
 
-      if(g_play_state == MENU && gpio_get(JOSTICK_RIGHT)){
+      if(g_play_state == MENU && gpio_value(UP)){
         
         menu_select();
         g_play_state = PLAYING;
