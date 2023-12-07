@@ -10,16 +10,24 @@ int prev_joystick_state[4] = {0, 0, 0, 0}; //UP, DOWN, LEFT, RIGHT
 
 //return 1 if gpio rising edge is detected
 int gpio_edge(enum joystick_direction c){
-    if(prev_joystick_state[c] == 0 && gpio_get(JOSTICK_UP) == 1){
+    int up_state = gpio_get(JOSTICK_UP);
+    int down_state = gpio_get(JOSTICK_DOWN);
+    int left_state = gpio_get(JOSTICK_LEFT);
+    int right_state = gpio_get(JOSTICK_RIGHT);
+    if(prev_joystick_state[c] == 0 && up_state == 1){
+        prev_joystick_state[c] = 1;
         return 1;
     }
-    if(prev_joystick_state[c] == 0 && gpio_get(JOSTICK_DOWN) == 1){
+    if(prev_joystick_state[c] == 0 && down_state == 1){
+        prev_joystick_state[c] = 1;
         return 1;
     }
-    if(prev_joystick_state[c] == 0 && gpio_get(JOSTICK_LEFT) == 1){
+    if(prev_joystick_state[c] == 0 && left_state == 1){
+        prev_joystick_state[c] = 1;
         return 1;
     }
-    if(prev_joystick_state[c] == 0 && gpio_get(JOSTICK_RIGHT) == 1){
+    if(prev_joystick_state[c] == 0 && right_state == 1){
+        prev_joystick_state[c] = 1;
         return 1;
     }
     prev_joystick_state[c] = gpio_get(JOSTICK_UP);

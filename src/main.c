@@ -151,8 +151,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         // initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
       }
 
-
-      if(g_play_state == MENU && gpio_value(UP)){
+      if(g_play_state == MENU && gpio_value(RIGHT)){
         
         menu_select();
         g_play_state = PLAYING;
