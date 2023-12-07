@@ -182,7 +182,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       // }
       // else b_mode = RANDOM_MODE;
       
-      if(b_mode == RANDOM_MODE && counter == 30){
+      if((g_play_state == MENU || g_play_state == PLAYING) && counter == 30){
         initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
         //add the score by the type of spawned balls
         total_score += head->data.type->score;
