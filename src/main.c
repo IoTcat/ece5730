@@ -80,6 +80,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
     // Variables for maintaining frame rate
     static int begin_time ;
     static int spare_time ;
+    static int counter = 0;
     
     initBallNode(int2fix15(200), &ball_types[0]);
     initBallNode(int2fix15(400), &ball_types[1]);
@@ -88,7 +89,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
     while(1) {
       // Measure time at start of thread
       begin_time = time_us_32() ;    
-
+      counter += 1;
       // for (int i = 0; i < MAX_NUM_OF_BALLS_ON_CORE0; i++){
       //   move_balls(&balls[i]);
       // }
@@ -107,9 +108,13 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       if(v_sum < MAX_VELOCITY_THAT_EQUALS_ZERO){
         // all balls are stopped
         // add a new ball
-        initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
+        // initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
       }
-
+      if(counter == 60){
+        // add a new ball
+        initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
+        counter = 0;
+      }
 
       // collision detection
       // for (int i = 0; i < MAX_NUM_OF_BALLS_ON_CORE0; i++){

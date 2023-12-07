@@ -48,11 +48,11 @@ void avoid_overlap(ball* a, ball* b){
   fix15 dx_unit = divfix(dx, distance);
   fix15 dy_unit = divfix(dy, distance);
   fix15 dx_all = multfix15(dx_unit, overlap);
-    fix15 dy_all = multfix15(dy_unit, overlap); 
-    a->x += multfix15(dx_all, fm1);
-    a->y += multfix15(dy_all, fm1);
-    b->x -= multfix15(dx_all, (int2fix15(1) - fm1));
-    b->y -= multfix15(dy_all, (int2fix15(1) - fm1));
+  fix15 dy_all = multfix15(dy_unit, overlap); 
+  a->x += multfix15(dx_all, fm1);
+  a->y += multfix15(dy_all, fm1);
+  b->x -= multfix15(dx_all, (int2fix15(1) - fm1));
+  b->y -= multfix15(dy_all, (int2fix15(1) - fm1));
   drawBall(b, b->type->color);
   drawBall(a, a->type->color);
 }
