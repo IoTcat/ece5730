@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "ball.c"
+#include "menu.c"
 
 // Ball linked list
 typedef struct node {
