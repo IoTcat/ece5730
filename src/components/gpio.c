@@ -30,10 +30,12 @@ int gpio_edge(enum joystick_direction c){
         prev_joystick_state[c] = 1;
         return 1;
     }
-    prev_joystick_state[c] = gpio_get(JOSTICK_UP);
-    prev_joystick_state[c] = gpio_get(JOSTICK_DOWN);
-    prev_joystick_state[c] = gpio_get(JOSTICK_LEFT);
-    prev_joystick_state[c] = gpio_get(JOSTICK_RIGHT);
+    
+    //update the array value
+    prev_joystick_state[UP] = up_state;
+    prev_joystick_state[DOWN] = down_state;
+    prev_joystick_state[LEFT] = left_state;
+    prev_joystick_state[RIGHT] = right_state;
     return 0;
 }
 
