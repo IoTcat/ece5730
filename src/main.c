@@ -141,7 +141,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
             bounce_function(&current->data);
           }
           move_balls(&current->data);
-          if(hitTop(current->data.y) && current->data.vy < 0){
+          if(hitTop(current->data.y-current->data.type->radius) && current->data.vy < 0){
             g_play_state = GAME_OVER;
             counter = 0;
           }
@@ -264,7 +264,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       
       if(g_play_state == GAME_OVER){
         struct list_Item game_over_list[1] = {
-          {"GAME OVER", WHITE, BLACK, 230, 100, 5},
+          {"GAME OVER", WHITE, BLACK, 190, 200, 5},
         };
         printList(game_over_list, 1);
       }

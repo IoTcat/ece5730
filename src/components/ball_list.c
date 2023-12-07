@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "ball.c"
+#include "menu.c"
 
 // Ball linked list
 typedef struct node {
@@ -44,7 +45,11 @@ void deleteBall(ball data) {
 
 void initBallNode(fix15 init_x, ball_type* type){
   ball a;
-  initBall(&a, init_x, type);
+  if(g_mode == 0){
+    initBall(&a, init_x, int2fix15(10), type);
+  }else{
+    initBall(&a, init_x, int2fix15(20), type);
+  }
   insertBall(a);
 }
 

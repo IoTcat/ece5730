@@ -43,13 +43,13 @@ typedef struct ball{
 
 
 //init balls
-void initBall(ball* a, fix15 init_x, ball_type* type){
+void initBall(ball* a, fix15 init_x, fix15 init_vy, ball_type* type){
   a->x = init_x;
   a->y = int2fix15(DROP_Y);
   a->fx = init_x;
   a->fy = int2fix15(DROP_Y);
   a->vx = int2fix15(0);//int2fix15(rand() % 2 - 1);
-  a->vy = int2fix15(10);
+  a->vy = init_vy;
   a->type = type;
   a->gravity = true;
 }
@@ -57,7 +57,7 @@ void initBall(ball* a, fix15 init_x, ball_type* type){
 
 // Draw the ball
 void drawBall(ball* a, char color){
-  for(int i = 0; i < 5; i++){
+  for(int i = 0; i < 2; i++){
     drawCircle(fix2int15(a->fx), fix2int15(a->fy), fix2int15(a->type->radius)-i, BLACK);
     drawCircle(fix2int15(a->x), fix2int15(a->y), fix2int15(a->type->radius)-i, color);
   }
