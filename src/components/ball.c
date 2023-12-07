@@ -57,7 +57,7 @@ void initBall(ball* a, fix15 init_x, ball_type* type){
 
 // Draw the ball
 void drawBall(ball* a, char color){
-  for(int i = 0; i < 5; i++){
+  for(int i = 0; i < 2; i++){
     drawCircle(fix2int15(a->fx), fix2int15(a->fy), fix2int15(a->type->radius)-i, BLACK);
     drawCircle(fix2int15(a->x), fix2int15(a->y), fix2int15(a->type->radius)-i, color);
   }

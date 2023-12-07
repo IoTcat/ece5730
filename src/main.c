@@ -228,7 +228,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       
       if(g_play_state == GAME_OVER){
         struct list_Item game_over_list[1] = {
-          {"GAME OVER", WHITE, BLACK, 230, 100, 5},
+          {"GAME OVER", WHITE, BLACK, 210, 200, 5},
         };
         printList(game_over_list, 1);
       }
