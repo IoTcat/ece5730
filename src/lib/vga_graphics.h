@@ -21,6 +21,9 @@
  *
  */
 
+#ifndef VGA_GRAPHICS_H
+#define VGA_GRAPHICS_H
+
 
 // Give the I/O pins that we're using some names that make sense - usable in main()
 enum vga_pins {HSYNC=16, VSYNC, RED_PIN, GREEN_PIN, BLUE_PIN} ;
@@ -50,3 +53,5 @@ void setTextSize(unsigned char s);
 void setTextWrap(char w);
 void tft_write(unsigned char c) ;
 void writeString(char* str) ;
+
+#endif

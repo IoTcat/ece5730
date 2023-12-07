@@ -26,7 +26,7 @@
  */
 
 // Include the VGA grahics library
-#include "vga_graphics.h"
+#include "lib/vga_graphics.h"
 // Include standard libraries
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,48 +42,17 @@
 #include "hardware/clocks.h"
 #include "hardware/pll.h"
 // Include protothreads
-#include "pt_cornell_rp2040_v1.h"
+#include "lib/pt_cornell_rp2040_v1.h"
+// Include fixed point library
+#include "lib/fix15.h"
 
-// === the fixed point macros ========================================
-typedef signed int fix15 ;
-#define multfix15(a,b) ((fix15)((((signed long long)(a))*((signed long long)(b)))>>15))
-#define float2fix15(a) ((fix15)((a)*32768.0)) // 2^15
-#define fix2float15(a) ((float)(a)/32768.0)
-#define absfix15(a) abs(a) 
-#define int2fix15(a) ((fix15)(a << 15))
-#define fix2int15(a) ((int)(a >> 15))
-#define char2fix15(a) (fix15)(((fix15)(a)) << 15)
-#define divfix(a,b) (fix15)(div_s64s64( (((signed long long)(a)) << 15), ((signed long long)(b))))
-#define float2fix(a) ((fix15)((a) * 32768.0))
-#define fix2float(a) ((float)(a) / 32768.0)
-#define sqrtfix(a) (float2fix(sqrt(fix2float(a))))
-#define fix15abs(a) ((a) < 0 ? -(a) : (a))
+#include "config.h"
 
-// uS per frame
-#define FRAME_RATE 33000
+#include "components/ball.c"
+#include "components/ball_list.c"
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
 
-#define BOX_LEFT 50
-#define BOX_RIGHT 590
-#define BOX_TOP 100
-#define BOX_BOTTOM 450
-#define BOX_COLOR WHITE
 
-#define DROP_Y 30
-
-#define MAX_VELOCITY_THAT_EQUALS_ZERO float2fix15(0.1)
-
-#define MAX_NUM_OF_BALLS 4
-#define MAX_NUM_OF_BALLS_ON_CORE0 2
-
-#define GRAVITY 0.11
-
-#define JOSTICK_UP 13
-#define JOSTICK_DOWN 12
-#define JOSTICK_LEFT 11
-#define JOSTICK_RIGHT 10
 
 
 // Wall detection
@@ -93,103 +62,14 @@ typedef signed int fix15 ;
 #define hitRight(a) (a>int2fix15(BOX_RIGHT))
 
 
-// Ball types struct
-typedef struct ball_type{
-  fix15 radius;
-  fix15 mass;
-  char color;
-}ball_type;
 
 
-// Ball types array
-static ball_type ball_types[3] = {
-  {int2fix15(20), int2fix15(400), RED},
-  {int2fix15(30), int2fix15(900), GREEN},
-  {int2fix15(10), int2fix15(100), BLUE}
-};
-
-
-enum play_state {DROP, COLLIDE, GAME_OVER};
-
-
-// Ball struct
-typedef struct ball{
-  fix15 x;
-  fix15 y;
-  fix15 vx;
-  fix15 vy;
-  ball_type* type;
-  bool gravity;
-}ball;
-
-// Ball linked list
-typedef struct node {
-  ball data;
-  struct node* next;
-} node;
-
-node* head = NULL;
-
-// Function to insert a ball at the beginning of the linked list
-void insertBall(ball data) {
-  node* newNode = (node*)malloc(sizeof(node));
-  newNode->data = data;
-  newNode->next = head;
-  head = newNode;
-}
-
-// Function to delete a ball from the linked list
-void deleteBall(ball data) {
-  node* current = head;
-  node* previous = NULL;
-
-  // Traverse the linked list to find the ball to delete
-  while (current != NULL) {
-    if (current->data.x == data.x && current->data.y == data.y) {
-      // Ball found, delete it
-      if (previous == NULL) {
-        // Ball is the head of the linked list
-        head = current->next;
-      } else {
-        // Ball is not the head of the linked list
-        previous->next = current->next;
-      }
-      free(current);
-      return;
-    }
-    previous = current;
-    current = current->next;
-  }
-}
-
-
+enum g_play_state {MENU, PREPARE, PLAYING, GAME_OVER};
 
 
 
 char str[40];
 int g_core1_spare_time = 0;
-
-//init balls
-void initBall(ball* a, fix15 init_x, ball_type* type){
-  a->x = init_x;
-  a->y = int2fix15(DROP_Y);
-  a->vx = int2fix15(0);//int2fix15(rand() % 2 - 1);
-  a->vy = int2fix15(10);
-  a->type = type;
-  a->gravity = true;
-}
-
-void initBallNode(fix15 init_x, ball_type* type){
-  ball a;
-  initBall(&a, init_x, type);
-  insertBall(a);
-}
-
-// Draw the ball
-void drawBall(ball* a, char color){
-  drawCircle(fix2int15(a->x), fix2int15(a->y), fix2int15(a->type->radius), color);
-}
-
 
 
 // Draw the Boundary
@@ -215,21 +95,6 @@ void gravity_function(ball* b){
 }
 
 
-// void collide_function(ball* a, ball* b){
-//   fix15 dx = a->x - b->x;
-//   fix15 dy = a->y - b->y;
-//   fix15 dvx = a->vx - b->vx;
-//   fix15 dvy = a->vy - b->vy;
-//   fix15 dvdr = multfix15(dx, dvx) + multfix15(dy, dvy);
-//   fix15 dist = multfix15(dx, dx) + multfix15(dy, dy);
-//   fix15 J = divfix(multfix15(multfix15(int2fix15(2), multfix15(a->type->mass, b->type->mass)), dvdr), multfix15((a->type->mass + b->type->mass), dist));
-//   fix15 Jx = divfix(multfix15(J, dx), dist);
-//   fix15 Jy = divfix(multfix15(J, dy), dist);
-//   a->vx -= multfix15(Jx, b->type->mass);
-//   a->vy -= multfix15(Jy, b->type->mass);
-//   b->vx += multfix15(Jx, a->type->mass);
-//   b->vy += multfix15(Jy, a->type->mass);
-// }
 
 //code reference: https://scipython.com/blog/two-dimensional-collisions/
 

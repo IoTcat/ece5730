@@ -9,4 +9,10 @@
     },
     "cmake.buildTask": true,
     "cmake.configureOnOpen": false,
+    "files.associations": {
+        "pt_cornell_rp2040_v1.h": "c",
+        "random": "c",
+        "config.h": "c",
+        "vga_graphics.h": "c"
+    },
 }
