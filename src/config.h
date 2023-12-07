@@ -29,7 +29,7 @@
 #define GRAVITY_1 0.11
 #define FRICTION_1 0.02
 #define GRAVITY_2 0
-#define FRICTION_2 0.04
+#define FRICTION_2 0.02
 
 #define JOSTICK_UP 13
 #define JOSTICK_DOWN 12
