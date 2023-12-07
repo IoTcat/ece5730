@@ -69,7 +69,7 @@ int menu_select() {
 
 
 void menu_display() {
-    printList(menu_list, 3);
+    //printList(menu_list, 3);
 }
 
 
