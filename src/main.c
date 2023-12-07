@@ -199,7 +199,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
           if(gpio_value(DOWN)){
             ball_drop = 1;
             drawBall(&a, BLACK);
-            insertBallNode(a);
+            insertBall(a);
           }
           if(gpio_value(RIGHT)){
             drawBall(&a, BLACK);
