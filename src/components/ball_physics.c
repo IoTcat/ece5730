@@ -159,5 +159,19 @@ void move_balls(ball* b){
   drawBall(b, b->type->color);
 }
 
+//merge two balls if they have same radius, delete the second ball
+void merge_function(ball* a, ball* b){
+  // erase ball
+  drawBall(b, BLACK);
+  drawBall(a, BLACK);
+  // merge two balls become next type
+  a->type = &ball_types[ball_type_index(a->type) + 1];
+  
+  // remove the second ball
+  // removeBallNode(current2);
+  // break;
+  // draw the ball at its new position
+  drawBall(a, a->type->color);
+}
 
 #endif

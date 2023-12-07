@@ -138,6 +138,15 @@ static PT_THREAD (protothread_anim(struct pt *pt))
           // if(fix15abs(current1->data.x - current2->data.x) < current1->data.type->radius + current2->data.type->radius && fix15abs(current1->data.y - current2->data.y) < current1->data.type->radius + current2->data.type->radius){
           // printf("%d\n", overlaps(&current1->data, &current2->data));
           if(overlaps(&current1->data, &current2->data)){
+            //merge two balls if they have same radius and the ball is not the last type (DANGER)
+            // DANGER@!!!!!!!!!!!!!!!!!!!!!!!!!!
+            if(current1->data.type == current2->data.type && current1->data.type != &ball_types[6]){
+              // merge two balls
+              merge_function(&current1->data, &current2->data);
+              // remove the second ball
+              removeBallNode(current2);
+              continue;
+            }
             avoid_overlap(&current1->data, &current2->data);
             collide_function(&current1->data, &current2->data);
           }
