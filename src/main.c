@@ -91,6 +91,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
     static int counter = 0;
     static int total_score = 0;
     
+    ball a;
+    
     initBallNode(int2fix15(200), &ball_types[0]);
     initBallNode(int2fix15(400), &ball_types[1]);
     initBallNode(int2fix15(300), &ball_types[2]);
@@ -175,10 +177,10 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         }
       }
       
-      if(g_play_state == MENU){
-        b_mode = RANDOM_MODE;
-      }
-      else b_mode = RANDOM_MODE;
+      // if(g_play_state == MENU){
+      //   b_mode = RANDOM_MODE;
+      // }
+      // else b_mode = RANDOM_MODE;
       
       if(b_mode == RANDOM_MODE && counter == 30){
         initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
@@ -186,31 +188,30 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         total_score += head->data.type->score;
         counter = 0;
       }
-      else if(b_mode == CONTROL_MODE){
-        ball a;
+      // else if(b_mode == CONTROL_MODE){
         
-        if(prev_b_mode != b_mode){
-          initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
-        }
+      //   if(prev_b_mode != b_mode){
+      //     initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
+      //   }
         
-        if(!ball_drop){
-          drawBall(&a, a.type->color);
+      //   if(!ball_drop){
+      //     drawBall(&a, a.type->color);
           
-          if(gpio_value(DOWN)){
-            ball_drop = 1;
-            drawBall(&a, BLACK);
-            insertBall(a);
-          }
-          if(gpio_value(RIGHT)){
-            drawBall(&a, BLACK);
-            a.x += int2fix15(10);
-            drawBall(&a, a.type->color);
-          }
-        }
+      //     if(gpio_value(DOWN)){
+      //       ball_drop = 1;
+      //       drawBall(&a, BLACK);
+      //       insertBall(a);
+      //     }
+      //     if(gpio_value(RIGHT)){
+      //       drawBall(&a, BLACK);
+      //       a.x += int2fix15(10);
+      //       drawBall(&a, a.type->color);
+      //     }
+      //   }
         
-      }
+      // }
       
-      prev_b_mode = b_mode;
+      // prev_b_mode = b_mode;
 
       if(g_play_state == GAME_OVER && counter == 300){
         // remove all balls
