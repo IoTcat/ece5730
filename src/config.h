@@ -24,12 +24,21 @@
 #define MAX_NUM_OF_BALLS 4
 #define MAX_NUM_OF_BALLS_ON_CORE0 2
 
-#define GRAVITY 0.11
-#define FRICTION 0.04
+#define GRAVITY_MENU 0.11
+#define FRICTION_MENU 0.04
+#define GRAVITY_1 0.11
+#define FRICTION_1 0.04
+#define GRAVITY_2 0
+#define FRICTION_2 0.11
 
 #define JOSTICK_UP 13
 #define JOSTICK_DOWN 12
 #define JOSTICK_LEFT 11
 #define JOSTICK_RIGHT 10
+
+
+fix15 g_gravity = float2fix15(GRAVITY_MENU);
+fix15 g_friction = float2fix15(FRICTION_MENU);
+
 
 #endif

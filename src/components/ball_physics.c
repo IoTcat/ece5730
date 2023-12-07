@@ -66,7 +66,7 @@ void gravity_function(ball* b){
   if(hitBottom(b->y + b->type->radius)){
     return;
   }
-  b->vy += float2fix15(GRAVITY);
+  b->vy += g_gravity;
 }
 
 void collide_function(ball* a, ball* b){
@@ -134,13 +134,13 @@ void move_balls(ball* b){
     b->vx = 0;
   } else {
     // friction
-    b->vx = b->vx > 0 ? b->vx - multfix15(float2fix15(FRICTION), b->vx) : b->vx + multfix15(float2fix15(FRICTION), -b->vx);
+    b->vx = b->vx > 0 ? b->vx - multfix15(g_friction, b->vx) : b->vx + multfix15(g_friction, -b->vx);
   }
   if(fix15abs(b->vy) < MAX_VELOCITY_THAT_EQUALS_ZERO){
     b->vy = 0;
   } else {
     // friction
-    b->vy = b->vy > 0 ? b->vy - multfix15(float2fix15(FRICTION), b->vy) : b->vy + multfix15(float2fix15(FRICTION), -b->vy);
+    b->vy = b->vy > 0 ? b->vy - multfix15(g_friction, b->vy) : b->vy + multfix15(g_friction, -b->vy);
   }
   
   // update ball's position and velocity

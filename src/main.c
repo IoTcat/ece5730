@@ -155,6 +155,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         menu_select();
         g_play_state = PLAYING;
         clearBallList();
+        g_gravity = g_mode ? float2fix15(GRAVITY_2) : float2fix15(GRAVITY_1);
+        g_friction = g_mode ? float2fix15(FRICTION_2) : float2fix15(FRICTION_1);
       }
 
       if((g_play_state == PLAYING || g_play_state == MENU) && counter == 30){
@@ -173,6 +175,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         g_play_state = MENU;
         counter = 0;
         clearScreen();
+        g_gravity = float2fix15(GRAVITY_MENU);
+        g_friction = float2fix15(FRICTION_MENU);
       }
 
       
