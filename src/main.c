@@ -152,7 +152,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       }
 
       if(g_play_state == MENU){
-        if(gpio_value(RIGHT)){
+        if(gpio_edge(RIGHT)){
           menu_select();
           if(g_menu_index == 0){
           g_play_state = PLAYING;
