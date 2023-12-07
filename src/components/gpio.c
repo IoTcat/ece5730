@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "config.h"
+#include "../config.h"
 // Include protothreads
 #include "lib/pt_cornell_rp2040_v1.h"
 
