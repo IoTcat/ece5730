@@ -81,6 +81,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
     static int begin_time ;
     static int spare_time ;
     static int counter = 0;
+    static int total_score = 0;
     
     initBallNode(int2fix15(200), &ball_types[0]);
     initBallNode(int2fix15(400), &ball_types[1]);
@@ -113,6 +114,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       if(counter == 30){
         // add a new ball
         initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
+        //add the score by the type of spawned balls
+        total_score += head->data.type->score;
         counter = 0;
       }
 
@@ -144,6 +147,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
               node* next = current2->next;
               // merge two balls
               merge_function(&current1->data, &current2->data);
+              total_score += current1->data.type->score;
+              total_score -= current2->data.type->score;
               // remove the second ball
               deleteBall(current2->data);
               current2 = next;
@@ -165,7 +170,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
 
 
       setTextColor2(WHITE, BLACK) ;
-      sprintf(str, "%f", fix2float15(head->data.vy));
+      sprintf(str, "%d", total_score);
       setCursor(65, 0) ;
       setTextSize(1) ;
       writeString("Score:") ;
@@ -272,9 +277,7 @@ int main(){
   gpio_pull_up(JOSTICK_DOWN);
   gpio_pull_up(JOSTICK_LEFT);
   gpio_pull_up(JOSTICK_RIGHT);
-  //print 1 if pressed
-  printf("%d\n", gpio_get(JOSTICK_LEFT));
-  printf("%d\n", gpio_get(JOSTICK_RIGHT));
+  
 
   // start core 1 
   multicore_reset_core1();

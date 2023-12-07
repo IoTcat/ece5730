@@ -12,18 +12,19 @@ typedef struct ball_type{
   fix15 radius;
   fix15 mass;
   char color;
+  int score;
 }ball_type;
 
 
 // Ball types array
 static ball_type ball_types[7] = {
-  {int2fix15(10), int2fix15(1), RED},
-  {int2fix15(20), int2fix15(4), GREEN},
-  {int2fix15(30), int2fix15(9), BLUE},
-  {int2fix15(40), int2fix15(16), YELLOW},
-  {int2fix15(50), int2fix15(25), CYAN},
-  {int2fix15(60), int2fix15(36), MAGENTA},
-  {int2fix15(70), int2fix15(49), WHITE}
+  {int2fix15(10), int2fix15(1), RED, 10},
+  {int2fix15(20), int2fix15(4), GREEN, 30},
+  {int2fix15(30), int2fix15(9), BLUE, 50},
+  {int2fix15(40), int2fix15(16), YELLOW, 100},
+  {int2fix15(50), int2fix15(25), CYAN, 200},
+  {int2fix15(60), int2fix15(36), MAGENTA, 300},
+  {int2fix15(70), int2fix15(49), WHITE, 500}
 };
 
 
