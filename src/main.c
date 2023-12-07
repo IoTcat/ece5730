@@ -159,10 +159,10 @@ static PT_THREAD (protothread_anim(struct pt *pt))
           g_gravity = g_mode ? float2fix15(GRAVITY_2) : float2fix15(GRAVITY_1);
           g_friction = g_mode ? float2fix15(FRICTION_2) : float2fix15(FRICTION_1);
         }
-        if(gpio_value(UP)){
+        if(gpio_edge(UP)){
           menu_up();
         }
-        if(gpio_value(DOWN)){
+        if(gpio_edge(DOWN)){
           menu_down();
         }
       }
