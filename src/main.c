@@ -141,11 +141,12 @@ static PT_THREAD (protothread_anim(struct pt *pt))
             //merge two balls if they have same radius and the ball is not the last type (DANGER)
             // DANGER@!!!!!!!!!!!!!!!!!!!!!!!!!!
             if(current1->data.type == current2->data.type && current1->data.type != &ball_types[6]){
+              node* next = current2->next;
               // merge two balls
               merge_function(&current1->data, &current2->data);
               // remove the second ball
-              // deleteBall(current2->data);
-              current2 = current2->next;
+              deleteBall(current2->data);
+              current2 = next;
               continue;
             }
             avoid_overlap(&current1->data, &current2->data);
