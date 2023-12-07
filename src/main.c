@@ -92,40 +92,6 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       begin_time = time_us_32() ;    
       counter += 1;
 
-      if(g_play_state == MENU && gpio_get(JOSTICK_RIGHT)){
-        
-        menu_select();
-        g_play_state = PLAYING;
-      }
-
-      if((g_play_state == PLAYING || g_play_state == MENU) && counter == 30){
-        // add a new ball
-        // if(gpio_get(JOSTICK_UP)){
-        //   printf("UP\n");
-        //   initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
-        // }
-          
-        initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
-        //add the score by the type of spawned balls
-        total_score += head->data.type->score;
-        counter = 0;
-      }
-
-      if(g_play_state == GAME_OVER && counter == 300){
-        // remove all balls
-        node* current = head;
-        while (current != NULL) {
-          node* next = current->next;
-          deleteBall(current->data);
-          current = next;
-        }
-        // reset score
-        total_score = 0;
-        // reset game state
-        g_play_state = MENU;
-        counter = 0;
-        clearScreen();
-      }
 
       // collision detection
       node* current1 = head;
@@ -181,6 +147,32 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         // all balls are stopped
         // add a new ball
         // initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
+      }
+
+
+      if(g_play_state == MENU && gpio_get(JOSTICK_RIGHT)){
+        
+        menu_select();
+        g_play_state = PLAYING;
+        clearBallList();
+      }
+
+      if((g_play_state == PLAYING || g_play_state == MENU) && counter == 30){
+        initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
+        //add the score by the type of spawned balls
+        total_score += head->data.type->score;
+        counter = 0;
+      }
+
+      if(g_play_state == GAME_OVER && counter == 300){
+        // remove all balls
+        clearBallList();
+        // reset score
+        total_score = 0;
+        // reset game state
+        g_play_state = MENU;
+        counter = 0;
+        clearScreen();
       }
 
       

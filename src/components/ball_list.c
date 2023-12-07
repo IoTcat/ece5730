@@ -47,3 +47,13 @@ void initBallNode(fix15 init_x, ball_type* type){
   initBall(&a, init_x, type);
   insertBall(a);
 }
+
+
+void clearBallList(){
+  node* current = head;
+  while (current != NULL) {
+    node* next = current->next;
+    deleteBall(current->data);
+    current = next;
+  }
+}
