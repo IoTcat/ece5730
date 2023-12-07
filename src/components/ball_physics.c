@@ -20,10 +20,10 @@ bool overlaps(ball* a, ball* b) {
       return false;
     }
 
-    fix15 dx_square = multfix15(dx, dx);
-    fix15 dy_square = multfix15(dy, dy);
-    fix15 distance = sqrtfix(dx_square + dy_square); // Euclidean distance between the centers
-    bool condition = distance < (a->type->radius + b->type->radius);
+    float dx_square = fix2float(dx) * fix2float(dx);
+    float dy_square = fix2float(dy) * fix2float(dy);
+    float distance_square = dx_square + dy_square;
+    bool condition = distance_square < fix2float(multfix15(a->type->radius + b->type->radius, a->type->radius + b->type->radius));
     // if(condition){
     //   printf("dx: %d\n", fix2int15(dx));
     //   printf("dy: %d\n", fix2int15(dy));
