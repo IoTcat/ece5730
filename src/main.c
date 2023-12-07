@@ -92,31 +92,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       begin_time = time_us_32() ;    
       counter += 1;
 
-      // move balls
-      node* current = head;
-      fix15 v_sum = int2fix15(0);
-      if(g_play_state == PLAYING || g_play_state == MENU){
-        while (current != NULL) {
-          if(g_play_state == PLAYING){
-            bounce_function(&current->data);
-          }
-          move_balls(&current->data);
-          if(hitTop(current->data.y) && current->data.vy < 0){
-            g_play_state = GAME_OVER;
-            counter = 0;
-          }
-          v_sum += absfix15(current->data.vx) < MAX_VELOCITY_THAT_EQUALS_ZERO ? int2fix15(0) : absfix15(current->data.vx);
-          v_sum += absfix15(current->data.vy) < MAX_VELOCITY_THAT_EQUALS_ZERO ? int2fix15(0) : absfix15(current->data.vy);
-          current = current->next;
-        }
-      }
 
-      // check if all balls are stopped
-      if(v_sum < MAX_VELOCITY_THAT_EQUALS_ZERO){
-        // all balls are stopped
-        // add a new ball
-        // initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
-      }
+
       if((g_play_state == PLAYING || g_play_state == MENU) && counter == 30){
         // add a new ball
         initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
@@ -170,6 +147,33 @@ static PT_THREAD (protothread_anim(struct pt *pt))
 
         current1 = current1->next;
       }
+
+
+      // move balls
+      node* current = head;
+      fix15 v_sum = int2fix15(0);
+      if(g_play_state == PLAYING || g_play_state == MENU){
+        while (current != NULL) {
+          if(g_play_state == PLAYING){
+            bounce_function(&current->data);
+          }
+          move_balls(&current->data);
+          if(hitTop(current->data.y) && current->data.vy < 0){
+            g_play_state = GAME_OVER;
+            counter = 0;
+          }
+          v_sum += absfix15(current->data.vx) < MAX_VELOCITY_THAT_EQUALS_ZERO ? int2fix15(0) : absfix15(current->data.vx);
+          v_sum += absfix15(current->data.vy) < MAX_VELOCITY_THAT_EQUALS_ZERO ? int2fix15(0) : absfix15(current->data.vy);
+          current = current->next;
+        }
+      }
+      // check if all balls are stopped
+      if(v_sum < MAX_VELOCITY_THAT_EQUALS_ZERO){
+        // all balls are stopped
+        // add a new ball
+        // initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
+      }
+
       
       if(g_play_state == PLAYING){
         drawBoundary();

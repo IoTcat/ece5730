@@ -35,8 +35,6 @@ bool overlaps(ball* a, ball* b) {
 
 
 void avoid_overlap(ball* a, ball* b){
-  drawBall(b, BLACK);
-  drawBall(a, BLACK);
   fix15 m1 = a->type->mass;
   fix15 m2 = b->type->mass;
   fix15 M = m1+ m2;
@@ -54,25 +52,10 @@ void avoid_overlap(ball* a, ball* b){
     fix15 dx_b = multfix15(dx_all, (int2fix15(1) - fm1));
     fix15 dy_b = multfix15(dy_all, (int2fix15(1) - fm1));
 
-    if(dx_a < MAX_VELOCITY_THAT_EQUALS_ZERO || dx_a > -MAX_VELOCITY_THAT_EQUALS_ZERO || dy_a < MAX_VELOCITY_THAT_EQUALS_ZERO || dy_a > -MAX_VELOCITY_THAT_EQUALS_ZERO){
-      drawBall(a, BLACK);
-    }
-    if(dx_b < MAX_VELOCITY_THAT_EQUALS_ZERO || dx_b > -MAX_VELOCITY_THAT_EQUALS_ZERO || dy_b < MAX_VELOCITY_THAT_EQUALS_ZERO || dy_b > -MAX_VELOCITY_THAT_EQUALS_ZERO){
-      drawBall(b, BLACK);
-    }
-
-
     a->x += dx_a;
     a->y += dy_a;
     b->x -= dx_b;
     b->y -= dy_b;
-
-    if(dx_a < MAX_VELOCITY_THAT_EQUALS_ZERO || dx_a > -MAX_VELOCITY_THAT_EQUALS_ZERO || dy_a < MAX_VELOCITY_THAT_EQUALS_ZERO || dy_a > -MAX_VELOCITY_THAT_EQUALS_ZERO){
-      drawBall(a, a->type->color);
-    }
-    if(dx_b < MAX_VELOCITY_THAT_EQUALS_ZERO || dx_b > -MAX_VELOCITY_THAT_EQUALS_ZERO || dy_b < MAX_VELOCITY_THAT_EQUALS_ZERO || dy_b > -MAX_VELOCITY_THAT_EQUALS_ZERO){
-      drawBall(b, b->type->color);
-    }
 
 }
 
@@ -129,13 +112,6 @@ void collide_function(ball* a, ball* b){
     b->vy += multfix15(factor2 , dy);
 
 
-    if(a->vx < MAX_VELOCITY_THAT_EQUALS_ZERO || a->vx > -MAX_VELOCITY_THAT_EQUALS_ZERO || a->vy < MAX_VELOCITY_THAT_EQUALS_ZERO || a->vy > -MAX_VELOCITY_THAT_EQUALS_ZERO){
-      drawBall(a, BLACK);
-    }
-    if(b->vx < MAX_VELOCITY_THAT_EQUALS_ZERO || b->vx > -MAX_VELOCITY_THAT_EQUALS_ZERO || b->vy < MAX_VELOCITY_THAT_EQUALS_ZERO || b->vy > -MAX_VELOCITY_THAT_EQUALS_ZERO){
-      drawBall(b, BLACK);
-    }
-
     b->x += b->vx;
     b->y += b->vy;
     a->x += a->vx;
@@ -143,18 +119,10 @@ void collide_function(ball* a, ball* b){
     a->gravity = false;
     b->gravity = false;
 
-    if(a->vx < MAX_VELOCITY_THAT_EQUALS_ZERO || a->vx > -MAX_VELOCITY_THAT_EQUALS_ZERO || a->vy < MAX_VELOCITY_THAT_EQUALS_ZERO || a->vy > -MAX_VELOCITY_THAT_EQUALS_ZERO){
-      drawBall(a, a->type->color);
-    }
-    if(b->vx < MAX_VELOCITY_THAT_EQUALS_ZERO || b->vx > -MAX_VELOCITY_THAT_EQUALS_ZERO || b->vy < MAX_VELOCITY_THAT_EQUALS_ZERO || b->vy > -MAX_VELOCITY_THAT_EQUALS_ZERO){
-      drawBall(b, b->type->color);
-    }
 }
 
 
 void move_balls(ball* b){
-  // erase ball
-  drawBall(b, BLACK);
   // update ball's position and velocity
   // if(b->gravity) gravity_function(b);
   gravity_function(b);
@@ -179,8 +147,10 @@ void move_balls(ball* b){
   b->x += b->vx;
   b->y += b->vy;
 
-  // draw the ball at its new position
-  drawBall(b, b->type->color);
+  if(fix15abs(b->x-b->fx) > MAX_VELOCITY_THAT_EQUALS_ZERO || fix15abs(b->y-b->fy) > MAX_VELOCITY_THAT_EQUALS_ZERO){
+    drawBall(b, b->type->color);
+  }
+
 }
 
 //merge two balls if they have same radius, delete the second ball
