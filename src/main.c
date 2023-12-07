@@ -209,7 +209,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       
 
       if(g_play_state == MENU){
-        //menu_display();
+        menu_display();
       }
       
       if(g_play_state == GAME_OVER){
@@ -218,9 +218,6 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         };
         printList(game_over_list, 1);
       }
-
-      menu_display();
-
 
 
 
