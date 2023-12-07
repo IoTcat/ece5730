@@ -190,7 +190,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         ball a;
         
         if(prev_b_mode != b_mode){
-          initBall(&a, int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
+          initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
         }
         
         if(!ball_drop){
