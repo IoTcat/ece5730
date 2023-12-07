@@ -12,9 +12,9 @@ int g_bgm = 1;
 
 
 struct list_Item menu_list[3] = {
-    {"START", BLACK, WHITE, 100, 100, 3},
-    {"MODE 1", WHITE, BLACK, 100, 120, 3},
-    {"BGM ON", WHITE, BLACK, 100, 140, 3},
+    {"START", BLACK, WHITE, 200, 140, 3},
+    {"MODE 1", WHITE, BLACK, 200, 180, 3},
+    {"BGM ON", WHITE, BLACK, 200, 220, 3},
 };
 
 void update_menu() {
