@@ -25,7 +25,7 @@
 #define MAX_NUM_OF_BALLS_ON_CORE0 2
 
 #define GRAVITY_MENU 0.11
-#define FRICTION_MENU 0.04
+#define FRICTION_MENU 0.01
 #define GRAVITY_1 0.11
 #define FRICTION_1 0.04
 #define GRAVITY_2 0
