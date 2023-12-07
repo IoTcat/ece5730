@@ -110,7 +110,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         // add a new ball
         // initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
       }
-      if(counter == 60){
+      if(counter == 30){
         // add a new ball
         initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
         counter = 0;
