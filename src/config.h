@@ -2,6 +2,9 @@
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
 
+#include "lib/fix15.h"
+#include "lib/vga_graphics.h"
+
 // uS per frame
 #define FRAME_RATE 33000
 
