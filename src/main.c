@@ -151,13 +151,20 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         // initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
       }
 
-      if(g_play_state == MENU && gpio_value(RIGHT)){
-        
-        menu_select();
-        g_play_state = PLAYING;
-        clearBallList();
-        g_gravity = g_mode ? float2fix15(GRAVITY_2) : float2fix15(GRAVITY_1);
-        g_friction = g_mode ? float2fix15(FRICTION_2) : float2fix15(FRICTION_1);
+      if(g_play_state == MENU){
+        if(gpio_value(RIGHT)){
+          menu_select();
+          g_play_state = PLAYING;
+          clearBallList();
+          g_gravity = g_mode ? float2fix15(GRAVITY_2) : float2fix15(GRAVITY_1);
+          g_friction = g_mode ? float2fix15(FRICTION_2) : float2fix15(FRICTION_1);
+        }
+        if(gpio_value(UP)){
+          menu_up();
+        }
+        if(gpio_value(DOWN)){
+          menu_down();
+        }
       }
 
       if((g_play_state == PLAYING || g_play_state == MENU) && counter == 30){
