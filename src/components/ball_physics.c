@@ -63,9 +63,9 @@ void avoid_overlap(ball* a, ball* b){
 
 //add a gravity function to the balls
 void gravity_function(ball* b){
-  if(hitBottom(b->y + b->type->radius)){
-    return;
-  }
+  // if(hitBottom(b->y + b->type->radius)){
+  //   return;
+  // }
   b->vy += g_gravity;
 }
 
