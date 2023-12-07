@@ -62,7 +62,8 @@
 
 
 
-enum g_play_state {MENU, PREPARE, PLAYING, GAME_OVER};
+enum play_state {MENU, PREPARE, PLAYING, GAME_OVER};
+enum play_state g_play_state = PLAYING;
 
 
 
@@ -100,6 +101,9 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       fix15 v_sum = int2fix15(0);
       while (current != NULL) {
         move_balls(&current->data);
+        if(hitTop(&current->data) && current->data.vy < 0){
+          g_play_state = GAME_OVER;
+        }
         v_sum += absfix15(current->data.vx) < MAX_VELOCITY_THAT_EQUALS_ZERO ? int2fix15(0) : absfix15(current->data.vx);
         v_sum += absfix15(current->data.vy) < MAX_VELOCITY_THAT_EQUALS_ZERO ? int2fix15(0) : absfix15(current->data.vy);
         current = current->next;
@@ -185,7 +189,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
 
       setCursor(65, 20) ;
       writeString("Elapsed time:") ;
-      sprintf(str, "%d",time_us_32()/1000000);
+      // sprintf(str, "%d",time_us_32()/1000000);
+      sprintf(str, "%d", g_play_state);
       writeString(str) ;
 
       setCursor(65, 30) ;
