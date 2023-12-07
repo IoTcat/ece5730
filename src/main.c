@@ -101,7 +101,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       fix15 v_sum = int2fix15(0);
       while (current != NULL) {
         move_balls(&current->data);
-        if(hitTop(&current->data) && current->data.vy < 0){
+        if(hitTop(current->data.y) && current->data.vy < 0){
           g_play_state = GAME_OVER;
         }
         v_sum += absfix15(current->data.vx) < MAX_VELOCITY_THAT_EQUALS_ZERO ? int2fix15(0) : absfix15(current->data.vx);
