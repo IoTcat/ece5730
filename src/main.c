@@ -272,7 +272,9 @@ int main(){
   gpio_pull_up(JOSTICK_DOWN);
   gpio_pull_up(JOSTICK_LEFT);
   gpio_pull_up(JOSTICK_RIGHT);
-
+  //print 1 if pressed
+  printf("%d\n", gpio_get(JOSTICK_LEFT));
+  printf("%d\n", gpio_get(JOSTICK_RIGHT));
 
   // start core 1 
   multicore_reset_core1();
