@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "../config.h"
-// Include protothreads
-#include "lib/pt_cornell_rp2040_v1.h"
+
 
 enum joystick_direction {UP, DOWN, LEFT, RIGHT};
 
