@@ -165,7 +165,7 @@ void merge_function(ball* a, ball* b){
   drawBall(b, BLACK);
   drawBall(a, BLACK);
   // merge two balls become next type
-  a->type = &ball_types[ball_type_index(a->type) + 1];
+  a->type = &ball_types[a->type - ball_types + 1];
   
   // remove the second ball
   // removeBallNode(current2);
