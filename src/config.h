@@ -24,7 +24,7 @@
 #define MAX_NUM_OF_BALLS 4
 #define MAX_NUM_OF_BALLS_ON_CORE0 2
 
-#define GRAVITY 0.11
+#define GRAVITY 0.21
 #define FRICTION 0.04
 
 #define JOSTICK_UP 13
