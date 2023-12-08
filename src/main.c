@@ -119,7 +119,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
           node* next = current1->next;
           if(current1->data.ttl <= 0){
             drawBall(&current1->data, BLACK);
-            deleteBall(current1->data);
+            deleteBall(&(current1->data));
           }
           current1 = next;
           continue;
@@ -143,7 +143,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
               total_score += current1->data.type->score;
               total_score -= current2->data.type->score;
               // remove the second ball
-              deleteBall(current2->data);
+              deleteBall(&(current2->data));
               current2 = next;
 
               genEffectBalls(current1->data.x, current1->data.y, current1->data.type->color);

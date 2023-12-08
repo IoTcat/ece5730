@@ -19,13 +19,13 @@ void insertBall(ball data) {
 }
 
 // Function to delete a ball from the linked list
-void deleteBall(ball data) {
+void deleteBall(ball* data) {
   node* current = head;
   node* previous = NULL;
 
   // Traverse the linked list to find the ball to delete
   while (current != NULL) {
-    if (current->data.x == data.x && current->data.y == data.y) {
+    if (data == &current->data) {
       // Ball found, delete it
       if (previous == NULL) {
         // Ball is the head of the linked list
@@ -73,7 +73,7 @@ void clearBallList(){
   node* current = head;
   while (current != NULL) {
     node* next = current->next;
-    deleteBall(current->data);
+    deleteBall(&(current->data));
     current = next;
   }
 }
