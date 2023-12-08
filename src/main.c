@@ -211,7 +211,12 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
     static unsigned int freq = 0 ;
 
     if(beep_head == NULL) {
-        freq = music1_head->frequency;
+        if(music1_head == NULL) {
+            return true ;
+        }
+        else {
+            freq = music1_head->frequency ;
+        }
     } else {
         freq = beep_head->frequency ;
     }
