@@ -211,6 +211,9 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
     static unsigned int freq = 0 ;
 
 
+    if(beep_head == NULL){
+      return true;
+    }
     freq = beep_head->frequency ;
 
     printf("freq: %d\n", freq);
