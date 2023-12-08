@@ -191,6 +191,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       else if (g_play_state == PLAYING && b_mode == CONTROL_MODE){
         if( (prev_b_mode != b_mode) || counter == 0){
           // initBall(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
+          printf("AAAAAAAA: %d",rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT);
           initBall(&a, int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), int2fix15(10), &ball_types[2]);
         }
         if(counter > 30){
