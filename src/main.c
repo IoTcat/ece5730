@@ -287,7 +287,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
               node* next = current2->next;
               // merge two balls
               merge_function(&current1->data, &current2->data);
-              update_beep(1000-fix2int15(current1->data.type->radius), 1000) ;
+              update_beep(1000-fix2int15(current1->data.type->radius)*10, 1000) ;
               total_score += current1->data.type->score;
               total_score -= current2->data.type->score;
               // remove the second ball
