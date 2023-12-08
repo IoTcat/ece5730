@@ -63,7 +63,7 @@ void initBall(ball* a, fix15 x, fix15 y, fix15 vx, fix15 vy, ball_type* type, bo
     a->collidable = false;
     a->ttl = 0;
   }
-  a->primary_color = -1;
+  a->primary_color = -99;
 }
 
 

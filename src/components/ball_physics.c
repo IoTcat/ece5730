@@ -149,7 +149,7 @@ void move_balls(ball* b){
 
   if(fix15abs(b->x-b->fx) > MAX_VELOCITY_THAT_EQUALS_ZERO || fix15abs(b->y-b->fy) > MAX_VELOCITY_THAT_EQUALS_ZERO){
     
-    if(b->primary_color != -1){
+    if(b->primary_color != -99){
       drawBall(b, b->primary_color);
     }else{
       drawBall(b, b->type->color);
