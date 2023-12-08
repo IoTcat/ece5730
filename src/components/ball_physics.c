@@ -142,6 +142,14 @@ void move_balls(ball* b){
     // friction
     b->vy = b->vy > 0 ? b->vy - multfix15(g_friction, b->vy) : b->vy + multfix15(g_friction, -b->vy);
   }
+
+  // avoid vibration
+  if(fix15abs(b->vx) < MAX_VELOCITY_THAT_EQUALS_ZERO){
+    b->vx = 0;
+  }
+  if(fix15abs(b->vy) < MAX_VELOCITY_THAT_EQUALS_ZERO){
+    b->vy = 0;
+  }
   
   // update ball's position and velocity
   b->x += b->vx;
