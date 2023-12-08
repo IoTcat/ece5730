@@ -205,11 +205,11 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         }
         if(gpio_value(RIGHT)){
           drawBall(&a, BLACK);
-          a.x += int2fix15(1);
+          a.x += int2fix15(5);
         }
         if(gpio_value(LEFT)){
           drawBall(&a, BLACK);
-          a.x -= int2fix15(1);
+          a.x -= int2fix15(5);
         }
         
       }
