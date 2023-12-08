@@ -137,51 +137,75 @@ volatile int corenum_0  ;
 // Global counter for spinlock experimenting
 volatile int global_counter = 0 ;
 
+struct beep {
+    unsigned int frequency ;
+    unsigned int duration ;
+    struct beep *next ;
+} ;
+
+
+struct beep *beep_head = NULL ;
+
+void attach_beep(unsigned int frequency, unsigned int duration) {
+    struct beep *new_beep = malloc(sizeof(struct beep)) ;
+    new_beep->frequency = frequency ;
+    new_beep->duration = duration ;
+    new_beep->next = NULL ;
+
+    if (beep_head == NULL) {
+        beep_head = new_beep ;
+    }
+    else {
+        struct beep *current = beep_head ;
+        while (current->next != NULL) {
+            current = current->next ;
+        }
+        current->next = new_beep ;
+    }
+}
+
+void detach_beep() {
+    if (beep_head == NULL) {
+        return ;
+    }
+    else {
+        struct beep *current = beep_head ;
+        beep_head = beep_head->next ;
+        free(current) ;
+    }
+}
+
+
 // This timer ISR is called on core 0
 bool repeating_timer_callback_core_1(struct repeating_timer *t) {
 
-    if (STATE_0 == 0) {
-        // DDS phase and sine table lookup
-        unsigned int formula =  count_0 < 3500 ? count_0 > 1500 ? 200 : 0 : 0;
-        phase_incr_main_0 = ((formula)*two32)/Fs ;
-        
-        phase_accum_main_0 += phase_incr_main_0  ;
-        DAC_output_0 = fix2int15(multfix15(current_amplitude_0,
-            sin_table[phase_accum_main_0>>24])) + 2048 ;
-
-        // Ramp up amplitude
-        if (count_0 < ATTACK_TIME) {
-            current_amplitude_0 = (current_amplitude_0 + attack_inc) ;
-        }
-        // Ramp down amplitude
-        else if (count_0 > BEEP_DURATION - DECAY_TIME) {
-            current_amplitude_0 = (current_amplitude_0 - decay_inc) ;
-        }
-
-        // Mask with DAC control bits
-        DAC_data_0 = (DAC_config_chan_B | (DAC_output_0 & 0xffff))  ;
-
-        // SPI write (no spinlock b/c of SPI buffer)
-        spi_write16_blocking(SPI_PORT, &DAC_data_0, 1) ;
-
-        // Increment the counter
-        count_0 += 1 ;
-
-        // State transition?
-        if (count_0 == BEEP_DURATION) {
-            STATE_0 = 1 ;
-            count_0 = 0 ;
-        }
+    if(g_bgm == 0){
+      return true;
     }
 
+    if(beep_head == NULL) {
+        return true ;
+    }
+
+
+    phase_incr_main_0 = ((beep_head->frequency)*two32)/Fs ;
+    
+    phase_accum_main_0 += phase_incr_main_0  ;
+    DAC_output_0 = fix2int15(multfix15(current_amplitude_0,
+        sin_table[phase_accum_main_0>>24])) + 2048 ;
+
+    // Mask with DAC control bits
+    DAC_data_0 = (DAC_config_chan_B | (DAC_output_0 & 0xffff))  ;
+
+    // SPI write (no spinlock b/c of SPI buffer)
+    spi_write16_blocking(SPI_PORT, &DAC_data_0, 1) ;
+
+    // Increment the counter
+    beep_head->duration -= 1 ;
+
     // State transition?
-    else {
-        count_0 += 1 ;
-        if (count_0 == BEEP_REPEAT_INTERVAL) {
-            current_amplitude_0 = 0 ;
-            STATE_0 = 0 ;
-            count_0 = 0 ;
-        }
+    if (beep_head->duration <= 0) {
+        detach_beep() ;
     }
 
     // retrieve core number of execution
@@ -262,6 +286,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
             }
             avoid_overlap(&current1->data, &current2->data);
             collide_function(&current1->data, &current2->data);
+
+            attach_beep(200, 1000) ;
           }
           current2 = current2->next;
         }
