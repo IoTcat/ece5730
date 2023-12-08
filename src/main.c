@@ -412,57 +412,34 @@ static PT_THREAD (protothread_anim(struct pt *pt))
 } // animation thread
 
 
-// Animation on core 1
-static PT_THREAD (protothread_anim1(struct pt *pt))
-{
-    // Mark beginning of thread
-    PT_BEGIN(pt);
 
-    // Variables for maintaining frame rate
-    static int begin_time ;
-    static int spare_time ;
-
-
-    while(1) {
-      // Measure time at start of thread
-      begin_time = time_us_32() ;  
-
-      // for (int i = MAX_NUM_OF_BALLS_ON_CORE0; i < MAX_NUM_OF_BALLS; i++){
-      //   move_balls(&balls[i]);
-      // }
-
-      // // delay in accordance with frame rate
-      spare_time = FRAME_RATE - (time_us_32() - begin_time) ;
-      // // yield for necessary amount of time
-
-      g_core1_spare_time = spare_time;
-
-      PT_YIELD_usec(spare_time) ;
-     // NEVER exit while
-    } // END WHILE(1)
-  PT_END(pt);
-} // animation thread
 
 // ========================================
 // === core 1 main -- started in main below
 // ========================================
+
+
+
 void core1_main(){
   
-  // Create a repeating timer that calls 
-  // repeating_timer_callback (defaults core 0)
-  struct repeating_timer timer_core_1;
 
-  // Negative delay so means we will call repeating_timer_callback, and call it
-  // again 25us (40kHz) later regardless of how long the callback took to execute
-  add_repeating_timer_us(-25, 
-      repeating_timer_callback_core_1, NULL, &timer_core_1);
-  // Add animation thread
-  pt_add_thread(protothread_anim1);
-  
-  
+    // create an alarm pool on core 1
+    alarm_pool_t *core1pool ;
+    core1pool = alarm_pool_create(2, 16) ;
 
-  // Start the scheduler
-  pt_schedule_start ;
+    // Create a repeating timer that calls repeating_timer_callback.
+    struct repeating_timer timer_core_1;
+
+    // Negative delay so means we will call repeating_timer_callback, and call it
+    // again 25us (40kHz) later regardless of how long the callback took to execute
+    alarm_pool_add_repeating_timer_us(core1pool, -25, 
+        repeating_timer_callback_core_1, NULL, &timer_core_1);
+
+    // Add thread to core 1
+    // pt_add_thread(protothread_core_1) ;
+
+    // Start scheduler on core 1
+    pt_schedule_start ;
 
 }
 
@@ -476,6 +453,36 @@ int main(){
   const uint32_t sys_clock = 250000;
   set_sys_clock_khz(sys_clock, true);
   stdio_init_all() ;
+
+// Initialize SPI channel (channel, baud rate set to 20MHz)
+    spi_init(SPI_PORT, 20000000) ;
+    // Format (channel, data bits per transfer, polarity, phase, order)
+    spi_set_format(SPI_PORT, 16, 0, 0, 0);
+
+        // Map SPI signals to GPIO ports
+    gpio_set_function(PIN_MISO, GPIO_FUNC_SPI);
+    gpio_set_function(PIN_SCK, GPIO_FUNC_SPI);
+    gpio_set_function(PIN_MOSI, GPIO_FUNC_SPI);
+    gpio_set_function(PIN_CS, GPIO_FUNC_SPI) ;
+
+        // Map LDAC pin to GPIO port, hold it low (could alternatively tie to GND)
+    gpio_init(LDAC) ;
+    gpio_set_dir(LDAC, GPIO_OUT) ;
+    gpio_put(LDAC, 0) ;
+
+    // set up increments for calculating bow envelope
+    attack_inc = divfix(max_amplitude, int2fix15(ATTACK_TIME)) ;
+    decay_inc =  divfix(max_amplitude, int2fix15(DECAY_TIME)) ;
+
+
+        // Build the sine lookup table
+    // scaled to produce values between 0 and 4096 (for 12-bit DAC)
+    int ii;
+    for (ii = 0; ii < sine_table_size; ii++){
+         sin_table[ii] = float2fix15(2047*sin((float)ii*6.283/(float)sine_table_size));
+    }
+
+
 
   // initialize VGA
   initVGA() ;
