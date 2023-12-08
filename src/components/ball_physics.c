@@ -112,12 +112,25 @@ void collide_function(ball* a, ball* b){
     b->vy += multfix15(factor2 , dy);
 
 
+  
+    fix15 distance = sqrtfix(dist_squared);
+    a->vx -= multfix15(float2fix15(ELASTICITY), divfix(b->x - a->x, distance));
+    a->vy -= multfix15(float2fix15(ELASTICITY), divfix(b->y - a->y, distance));
+    b->vx += multfix15(float2fix15(ELASTICITY), divfix(b->x - a->x, distance));
+    b->vy += multfix15(float2fix15(ELASTICITY), divfix(b->y - a->y, distance));
+    
+
+
+
+
     b->x += b->vx;
     b->y += b->vy;
     a->x += a->vx;
     a->y += a->vy;
     a->gravity = false;
     b->gravity = false;
+
+
 
 }
 
