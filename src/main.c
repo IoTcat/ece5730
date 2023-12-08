@@ -238,7 +238,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       
       prev_b_mode = b_mode;
 
-      if(g_play_state == GAME_OVER && counter == 300){
+      if(g_play_state == GAME_OVER && (counter == 300 || gpio_edge(DOWN) || gpio_edge(UP) || gpio_edge(LEFT) || gpio_edge(RIGHT))){
         // remove all balls
         clearBallList();
         // reset score
