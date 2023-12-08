@@ -468,8 +468,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       sprintf(left_list[1].str, "Play State: %d", g_play_state);
       sprintf(left_list[2].str, "Time Elapsed: %d", time_us_32()/1000000);
       sprintf(left_list[3].str, "V_sum: %f", fix2float15(v_sum));
-      sprintf(left_list[4].str, "Spare Time 0: %d", spare_time);
-      sprintf(left_list[5].str, "Spare Time 1: %d", g_core1_spare_time);
+      // sprintf(left_list[4].str, "Spare Time 0: %d", spare_time);
+      // sprintf(left_list[5].str, "Spare Time 1: %d", g_core1_spare_time);
 
 
       printList(left_list, 6);
