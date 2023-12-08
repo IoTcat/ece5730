@@ -142,7 +142,7 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
 
     if (STATE_0 == 0) {
         // DDS phase and sine table lookup
-        unsigned int formula = 5000 - (count_0 * 0.3);
+        unsigned int formula = 2000 - (count_0 * 0.1);
         phase_incr_main_0 = ((formula)*two32)/Fs ;
         
         phase_accum_main_0 += phase_incr_main_0  ;
