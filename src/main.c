@@ -167,7 +167,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
             bounce_function(&current->data);
           }
           move_balls(&current->data);
-          if(hitTop(current->data.y-current->data.type->radius) && current->data.vy < 0){
+          if(current->data.collidable && hitTop(current->data.y-current->data.type->radius) && current->data.vy < 0){
             g_play_state = GAME_OVER;
             counter = 0;
           }
