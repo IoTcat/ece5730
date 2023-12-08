@@ -114,10 +114,10 @@ void collide_function(ball* a, ball* b){
 
   
     fix15 distance = sqrtfix(dist_squared);
-    a->vx =  multfix15(a->vx, multfix15(float2fix15(ELASTICITY), divfix(fix15abs(b->x - a->x), distance)));
-    a->vy =  multfix15(a->vy, multfix15(float2fix15(ELASTICITY), divfix(fix15abs(b->y - a->y), distance)));
-    b->vx =  multfix15(b->vx, multfix15(float2fix15(ELASTICITY), divfix(fix15abs(b->x - a->x), distance)));
-    b->vy =  multfix15(b->vy, multfix15(float2fix15(ELASTICITY), divfix(fix15abs(b->y - a->y), distance)));
+    a->vx =  multfix15(a->vx, int2fix15(1) - multfix15(float2fix15(ELASTICITY), divfix(fix15abs(b->x - a->x), distance)));
+    b->vx =  multfix15(b->vx, int2fix15(1) - multfix15(float2fix15(ELASTICITY), divfix(fix15abs(b->x - a->x), distance)));
+    a->vy =  multfix15(a->vy, int2fix15(1) - multfix15(float2fix15(ELASTICITY), divfix(fix15abs(b->y - a->y), distance)));
+    b->vy =  multfix15(b->vy, int2fix15(1) - multfix15(float2fix15(ELASTICITY), divfix(fix15abs(b->y - a->y), distance)));
     
 
 
@@ -144,7 +144,7 @@ void move_balls(ball* b){
   
   // avoid vibration
   if(fix15abs(b->vx) < MAX_VELOCITY_THAT_EQUALS_ZERO){
-    // b->vx = 0;
+    b->vx = 0;
   } else {
     // friction
     b->vx = b->vx > 0 ? b->vx - multfix15(g_friction, b->vx) : b->vx + multfix15(g_friction, -b->vx);
