@@ -567,12 +567,12 @@ int main(){
     attach_beep(523, peace, music1_head); // C5
     attach_beep(0, peace, music1_head);
 
-    // loop back to the beginning
-    struct beep *current = music1_head;
-    while(current->next != NULL){
-      current = current->next;
-    }
-    current->next = music1_head;
+    // // loop back to the beginning
+    // struct beep *current = music1_head;
+    // while(current->next != NULL){
+    //   current = current->next;
+    // }
+    // current->next = music1_head;
 
 
   // initialize VGA
