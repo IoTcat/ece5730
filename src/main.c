@@ -173,24 +173,24 @@ void attach_beep(unsigned int frequency, unsigned int duration, struct beep **he
     }
 }
 
-void detach_beep(struct beep *head) {
-    if (head == NULL) {
+void detach_beep(struct beep **head) {
+    if (*head == NULL) {
         return ;
     }
     else {
-        struct beep *current = head ;
-        head = head->next ;
+        struct beep *current = *head ;
+        *head = (*head)->next ;
         free(current) ;
     }
 }
 
-void update_beep(unsigned int frequency, unsigned int duration, struct beep *head) {
+void update_beep(unsigned int frequency, unsigned int duration, struct beep **head) {
     if (head == NULL) {
-        attach_beep(frequency, duration, &head) ;
+        attach_beep(frequency, duration, head) ;
     }
     else {
-        head->frequency = frequency ;
-        head->duration = duration ;
+        (*head)->frequency = frequency ;
+        (*head)->duration = duration ;
     }
 }
 
@@ -237,7 +237,7 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
 
     // State transition?
     if (beep_head->duration <= 0) {
-        detach_beep(beep_head) ;
+        detach_beep(&beep_head) ;
     }
 
     if (music1_head->duration <= 0) {
