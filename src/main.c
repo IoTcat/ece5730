@@ -447,17 +447,19 @@ static PT_THREAD (protothread_anim1(struct pt *pt))
 // === core 1 main -- started in main below
 // ========================================
 void core1_main(){
+  
+  // Create a repeating timer that calls 
+  // repeating_timer_callback (defaults core 0)
+  struct repeating_timer timer_core_1;
+
+  // Negative delay so means we will call repeating_timer_callback, and call it
+  // again 25us (40kHz) later regardless of how long the callback took to execute
+  add_repeating_timer_us(-25, 
+      repeating_timer_callback_core_1, NULL, &timer_core_1);
   // Add animation thread
   pt_add_thread(protothread_anim1);
   
-  // Create a repeating timer that calls 
-    // repeating_timer_callback (defaults core 0)
-    struct repeating_timer timer_core_1;
-
-    // Negative delay so means we will call repeating_timer_callback, and call it
-    // again 25us (40kHz) later regardless of how long the callback took to execute
-    add_repeating_timer_us(-25, 
-        repeating_timer_callback_core_1, NULL, &timer_core_1);
+  
 
   // Start the scheduler
   pt_schedule_start ;
