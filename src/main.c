@@ -213,32 +213,10 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         }
         
       }
-      // else if(b_mode == CONTROL_MODE){
-        
-      //   if(prev_b_mode != b_mode){
-      //     initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
-      //   }
-        
-      //   if(!ball_drop){
-      //     drawBall(&a, a.type->color);
-          
-      //     if(gpio_value(DOWN)){
-      //       ball_drop = 1;
-      //       drawBall(&a, BLACK);
-      //       insertBall(a);
-      //     }
-      //     if(gpio_value(RIGHT)){
-      //       drawBall(&a, BLACK);
-      //       a.x += int2fix15(10);
-      //       drawBall(&a, a.type->color);
-      //     }
-      //   }
-        
-      // }
       
       prev_b_mode = b_mode;
 
-      if(g_play_state == GAME_OVER && (counter == 300 || gpio_edge(DOWN) || gpio_edge(UP) || gpio_edge(LEFT) || gpio_edge(RIGHT))){
+      if(g_play_state == GAME_OVER && (counter == 300 || counter>100 &&(gpio_edge(DOWN) || gpio_edge(UP) || gpio_edge(LEFT) || gpio_edge(RIGHT)))){
         // remove all balls
         clearBallList();
         // reset score
