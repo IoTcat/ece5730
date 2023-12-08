@@ -218,7 +218,7 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
 
     if(beep_head == NULL){
       freq = music1_head->frequency ;
-      amplitude = float2fix15(0.5) ;
+      amplitude = float2fix15(0.3) ;
     } else {
       freq = beep_head->frequency ;
       amplitude = float2fix15(1) ;
