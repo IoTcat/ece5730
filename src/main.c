@@ -142,6 +142,8 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
 
     if (STATE_0 == 0) {
         // DDS phase and sine table lookup
+        phase_incr_main_0 = (((1.84*(0.0001)*count_0*count_0) + 2000)*two32)/Fs ;
+        
         phase_accum_main_0 += phase_incr_main_0  ;
         DAC_output_0 = fix2int15(multfix15(current_amplitude_0,
             sin_table[phase_accum_main_0>>24])) + 2048 ;
