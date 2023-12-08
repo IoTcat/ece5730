@@ -118,6 +118,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
           current1->data.ttl -= 1;
           node* next = current1->next;
           if(current1->data.ttl <= 0){
+            drawBall(&current1->data, BLACK);
             deleteBall(current1->data);
           }
           current1 = next;
