@@ -186,7 +186,8 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
     if(beep_head == NULL) {
         return true ;
     }
-
+    printf("freq: %d\n", beep_head->frequency);
+    printf("duration: %d\n", beep_head->duration);
 
     phase_incr_main_0 = ((beep_head->frequency)*two32)/Fs ;
     
