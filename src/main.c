@@ -191,8 +191,9 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
     phase_incr_main_0 = ((beep_head->frequency)*two32)/Fs ;
     
     phase_accum_main_0 += phase_incr_main_0  ;
-    DAC_output_0 = fix2int15(multfix15(current_amplitude_0,
+    DAC_output_0 = fix2int15(multfix15(1,
         sin_table[phase_accum_main_0>>24])) + 2048 ;
+
 
     // Mask with DAC control bits
     DAC_data_0 = (DAC_config_chan_B | (DAC_output_0 & 0xffff))  ;
