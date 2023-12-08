@@ -221,6 +221,7 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
       amplitude = float2fix15(0.5) ;
     } else {
       freq = beep_head->frequency ;
+      amplitude = float2fix15(1) ;
     }
 
     phase_incr_main_0 = ((freq)*two32)/Fs ;
