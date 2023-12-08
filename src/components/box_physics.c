@@ -12,7 +12,7 @@
 void bounce_function(ball* b){
   if(hitBottom(b->y + b->type->radius)){
     b->y = int2fix15(BOX_BOTTOM) - b->type->radius;
-    b->vy = -b->vy;
+    b->vy = multfix15(-b->vy, float2fix15(1-ELASTICITY));
     // b->vy = 0;
   }
   if(hitLeft(b->x - b->type->radius)){

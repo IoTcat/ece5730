@@ -27,7 +27,7 @@
 #define GRAVITY_MENU 0.15
 #define FRICTION_MENU 0.05
 #define GRAVITY_1 0.11
-#define FRICTION_1 0.03
+#define FRICTION_1 0.02
 #define GRAVITY_2 0
 #define FRICTION_2 0.04
 
