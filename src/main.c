@@ -196,8 +196,8 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
     if(beep_head == NULL) {
         return true ;
     }
-    printf("freq: %d\n", beep_head->frequency);
-    printf("duration: %d\n", beep_head->duration);
+    // printf("freq: %d\n", beep_head->frequency);
+    // printf("duration: %d\n", beep_head->duration);
 
     phase_incr_main_0 = ((beep_head->frequency)*two32)/Fs ;
     
@@ -299,7 +299,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
             avoid_overlap(&current1->data, &current2->data);
             collide_function(&current1->data, &current2->data);
 
-            update_beep(200, 1000) ;
+            update_beep(1000, 1000) ;
           }
           current2 = current2->next;
         }
