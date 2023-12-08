@@ -175,6 +175,16 @@ void detach_beep() {
     }
 }
 
+void update_beep(unsigned int frequency, unsigned int duration) {
+    if (beep_head == NULL) {
+        attach_beep(frequency, duration) ;
+    }
+    else {
+        beep_head->frequency = frequency ;
+        beep_head->duration = duration ;
+    }
+}
+
 
 // This timer ISR is called on core 0
 bool repeating_timer_callback_core_1(struct repeating_timer *t) {
@@ -289,7 +299,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
             avoid_overlap(&current1->data, &current2->data);
             collide_function(&current1->data, &current2->data);
 
-            attach_beep(200, 1000) ;
+            update_beep(200, 1000) ;
           }
           current2 = current2->next;
         }
