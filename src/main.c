@@ -117,7 +117,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         if(current1->data.collidable == false){
           current1->data.ttl -= 1;
           node* next = current1->next;
-          if(current1->data.ttl <= -300){
+          if(current1->data.ttl <= -100){
             drawBall(&current1->data, BLACK);
             deleteBall(&(current1->data));
           }
