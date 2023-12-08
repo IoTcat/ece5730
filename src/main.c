@@ -217,7 +217,15 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
     static fix15 amplitude = 0 ;
 
     if(beep_head == NULL){
-      freq = music1_head->frequency ;
+      if(g_play_state == PLAYING){
+        if(g_mode == 0){
+          freq = music1_head->frequency ;
+        } else {
+          freq = music2_head->frequency ;
+        }
+      } else {
+        return true;
+      }
       amplitude = float2fix15(0.3) ;
     } else {
       freq = beep_head->frequency ;
@@ -240,6 +248,7 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
     // Increment the counter
     beep_head->duration -= 1 ;
     music1_head->duration -= 1 ;
+    music2_head->duration -= 1 ;
 
     // State transition?
     if (beep_head->duration <= 0) {
@@ -249,6 +258,11 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
     if (music1_head->duration <= 0) {
         music1_head->duration = music1_head->next->duration;
         music1_head = music1_head->next;
+    }
+
+    if (music2_head->duration <= 0) {
+        music2_head->duration = music2_head->next->duration;
+        music2_head = music2_head->next;
     }
 
 
@@ -579,6 +593,33 @@ int main(){
       current = current->next;
     }
     current->next = music1_head;
+
+
+
+    attach_beep(783, peace, &music2_head); // G5
+    attach_beep(0, peace, &music2_head);
+    attach_beep(783, peace, &music2_head); // G5
+    attach_beep(0, peace, &music2_head);
+    attach_beep(493, peace, &music2_head); // B4
+    attach_beep(0, peace, &music2_head);
+    attach_beep(493, peace, &music2_head); // B4
+    attach_beep(0, peace, &music2_head);
+    attach_beep(587, peace, &music2_head); // D5
+    attach_beep(0, peace, &music2_head);
+    attach_beep(587, peace, &music2_head); // D5
+    attach_beep(0, peace, &music2_head);
+    attach_beep(659, peace, &music2_head); // E5
+    attach_beep(0, peace, &music2_head);
+    attach_beep(659, peace, &music2_head); // E5
+    attach_beep(0, peace, &music2_head);
+
+    // loop back to the beginning
+    current = music2_head;
+    while(current->next != NULL){
+      current = current->next;
+    }
+    current->next = music2_head;
+
 
 
   // initialize VGA
