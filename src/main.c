@@ -113,8 +113,23 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       // collision detection
       node* current1 = head;
       while (current1 != NULL) {
+        // skip non-collidable balls
+        if(current1->data.collidable == false){
+          current1->data.ttl -= 1;
+          node* next = current1->next;
+          if(current1->data.ttl <= 0){
+            deleteBall(current1->data);
+          }
+          current1 = next;
+          continue;
+        }
         node* current2 = head;
         while (current2 != current1 && current2 != NULL) {
+          // skip non-collidable balls
+          if(current2->data.collidable == false){
+            current2 = current2->next;
+            continue;
+          }
           // if(fix15abs(current1->data.x - current2->data.x) < current1->data.type->radius + current2->data.type->radius && fix15abs(current1->data.y - current2->data.y) < current1->data.type->radius + current2->data.type->radius){
           // printf("%d\n", overlaps(&current1->data, &current2->data));
           if(overlaps(&current1->data, &current2->data)){
@@ -129,6 +144,8 @@ static PT_THREAD (protothread_anim(struct pt *pt))
               // remove the second ball
               deleteBall(current2->data);
               current2 = next;
+
+              genEffectBalls(current1->data.x, current1->data.y, current1->data.type->color);
               continue;
             }
             avoid_overlap(&current1->data, &current2->data);

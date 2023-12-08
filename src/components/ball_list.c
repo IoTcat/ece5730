@@ -46,13 +46,28 @@ void deleteBall(ball data) {
 void initBallNode(fix15 init_x, ball_type* type){
   ball a;
   if(g_mode == 0){
-    initBall(&a, init_x, int2fix15(10), type);
+    initBall(&a, init_x, int2fix15(DROP_Y), int2fix15(0), int2fix15(10), type, true);
   }else{
-    initBall(&a, init_x, int2fix15(20), type);
+    initBall(&a, init_x, int2fix15(DROP_Y), int2fix15(0), int2fix15(20), type, true);
   }
   insertBall(a);
 }
 
+
+void initEffectBallNode(fix15 x, fix15 y, fix15 vx, fix15 vy, char color){
+  ball a;
+  ball_type type = {int2fix15(10), int2fix15(1), color, 0};
+  initBall(&a, x, y, vx, vy, &type, false);
+  insertBall(a);
+}
+
+void genEffectBalls(fix15 x, fix15 y, char color){
+  for(int i = 0; i < 10; i++){
+    fix15 vx = int2fix15(rand() % 40 - 20);
+    fix15 vy = int2fix15(rand() % 40 - 20);
+    initEffectBallNode(x, y, vx, vy, color);
+  }
+}
 
 void clearBallList(){
   node* current = head;

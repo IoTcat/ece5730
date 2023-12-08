@@ -39,20 +39,30 @@ typedef struct ball{
   fix15 vy;
   ball_type* type;
   bool gravity;
+  bool collidable;
+  int ttl;
 }ball;
 
 
 //init balls
-void initBall(ball* a, fix15 init_x, fix15 init_vy, ball_type* type){
-  a->x = init_x;
-  a->y = int2fix15(DROP_Y);
-  a->fx = init_x;
-  a->fy = int2fix15(DROP_Y);
-  a->vx = int2fix15(0);//int2fix15(rand() % 2 - 1);
-  a->vy = init_vy;
+void initBall(ball* a, fix15 x, fix15 y, fix15 vx, fix15 vy, ball_type* type, bool collidable){
+  a->x = x;
+  a->y = y;
+  a->fx = x;
+  a->fy = y;
+  a->vx = vx;
+  a->vy = vy;
   a->type = type;
   a->gravity = true;
+  if(collidable){
+    a->collidable = true;
+    a->ttl = 30;
+  }else{
+    a->collidable = false;
+    a->ttl = 0;
+  }
 }
+
 
 
 // Draw the ball
