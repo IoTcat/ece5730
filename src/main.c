@@ -203,6 +203,14 @@ static PT_THREAD (protothread_anim(struct pt *pt))
           initBallNode(a.x, a.type);
           a.type = &ball_types[rand() % 3];
         }
+        if(gpio_edge(RIGHT)){
+          drawBall(&a, BLACK);
+          a.x += int2fix15(10);
+        }
+        if(gpio_edge(LEFT)){
+          drawBall(&a, BLACK);
+          a.x -= int2fix15(10);
+        }
         
       }
       // else if(b_mode == CONTROL_MODE){
