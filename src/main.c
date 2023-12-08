@@ -146,17 +146,26 @@ struct beep {
 
 struct beep *beep_head = NULL ;
 
-void attach_beep(unsigned int frequency, unsigned int duration) {
+struct beep *music1_head = NULL ;
+struct beep *music2_head = NULL ;
+
+
+unsigned int peace = 1000;
+
+
+
+
+void attach_beep(unsigned int frequency, unsigned int duration, struct beep *head) {
     struct beep *new_beep = malloc(sizeof(struct beep)) ;
     new_beep->frequency = frequency ;
     new_beep->duration = duration ;
     new_beep->next = NULL ;
 
-    if (beep_head == NULL) {
-        beep_head = new_beep ;
+    if (head == NULL) {
+        head = new_beep ;
     }
     else {
-        struct beep *current = beep_head ;
+        struct beep *current = head ;
         while (current->next != NULL) {
             current = current->next ;
         }
@@ -164,26 +173,32 @@ void attach_beep(unsigned int frequency, unsigned int duration) {
     }
 }
 
-void detach_beep() {
-    if (beep_head == NULL) {
+void detach_beep(struct beep *head) {
+    if (head == NULL) {
         return ;
     }
     else {
-        struct beep *current = beep_head ;
-        beep_head = beep_head->next ;
+        struct beep *current = head ;
+        head = head->next ;
         free(current) ;
     }
 }
 
-void update_beep(unsigned int frequency, unsigned int duration) {
-    if (beep_head == NULL) {
-        attach_beep(frequency, duration) ;
+void update_beep(unsigned int frequency, unsigned int duration, struct beep *head) {
+    if (head == NULL) {
+        attach_beep(frequency, duration, head) ;
     }
     else {
-        beep_head->frequency = frequency ;
-        beep_head->duration = duration ;
+        head->frequency = frequency ;
+        head->duration = duration ;
     }
 }
+
+
+
+
+
+
 
 
 // This timer ISR is called on core 0
@@ -193,13 +208,17 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
       return true;
     }
 
+    static unsigned int freq = 0 ;
+
     if(beep_head == NULL) {
-        return true ;
+        freq = music1_head->frequency;
+    } else {
+        freq = beep_head->frequency ;
     }
     // printf("freq: %d\n", beep_head->frequency);
     // printf("duration: %d\n", beep_head->duration);
 
-    phase_incr_main_0 = ((beep_head->frequency)*two32)/Fs ;
+    phase_incr_main_0 = ((freq)*two32)/Fs ;
     
     phase_accum_main_0 += phase_incr_main_0  ;
     DAC_output_0 = fix2int15(multfix15(max_amplitude,
@@ -214,11 +233,18 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
 
     // Increment the counter
     beep_head->duration -= 1 ;
+    music1_head->duration -= 1 ;
 
     // State transition?
     if (beep_head->duration <= 0) {
-        detach_beep() ;
+        detach_beep(beep_head) ;
     }
+
+    if (music1_head->duration <= 0) {
+        music1_head->duration = music1_head->next->duration;
+        music1_head = music1_head->next;
+    }
+
 
     // retrieve core number of execution
     corenum_0 = get_core_num() ;
@@ -287,7 +313,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
               node* next = current2->next;
               // merge two balls
               merge_function(&current1->data, &current2->data);
-              update_beep(1000-fix2int15(current1->data.type->radius)*10, 1000) ;
+              update_beep(1000-fix2int15(current1->data.type->radius)*10, 1000, beep_head);
               total_score += current1->data.type->score;
               total_score -= current2->data.type->score;
               // remove the second ball
@@ -523,6 +549,30 @@ int main(){
          sin_table[ii] = float2fix15(2047*sin((float)ii*6.283/(float)sine_table_size));
     }
 
+
+    attach_beep(329, peace, music1_head); // G4
+    attach_beep(0, peace, music1_head);
+    attach_beep(329, peace, music1_head); // G4
+    attach_beep(0, peace, music1_head);
+    attach_beep(659, peace, music1_head); // E5
+    attach_beep(0, peace, music1_head);
+    attach_beep(659, peace, music1_head); // E5
+    attach_beep(0, peace, music1_head);
+    attach_beep(587, peace, music1_head); // D5
+    attach_beep(0, peace, music1_head);
+    attach_beep(587, peace, music1_head); // D5
+    attach_beep(0, peace, music1_head);
+    attach_beep(523, peace, music1_head); // C5
+    attach_beep(0, peace, music1_head);
+    attach_beep(523, peace, music1_head); // C5
+    attach_beep(0, peace, music1_head);
+
+    // loop back to the beginning
+    struct beep *current = music1_head;
+    while(current->next != NULL){
+      current = current->next;
+    }
+    current->next = music1_head;
 
 
   // initialize VGA
