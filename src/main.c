@@ -216,8 +216,6 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
     }
     freq = beep_head->frequency ;
 
-    printf("freq: %d\n", freq);
-
     phase_incr_main_0 = ((freq)*two32)/Fs ;
     
     phase_accum_main_0 += phase_incr_main_0  ;
@@ -313,7 +311,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
               node* next = current2->next;
               // merge two balls
               merge_function(&current1->data, &current2->data);
-              attach_beep(1000-fix2int15(current1->data.type->radius)*10, 1000, &beep_head);
+              update_beep(1000-fix2int15(current1->data.type->radius)*10, 1000, &beep_head);
               total_score += current1->data.type->score;
               total_score -= current2->data.type->score;
               // remove the second ball
