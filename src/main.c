@@ -60,7 +60,7 @@
 
 #include "components/gpio.c"
 
-
+#include "hardware/spi.h"
 
 
 
@@ -78,6 +78,114 @@ int ball_drop = 0;
 
 int g_core1_spare_time = 0;
 
+//Direct Digital Synthesis (DDS) parameters
+#define two32 4294967296.0  // 2^32 (a constant)
+#define Fs 40000            // sample rate
+
+// the DDS units - core 0
+// Phase accumulator and phase increment. Increment sets output frequency.
+volatile unsigned int phase_accum_main_0;
+volatile unsigned int phase_incr_main_0 = (400.0*two32)/Fs ;
+
+// DDS sine table (populated in main())
+#define sine_table_size 256
+fix15 sin_table[sine_table_size] ;
+
+// Values output to DAC
+int DAC_output_0 ;
+int DAC_output_1 ;
+
+// Amplitude modulation parameters and variables
+fix15 max_amplitude = int2fix15(1) ;    // maximum amplitude
+fix15 attack_inc ;                      // rate at which sound ramps up
+fix15 decay_inc ;                       // rate at which sound ramps down
+fix15 current_amplitude_0 = 0 ;         // current amplitude (modified in ISR)
+fix15 current_amplitude_1 = 0 ;         // current amplitude (modified in ISR)
+
+// Timing parameters for beeps (units of interrupts)
+#define ATTACK_TIME             200
+#define DECAY_TIME              200
+#define SUSTAIN_TIME            10000
+#define BEEP_DURATION           10400
+#define BEEP_REPEAT_INTERVAL    40000
+// State machine variables
+volatile unsigned int STATE_0 = 0 ;
+volatile unsigned int count_0 = 0 ;
+
+// SPI data
+uint16_t DAC_data_1 ; // output value
+uint16_t DAC_data_0 ; // output value
+
+// DAC parameters (see the DAC datasheet)
+// A-channel, 1x, active
+#define DAC_config_chan_A 0b0011000000000000
+// B-channel, 1x, active
+#define DAC_config_chan_B 0b1011000000000000
+
+//SPI configurations (note these represent GPIO number, NOT pin number)
+#define PIN_MISO 4
+#define PIN_CS   5
+#define PIN_SCK  6
+#define PIN_MOSI 7
+#define LDAC     8
+#define LED      25
+#define SPI_PORT spi0
+
+// Two variables to store core number
+volatile int corenum_0  ;
+
+// Global counter for spinlock experimenting
+volatile int global_counter = 0 ;
+
+// This timer ISR is called on core 0
+bool repeating_timer_callback_core_1(struct repeating_timer *t) {
+
+    if (STATE_0 == 0) {
+        // DDS phase and sine table lookup
+        phase_accum_main_0 += phase_incr_main_0  ;
+        DAC_output_0 = fix2int15(multfix15(current_amplitude_0,
+            sin_table[phase_accum_main_0>>24])) + 2048 ;
+
+        // Ramp up amplitude
+        if (count_0 < ATTACK_TIME) {
+            current_amplitude_0 = (current_amplitude_0 + attack_inc) ;
+        }
+        // Ramp down amplitude
+        else if (count_0 > BEEP_DURATION - DECAY_TIME) {
+            current_amplitude_0 = (current_amplitude_0 - decay_inc) ;
+        }
+
+        // Mask with DAC control bits
+        DAC_data_0 = (DAC_config_chan_B | (DAC_output_0 & 0xffff))  ;
+
+        // SPI write (no spinlock b/c of SPI buffer)
+        spi_write16_blocking(SPI_PORT, &DAC_data_0, 1) ;
+
+        // Increment the counter
+        count_0 += 1 ;
+
+        // State transition?
+        if (count_0 == BEEP_DURATION) {
+            STATE_0 = 1 ;
+            count_0 = 0 ;
+        }
+    }
+
+    // State transition?
+    else {
+        count_0 += 1 ;
+        if (count_0 == BEEP_REPEAT_INTERVAL) {
+            current_amplitude_0 = 0 ;
+            STATE_0 = 0 ;
+            count_0 = 0 ;
+        }
+    }
+
+    // retrieve core number of execution
+    corenum_0 = get_core_num() ;
+
+    return true;
+}
 
 // Animation on core 0
 static PT_THREAD (protothread_anim(struct pt *pt))
@@ -341,6 +449,16 @@ static PT_THREAD (protothread_anim1(struct pt *pt))
 void core1_main(){
   // Add animation thread
   pt_add_thread(protothread_anim1);
+  
+  // Create a repeating timer that calls 
+    // repeating_timer_callback (defaults core 0)
+    struct repeating_timer timer_core_1;
+
+    // Negative delay so means we will call repeating_timer_callback, and call it
+    // again 25us (40kHz) later regardless of how long the callback took to execute
+    add_repeating_timer_us(-25, 
+        repeating_timer_callback_core_1, NULL, &timer_core_1);
+
   // Start the scheduler
   pt_schedule_start ;
 
