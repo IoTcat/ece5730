@@ -189,7 +189,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         counter = 0;
       }
       else if (g_play_state == PLAYING && b_mode == CONTROL_MODE){
-        if(prev_b_mode != b_mode || counter == 0){
+        if( (prev_b_mode != b_mode) || counter == 0){
           // initBall(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
           initBall(&a, int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), int2fix15(10), &ball_types[rand() % 3]);
         }
@@ -242,7 +242,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         
       // }
       
-      // prev_b_mode = b_mode;
+      prev_b_mode = b_mode;
 
       if(g_play_state == GAME_OVER && counter == 300){
         // remove all balls
