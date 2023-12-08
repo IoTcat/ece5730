@@ -25,7 +25,7 @@ static ball_type ball_types[8] = {
   {int2fix15(50), int2fix15(25), CYAN, 200},
   {int2fix15(60), int2fix15(36), MAGENTA, 300},
   {int2fix15(70), int2fix15(49), WHITE, 500},
-  {int2fix15(1), int2fix15(1), -1, 0}
+  {int2fix15(1), int2fix15(1), 0, 0}
 };
 
 
@@ -63,7 +63,7 @@ void initBall(ball* a, fix15 x, fix15 y, fix15 vx, fix15 vy, ball_type* type, bo
     a->collidable = false;
     a->ttl = 0;
   }
-  a->primary_color = -99;
+  a->primary_color = 0;
 }
 
 
