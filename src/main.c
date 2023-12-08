@@ -553,22 +553,22 @@ int main(){
     }
 
 
-    attach_beep(329, peace, music1_head); // G4
-    attach_beep(0, peace, music1_head);
-    attach_beep(329, peace, music1_head); // G4
-    attach_beep(0, peace, music1_head);
-    attach_beep(659, peace, music1_head); // E5
-    attach_beep(0, peace, music1_head);
-    attach_beep(659, peace, music1_head); // E5
-    attach_beep(0, peace, music1_head);
-    attach_beep(587, peace, music1_head); // D5
-    attach_beep(0, peace, music1_head);
-    attach_beep(587, peace, music1_head); // D5
-    attach_beep(0, peace, music1_head);
-    attach_beep(523, peace, music1_head); // C5
-    attach_beep(0, peace, music1_head);
-    attach_beep(523, peace, music1_head); // C5
-    attach_beep(0, peace, music1_head);
+    attach_beep(329, peace, &music1_head); // G4
+    attach_beep(0, peace, &music1_head);
+    attach_beep(329, peace, &music1_head); // G4
+    attach_beep(0, peace, &music1_head);
+    attach_beep(659, peace, &music1_head); // E5
+    attach_beep(0, peace, &music1_head);
+    attach_beep(659, peace, &music1_head); // E5
+    attach_beep(0, peace, &music1_head);
+    attach_beep(587, peace, &music1_head); // D5
+    attach_beep(0, peace, &music1_head);
+    attach_beep(587, peace, &music1_head); // D5
+    attach_beep(0, peace, &music1_head);
+    attach_beep(523, peace, &music1_head); // C5
+    attach_beep(0, peace, &music1_head);
+    attach_beep(523, peace, &music1_head); // C5
+    attach_beep(0, peace, &music1_head);
 
     // loop back to the beginning
     struct beep *current = music1_head;
