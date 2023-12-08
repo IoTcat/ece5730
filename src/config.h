@@ -31,7 +31,7 @@
 #define GRAVITY_2 0
 #define FRICTION_2 0.04
 
-#define ELASTICITY 1
+#define ELASTICITY 0.5
 
 #define JOSTICK_UP 13
 #define JOSTICK_DOWN 12
