@@ -205,11 +205,11 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         }
         if(gpio_value(RIGHT)){
           drawBall(&a, BLACK);
-          if(a.x < BOX_RIGHT- fix2int15(a.type->radius)) a.x += int2fix15(7);
+          if(fix2int15(a.x) < BOX_RIGHT- fix2int15(a.type->radius)) a.x += int2fix15(7);
         }
         if(gpio_value(LEFT)){
           drawBall(&a, BLACK);
-          if(a.x > BOX_LEFT+ fix2int15(a.type->radius)) a.x -= int2fix15(7);
+          if(fix2int15(a.x) > BOX_LEFT+ fix2int15(a.type->radius)) a.x -= int2fix15(7);
         }
         
       }
