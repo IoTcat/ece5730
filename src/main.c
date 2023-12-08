@@ -385,6 +385,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
           if(g_menu_index == 0){
           g_play_state = PLAYING;
           clearBallList();
+          total_score = 0;
           g_gravity = g_mode ? float2fix15(GRAVITY_2) : float2fix15(GRAVITY_1);
           g_friction = g_mode ? float2fix15(FRICTION_2) : float2fix15(FRICTION_1);
           }
@@ -405,7 +406,9 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       if((g_play_state == MENU || g_play_state == PLAYING) && b_mode == RANDOM_MODE && counter == 30){
         initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
         //add the score by the type of spawned balls
-        total_score += head->data.type->score;
+        if(g_play_state == PLAYING){
+          total_score += head->data.type->score;
+        }
         counter = 0;
       }
       else if (g_play_state == PLAYING){
@@ -437,6 +440,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         // reset game state
         g_play_state = MENU;
         counter = 0;
+        total_score = 0;
         clearScreen();
         g_gravity = float2fix15(GRAVITY_MENU);
         g_friction = float2fix15(FRICTION_MENU);
