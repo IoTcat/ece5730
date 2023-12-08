@@ -150,7 +150,7 @@ struct beep *music1_head = NULL ;
 struct beep *music2_head = NULL ;
 
 
-unsigned int peace = 1000;
+unsigned int peace = 4000;
 
 
 
