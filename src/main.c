@@ -177,16 +177,47 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         }
       }
       
-      // if(g_play_state == MENU){
-      //   b_mode = RANDOM_MODE;
-      // }
-      // else b_mode = RANDOM_MODE;
+      if(g_play_state == MENU){
+        b_mode = RANDOM_MODE;
+      }
+      else b_mode = CONTROL_MODE;
       
-      if((g_play_state == MENU || g_play_state == PLAYING) && counter == 30){
+      if((g_play_state == MENU || g_play_state == PLAYING) && b_mode == RANDOM_MODE && counter == 30){
         initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
         //add the score by the type of spawned balls
         total_score += head->data.type->score;
         counter = 0;
+      }
+      else if (g_play_state == PLAYING && b_mode == CONTROL_MODE){
+        if(prev_b_mode != b_mode || counter == 0){
+          // initBall(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
+          initBall(&a, int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), int2fix15(10), &ball_types[rand() % 3]);
+        }
+        if(counter > 30){
+          drawBall(&a, a.type->color);
+          if(gpio_edge(DOWN)){
+            ball_drop = 1;
+            drawBall(&a, BLACK);
+            insertBall(a);
+            counter = 0;
+          }
+          // if(gpio_edge(RIGHT)){
+          //   drawBall(&a, BLACK);
+          //   a.x += int2fix15(10);
+          //   drawBall(&a, a.type->color);
+          // }
+        }
+        // else if(counter == 30){
+        //   drawBall(&a, BLACK);
+        //   a.x += int2fix15(10);
+        //   drawBall(&a, a.type->color);
+        // }
+        // else if(counter == 0){
+        //   drawBall(&a, BLACK);
+        //   a.x += int2fix15(10);
+        //   drawBall(&a, a.type->color);
+        // }
+        
       }
       // else if(b_mode == CONTROL_MODE){
         
