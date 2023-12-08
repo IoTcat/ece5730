@@ -91,7 +91,14 @@ static PT_THREAD (protothread_anim(struct pt *pt))
     static int counter = 0;
     static int total_score = 0;
     
-    ball a;
+    ball a = {
+      .x = int2fix15(SCREEN_WIDTH/2),
+      .y = int2fix15(DROP_Y),
+      .vx = int2fix15(0),
+      .vy = int2fix15(0),
+      .type = &ball_types[rand() % 3],
+    };
+  
     
     initBallNode(int2fix15(200), &ball_types[0]);
     initBallNode(int2fix15(400), &ball_types[1]);
@@ -188,36 +195,14 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         total_score += head->data.type->score;
         counter = 0;
       }
-      else if (g_play_state == PLAYING && b_mode == CONTROL_MODE){
-        if( (prev_b_mode != b_mode) || counter == 0){
-          // initBall(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
-          printf("AAAAAAAA: %d",rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT);
-          initBall(&a, int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), int2fix15(10), &ball_types[2]);
+      else if (g_play_state == PLAYING){
+        
+        
+        if(gpio_edge(DOWN)){
+          drawBall(&a, BLACK);
+          initBallNode(a.x, a.type);
+          a.type = &ball_types[rand() % 3];
         }
-        if(counter > 30){
-          drawBall(&a, a.type->color);
-          if(gpio_edge(DOWN)){
-            ball_drop = 1;
-            drawBall(&a, BLACK);
-            insertBall(a);
-            counter = 0;
-          }
-          // if(gpio_edge(RIGHT)){
-          //   drawBall(&a, BLACK);
-          //   a.x += int2fix15(10);
-          //   drawBall(&a, a.type->color);
-          // }
-        }
-        // else if(counter == 30){
-        //   drawBall(&a, BLACK);
-        //   a.x += int2fix15(10);
-        //   drawBall(&a, a.type->color);
-        // }
-        // else if(counter == 0){
-        //   drawBall(&a, BLACK);
-        //   a.x += int2fix15(10);
-        //   drawBall(&a, a.type->color);
-        // }
         
       }
       // else if(b_mode == CONTROL_MODE){
@@ -293,6 +278,10 @@ static PT_THREAD (protothread_anim(struct pt *pt))
 
       if(g_play_state == MENU){
         menu_display();
+      }
+      
+      if(g_play_state == PLAYING){
+        drawBall(&a, a.type->color);
       }
       
       if(g_play_state == GAME_OVER){
