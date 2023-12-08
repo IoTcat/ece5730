@@ -210,16 +210,8 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
 
     static unsigned int freq = 0 ;
 
-    if(beep_head == NULL) {
-        if(music1_head == NULL) {
-            return true ;
-        }
-        else {
-            freq = music1_head->frequency ;
-        }
-    } else {
-        freq = beep_head->frequency ;
-    }
+
+    freq = beep_head->frequency ;
 
     printf("freq: %d\n", freq);
 
@@ -555,22 +547,22 @@ int main(){
     }
 
 
-    attach_beep(329, peace, music1_head); // G4
-    attach_beep(0, peace, music1_head);
-    attach_beep(329, peace, music1_head); // G4
-    attach_beep(0, peace, music1_head);
-    attach_beep(659, peace, music1_head); // E5
-    attach_beep(0, peace, music1_head);
-    attach_beep(659, peace, music1_head); // E5
-    attach_beep(0, peace, music1_head);
-    attach_beep(587, peace, music1_head); // D5
-    attach_beep(0, peace, music1_head);
-    attach_beep(587, peace, music1_head); // D5
-    attach_beep(0, peace, music1_head);
-    attach_beep(523, peace, music1_head); // C5
-    attach_beep(0, peace, music1_head);
-    attach_beep(523, peace, music1_head); // C5
-    attach_beep(0, peace, music1_head);
+    // attach_beep(329, peace, music1_head); // G4
+    // attach_beep(0, peace, music1_head);
+    // attach_beep(329, peace, music1_head); // G4
+    // attach_beep(0, peace, music1_head);
+    // attach_beep(659, peace, music1_head); // E5
+    // attach_beep(0, peace, music1_head);
+    // attach_beep(659, peace, music1_head); // E5
+    // attach_beep(0, peace, music1_head);
+    // attach_beep(587, peace, music1_head); // D5
+    // attach_beep(0, peace, music1_head);
+    // attach_beep(587, peace, music1_head); // D5
+    // attach_beep(0, peace, music1_head);
+    // attach_beep(523, peace, music1_head); // C5
+    // attach_beep(0, peace, music1_head);
+    // attach_beep(523, peace, music1_head); // C5
+    // attach_beep(0, peace, music1_head);
 
     // // loop back to the beginning
     // struct beep *current = music1_head;
