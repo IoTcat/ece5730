@@ -56,8 +56,8 @@ void initBallNode(fix15 init_x, ball_type* type){
 
 void initEffectBallNode(fix15 x, fix15 y, fix15 vx, fix15 vy, char color){
   ball a;
-  ball_type type = {int2fix15(1), int2fix15(1), color, 0};
-  initBall(&a, x, y, vx, vy, &type, false);
+  initBall(&a, x, y, vx, vy, &ball_types[7], false);
+  a.primary_color = color;
   insertBall(a);
 }
 

@@ -17,14 +17,15 @@ typedef struct ball_type{
 
 
 // Ball types array
-static ball_type ball_types[7] = {
+static ball_type ball_types[8] = {
   {int2fix15(10), int2fix15(1), RED, 10},
   {int2fix15(20), int2fix15(4), GREEN, 30},
   {int2fix15(30), int2fix15(9), BLUE, 50},
   {int2fix15(40), int2fix15(16), YELLOW, 100},
   {int2fix15(50), int2fix15(25), CYAN, 200},
   {int2fix15(60), int2fix15(36), MAGENTA, 300},
-  {int2fix15(70), int2fix15(49), WHITE, 500}
+  {int2fix15(70), int2fix15(49), WHITE, 500},
+  {int2fix15(1), int2fix15(1), -1, 0}
 };
 
 
@@ -41,6 +42,7 @@ typedef struct ball{
   bool gravity;
   bool collidable;
   int ttl;
+  char primary_color;
 }ball;
 
 
@@ -61,6 +63,7 @@ void initBall(ball* a, fix15 x, fix15 y, fix15 vx, fix15 vy, ball_type* type, bo
     a->collidable = false;
     a->ttl = 0;
   }
+  a->primary_color = -1;
 }
 
 
