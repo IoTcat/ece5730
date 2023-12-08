@@ -214,9 +214,11 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
     }
 
     static unsigned int freq = 0 ;
+    static fix15 amplitude = 0 ;
 
     if(beep_head == NULL){
       freq = music1_head->frequency ;
+      amplitude = float2fix15(0.5) ;
     } else {
       freq = beep_head->frequency ;
     }
@@ -224,7 +226,7 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
     phase_incr_main_0 = ((freq)*two32)/Fs ;
     
     phase_accum_main_0 += phase_incr_main_0  ;
-    DAC_output_0 = fix2int15(multfix15(max_amplitude,
+    DAC_output_0 = fix2int15(multfix15(amplitude,
         sin_table[phase_accum_main_0>>24])) + 2048 ;
 
 
