@@ -18,7 +18,7 @@ typedef struct ball_type{
 
 // Ball types array
 static ball_type ball_types[8] = {
-  {int2fix15(10), int2fix15(1), RED, 10},
+  {int2fix15(10), int2fix15(2), RED, 10},
   {int2fix15(20), int2fix15(4), GREEN, 30},
   {int2fix15(30), int2fix15(9), BLUE, 50},
   {int2fix15(40), int2fix15(16), YELLOW, 100},
