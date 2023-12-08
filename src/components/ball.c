@@ -56,7 +56,7 @@ void initBall(ball* a, fix15 x, fix15 y, fix15 vx, fix15 vy, ball_type* type, bo
   a->gravity = true;
   if(collidable){
     a->collidable = true;
-    a->ttl = 30;
+    a->ttl = 300;
   }else{
     a->collidable = false;
     a->ttl = 0;
