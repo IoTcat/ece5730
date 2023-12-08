@@ -62,7 +62,7 @@ void initEffectBallNode(fix15 x, fix15 y, fix15 vx, fix15 vy, char color){
 }
 
 void genEffectBalls(fix15 x, fix15 y, char color){
-  for(int i = 0; i < 3; i++){
+  for(int i = 0; i < 10; i++){
     fix15 vx = int2fix15(rand() % 40 - 20);
     fix15 vy = int2fix15(rand() % 40 - 20);
     initEffectBallNode(x, y, vx, vy, color);
