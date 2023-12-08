@@ -185,8 +185,13 @@ void detach_beep(struct beep **head) {
 }
 
 void update_beep(unsigned int frequency, unsigned int duration, struct beep **head) {
-    if (head == NULL) {
-        attach_beep(frequency, duration, head) ;
+    if (*head == NULL) {
+        struct beep *new_beep = malloc(sizeof(struct beep)) ;
+        new_beep->frequency = frequency ;
+        new_beep->duration = duration ;
+        new_beep->next = NULL ;
+        *head = new_beep ;
+        return ;
     }
     else {
         (*head)->frequency = frequency ;
@@ -311,7 +316,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
               node* next = current2->next;
               // merge two balls
               merge_function(&current1->data, &current2->data);
-              attach_beep(1000-fix2int15(current1->data.type->radius)*10, 1000, &beep_head);
+              update_beep(1000-fix2int15(current1->data.type->radius)*10, 1000, &beep_head);
               total_score += current1->data.type->score;
               total_score -= current2->data.type->score;
               // remove the second ball
