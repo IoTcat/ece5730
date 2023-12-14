@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="description" content="">
+        <meta name="author" content="Yen-Hsing Li, Yimian Liu">
+        <title>Watermelon Game Implemented on RP2040</title>
+        <link href="./bootstrap.min.css" rel="stylesheet">
+        <style>
+            body {
+                padding-top: 50px;
+            }
+            hr { margin: 20px 0 20px 0; }
+            
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#" style="text-align: center">
+                        <b>Watermelon Game Implemented on RP2040</b>
+                    </a>
+                </div>
+                <!--/navbar-header -->
+                <div id="navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="inactive">
+                            <a href="#">Home</a>
+                        </li>
+                        <li>
+                            <a href="#demo_video">Demo</a>
+                        </li>
+                        <li>
+                            <a href="#objective">Objective</a>
+                        </li>
+                        <li>
+                            <a href="#introduction">Intro</a>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                High Level Design<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#design">High Level Design</a>
+                                </li>
+                                <li>
+                                    <a href="#boids">Boids Algorithm Background Math</a>
+                                </li>
+                                <li>
+                                    <a href="#predator_lag">Predator Lag Background Math</a>
+                                </li>
+                                <li>
+                                    <a href="#cv_math">Computer Vision Background Math</a>
+                                </li>
+                                <li>
+                                    <a href="#logical_structure">Logical Structure</a>
+                                </li>
+                                <li>
+                                    <a href="#hw_sw">Hardware/Software Tradeoffs</a>
+                                </li>
+                                <li>
+                                    <a href="#standards">Relationship to Standards</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Program/Hardware Design<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#prog_hw_design">Program/Hardware Design</a>
+                                </li>
+                                <li>
+                                    <a href="#pic32_code">PIC32 Program Design</a>
+                                </li>
+                                <li>
+                                    <a href="#raspi_code">Raspberry Pi Program Design</a>
+                                </li>
+                                <li>
+                                    <a href="#hardware">Hardware Design</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Results<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#results">Results</a>
+                                </li>
+                                <li>
+                                    <a href="#comms">Early Two-Way Communications Attempts</a>
+                                </li>
+                                <li>
+                                    <a href="#c_performance">C Code Performance</a>
+                                </li>
+                                <li>
+                                    <a href="#pycv_performance">Python/CV Code Performance</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Conclusion<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#conclusion">Conclusion</a>
+                                </li>
+                                <li>
+                                    <a href="#expectations">Results vs. Expectations and Future Changes</a>
+                                </li>
+                                <li>
+                                    <a href="#ip">Intellectual Property Considerations</a>
+                                </li>
+                                <li>
+                                    <a href="#ethics">Ethical Considerations</a>
+                                </li>
+                                <li>
+                                    <a href="#safety">Safety Considerations</a>
+                                </li>
+                                <li>
+                                    <a href="#legal">Legal Considerations</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#work_dist">Work Distribution</a>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Appendix<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="#app_a">Appendix A: Permissions</a>
+                                </li>
+                                <li>
+                                    <a href="#app_b">Appendix B: Commented Code</a>
+                                </li>
+                                <li>
+                                    <a href="#app_c">Appendix C: Hardware Schematic</a>
+                                </li>
+                                <li>
+                                    <a href="#bom">Bill of Materials</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#references">References</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+            <!--/container -->
+        </nav>
+        <div class="container">
+            <div style="padding-top: 50px;padding: 40px 15px;text-align: center;">
+                <h1>Watermelon Game</h1>
+                <p class="lead">Implemented on RP2040</p>
+                <p class="lead">Yen-Hsing Li(yl2924), Yimian Liu(yl996)</p>
+            </div>
+            <div class="center-block"></div>
+            <hr id="demo_video">
+            <div style="text-align:center;">
+                <h2>Demonstration Video</h2>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/ZxyzBawe35w?si=jZU02GvCrLy0e2Tu" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+            <hr id="objective">
+            <div style="text-align:center;">
+                <h2>Objective</h2>
+                <p style="text-align: left;padding: 0px 30px">Our project extends the boids algorithm into a two-player game in which players compete to “eat” the most boids by each steering a predator using a laser pointer tracked by computer vision.</p>
+            </div>
+            <hr id="introduction">
+            <div style="text-align:center;">
+                <h2>Introduction</h2>
+                <p style="text-align: left;padding: 0px 30px">We have created a game based on the principles of the boids algorithm introduced in Lab 2. The game involves two players standing in front of a projector screen full of boids, each player taking on the role of a predator and using a laser pointer to control the predator’s position. The object of the game is for each player to “eat” as many boids as possible by steering their predator around the screen with a handheld laser pointer. When a boid is eaten, players see a “splat” on the screen when the boid disappears and hear a beep corresponding to their laser pointer color. Players can see the current position of their predator on the screen. Once all boids are gone, the player that has eaten the most boids wins the game. For safety in the presence of lasers, all spectators must stand behind the players (see the Safety section below).</p>
+                <p style="text-align: left;padding: 0px 30px">The game uses the PIC32 as the main host of the game, a Raspberry Pi to run computer vision and track the laser pointers, a pair of laser pointers held by the players to control the positions of the predators, a webcam to track the positions of the laser pointers on the screen, a document camera to capture the thin film transistor (TFT) display, and a projector to display the game on a large screen.</p>
+                <p style="text-align: left;padding: 0px 30px">A Raspberry Pi with a webcam uses computer vision to track the laser pointers. One player carries a red laser pointer, and the other uses green. The two laser pointers are differentiated by their color contents in the computer vision program. The Raspberry Pi uses the open-source opencv library in python to locate the laser pointers and produce an (x, y) coordinate pair representing the position of each laser pointer mapped to a position on the TFT. The Pi sends this pair of coordinates to the PIC32 over a serial interface.</p>
+                <p style="text-align: left;padding: 0px 30px">The PIC runs the boids algorithm, executes the game procedure, and positions the predators in relation to the laser pointer coordinates sent by the Pi. The PIC runs an optimized boids algorithm for the prey boids, but it runs an augmented set of logic to control the positions of the predators. The PIC takes in the coordinates provided by the Pi in the calculation of new predator positions. The coordinates sent by the Pi represent points that the predators turn toward with a limited acceleration and velocity. The farther the pointer coordinate is from the predator’s current position, the faster the predator’s speed will become. This coordinate-to-predator relationship will be employed instead of using the coordinate as a simple position vector for the predator both to make the motion of the predator more organic and boid-like and to make the game more fair by subjecting the predators to some constraints on their velocity.</p>
+                <p style="text-align: left;padding: 0px 30px">The project required significant augmentation of the boids algorithm and completely new logic for controlling the predators and executing the game. It also required implementing fast and reliable communication from the Pi to the PIC. This proved to be the most technically challenging and time-consuming part of the project. The result is an exciting and entertaining game which stresses multiple aspects of the PIC32’s capabilities.</p>
+            </div>
+            <hr id="design">
+            <div style="text-align:center;">
+                <h2>High Level Design</h2>
+                <p style="text-align: left;padding: 0px 30px">After completing Lab 2, we believed the boids algorithm we developed could be extended into an interactive, entertaining game that would stretch the capabilities of the PIC 32, integrate new hardware and software complexity using a Raspberry Pi and computer vision, and augment our experience in using techniques such as direct digital synthesis (DDS), threading, code optimization, and serial communication. The final product works almost exactly as outlined in the Final Project Proposal, with two players competing to eat 40 boids rendered on the big screen in Phillips 101. The project was inspired by the idea that a game could be designed in which all of the intelligence is removed from the game controller, leaving behind an intuitive interface in which the player must simply point to where they want their predator to travel. We envisioned a game which would complement the natural human tendency to point where we want an object to go rather than abstracting the user input into a joystick or contrived controller. Such a game also enables a player to play from almost any distance or position as long as they have a line of sight to the screen. This type of design requires more intelligence at the point of gameplay and more complexity. The Raspberry Pi is needed to identify the positions of the pointers and communicate these coordinates to the PIC, and the PIC must operate on these inputs to place the predators according to the user’s inputs. The result is an intuitive, fluid user interface.</p>
+                <p style="text-align: left;padding: 0px 30px">
+                    The high level system block diagram is shown in <a href="#fig1">Figure 1</a>
+                    .
+                </p>
+                <img class="img-rounded" src="img/block_diagram.png" alt="High Level System Block Diagram" height="400" id="fig1">
+                <p>
+                    <small>Figure 1. High Level System Block Diagram</small>
+                </p>
+                <h3 id="boids">Boids Algorithm Background Math</h3>
+                <p style="text-align: left;padding: 0px 30px">
+                    The following pseudocode describes the operation of the game. It is adapted from the <a href="https://people.ece.cornell.edu/land/courses/ece4760/labs/f2021/lab2boids/Boids-predator.html">ECE 4760 course website</a>
+                    .
+                </p>
+                <h3 id="predator_lag">Predator Lag Background Math</h3>
+                <p style="text-align: left;padding: 0px 30px">
+                    The boids algorithm is an artificial life algorithm, meaning it models the emergent behavior of groups of living creatures subject to physical constraints on their movements. If the predators in our boids game tracked the positions of the laser pointers exactly, then with a flick of the wrist a game player would be able to move their predator across the entirety of the screen, producing an unrealistic predator motion and making the game far too easy. To remedy this problem and cause the predators’ motion to more closely match that of the boids they are pursuing, we created a “laggy predator.” Instead of the laser pointer encoding a position vector for the predator, it is instead used to describe a position to which the predator flies. The farther from the laser pointer the predator is, the faster it flies toward the pointer. As it approaches the pointer position, the predator gradually moves slower. In a given frame, the predator can move at most the distance to the laser pointer multiplied by a factor called the <code>predspeedfactor</code>
+                    . In this way, the difficulty of the game can be tuned by adjusting the <code>predspeedfactor</code>
+                    .
+                </p>
+                <h3 id="cv_math">Computer Vision Background Math</h3>
+                <p style="text-align: left;padding: 0px 30px">We designed a computer vision system on a Raspberry Pi to parse player input and send it to the PIC32. The system receives a stream of image frames from a webcam, applies image processing to isolate two laser pointer dots in each frame, and estimates their positions within a region of interest mapped to the TFT display. It then transmits those positions to the PIC32 continuously via UART.</p>
+                <p style="text-align: left;padding: 0px 30px">We chose to implement OpenCV tools in Python to develop this. While OpenCV is also available in a C++ implementation, its Python implementation abstracts away several steps that have to be manually performed in the C++ implementation. While minimizing the risk of misconfiguration in this manner, the Python implementation has also been highly optimized as a wrapper around C++ functions. Therefore at moderate frame rates (around 20fps), performance is nearly identical between both implementations. The worst-case difference in execution time between the two is only around 4% [3].</p>
+                <p style="text-align: left;padding: 0px 30px">For rapid transfer of predator coordinates to the PIC32, we wanted to achieve reliable object detection and localization with minimal latency. So our design approach was to use OpenCV’s native functions as much as possible, while minimizing the number of pixels (using spatial and colorimetric filtering) to be processed by those functions.</p>
+                <p style="text-align: left;padding: 0px 30px">The pseudocode design for the computer vision algorithm is shown below.</p>
+                <h3 id="logical_structure">Logical Structure</h3>
+                <p style="text-align: left;padding: 0px 30px">The logical structure of our final product involved separating processing tasks as much as possible between the PIC32 and the Raspberry Pi, with minimal communication between the two devices. The Raspberry Pi was solely responsible for computer vision tasks to determine the positions of both players’ laser pointers, and this was achieved through connecting a webcam to the Pi which ran Python code using the OpenCV library. The PIC32 was responsible for performing all of the mathematical calculations relevant to the boids algorithm, as well as rendering all TFT animation elements and playing sounds through direct digital synthesis. The connection between these two devices was designed to be as simple and fast as possible, with serial communication occurring over UART to send each laser pointer’s ID, x, and y coordinates from the Pi to the PIC.</p>
+                <h3 id="hw_sw">Hardware/Software Tradeoffs</h3>
+                <p style="text-align: left;padding: 0px 30px">Since our project heavily focused on animation and computer graphics algorithms, our goal was to make the hardware aspects of the project as simple as possible. This drove our choice to split the software tasks between two different computing components, the PIC32 and the RaspberryPi. We knew that the Pi would be critical in implementing OpenCV. Since we also wanted a hardware-minimal way to connect to a projector, we also opted to try rendering our game elements on the Pi as well by sending them from the PIC. As a result, our only connection through hardware between the two microprocessors was over UART serial communication, which we hoped would simplify the hardware as much as possible. Our only other hardware connection was over USB, to connect an off the shelf webcam to the Pi for computer vision.</p>
+                <h3 id="standards">Relationship to Standards</h3>
+                <p style="text-align: left;padding: 0px 30px">Since we are not transmitting anything wirelessly in our implementation, we do not need to account for or apply any IEEE or likewise standards.</p>
+            </div>
+            <hr id="prog_hw_design">
+            <div style="text-align:center;">
+                <h2>Program/Hardware Design</h2>
+                <p style="text-align: left;padding: 0px 30px">Our project involved both C code running on the PIC32 microcontroller and Python code running on a Raspberry Pi, which will be discussed in depth in the following sections.</p>
+                <h3 id="pic32_code">PIC32 Program Design</h3>
+                <p style="text-align: left;padding: 0px 30px">For the final version of our game, we ended up implementing both the mathematical calculations for the boids algorithm and the game display elements in C to run on the PIC32. Since we were basing our game around the boids algorithm, we started with the lab 2 code as a framework. This also included support for one predator, since we implemented the MEng version of the lab. The boids algorithm achieves realistic flocking behavior by adjusting the velocity of each boid according to the following parameters common to all boids: turn factor, visual range, protected range, centering factor, avoid factor, matching factor, maximum speed speed, and minimum speed. The turn factor dictates the turn radius the boids can achieve, with a greater turn factor leading to a tighter turn radius and flocking behavior that appears more “bouncy.” The visual range is the distance at which a boid can detect and act upon the presence of other boids; a greater visual range allows the boids to coordinate their velocities more tightly with the boids around them, and thus flocks become more homogeneous in their movement. The protected range is a measure of the personal space asserted by each boid, with a larger protected range leading to wider spacing in the flock. The centering factor is the boids’ affinity for gravitating toward the other boids within the visual range, with a greater centering factor drawing the boids more tightly together. The avoid factor encodes the strength of the avoidance behavior. The maximum and minimum speeds place bounds on boid velocities to mimic more realistic behavior.</p>
+                <p style="text-align: left;padding: 0px 30px">In our lab 2 code, we managed boids and our single predator through the following struct:</p>
+                <p style="text-align: left;padding: 0px 30px">
+                    Since our game involves determining whether a boid has been eaten so that it can be removed from the screen and added to a player’s score, we modified this struct to include an ‘eaten’ flag for each <code>boid_t</code>
+                    object:
+</code></p>
+
+<p style="text-align: left;padding: 0px 30px">As in lab 2, we had an animation thread to handle animation calculations and TFT rendering. In the beginning section of the thread, we initialized a boid array of size 40, with boid positions and velocities initialized randomly using the same rand() functions as in lab 2. Additionally, to support two predators for our two player game, we initialized a predator array in a similar manner. Both boid and predator objects use the same boid_t struct since they all move using x and y positions and velocities. While predators do not use the eaten flag, the flag is initialized to zero in all boid_t objects and will just never be modified for boid_t objects belonging to the predator array. Finally, the beginning section includes drawing 4 lines onto the TFT at the screen edges in order to clearly visualize the game field edges for the players.</p>
+<p style="text-align: left;padding: 0px 30px">The looping section of the thread was also structured very similarly to the lab 2 code, following the pseudocode algorithm described in the previous section. In order to determine positions for all of the boids, we have a nested for loop with multiple subsections. The highest level loop iterates over all of the boids in our boid array. If this boid has not been eaten, we proceed into the other layers of the loop to determine its next position according to the boids algorithm. We erase the boid by drawing a black pixel in its original position. We then determine a new position relative to all of the neighboring un-eaten boids in the boid array, as described in the pseudocode in the last section. We then iterate over both predators, and determine the boid’s final new position following the algorithm’s rules for how boids should avoid predators.</p>
+<p style="text-align: left;padding: 0px 30px">
+    Then, in the next loop we iterate through the predators once again to determine how close the boid is to both predators. If a predator is within the proximity of the predefined variable <code>deathrange</code>
+    , we set the boid’s eaten flag to 1 so that it will not be rendered again. We then add the boid to the score variable of that predator. If the sum of both players’ scores is equal to the number of boids in the game, we display a winner’s screen for the winning player, along with the final score and pass into an infinite while loop so that the game will effectively end until it is reset. This is shown in <a href="#fig2">Figure 2</a>
+    . At the end of the loop, we proceed to render all of the gameplay elements each time, including the scores of both players in the top corners of the screen, and the boundary lines, since they may have been erased by boids that “flew” over them. If a boid has been eaten, we also animate it such that it appears to explode over a sequence of 4 cycles. Each time the eaten boid is rendered, its radius will grow and the eaten flag will be incremented to reflect its status in the explosion animation cycle. Once the eaten flag reaches a value of 4, the boid will be rendered in black for the rest of the game. Finally, to increase the difficulty of the gameplay as the game goes on, we check the combined score of the players to determine how many boids are left, and progressively increase the value of the <code>predatorrange</code>
+    variable so that boids are able to “fly away” from the predators at further ranges. At the very end of the looping section, we save the updated boid with its new positions and eaten flag value back into the same spot of the boid array.
+</p>
+<img class="img-rounded" src="img/red_wins.png" alt="Game end screen showing winner and final score" height="400" id="fig1">
+<p>
+    <small>Figure 2. Game end screen showing winner and final score</small>
+</p>
+<p style="text-align: left;padding: 0px 30px">In addition to our animation thread, we also carried over the structure of the Python string reading thread and serial thread from lab 2. Instead of taking serial inputs from a GUI, we performed the same serial sending method within our OpenCV python script to pass the coordinates of the players’ laser pointers. We maintained the same serial thread as the lab 2 example code to set a flag whenever a new string was in the receive buffer, and removed all other extraneous elements of the thread since we did not need to handle buttons, sliders, or any other GUI elements. In the Python string thread’s loop section, we began by reading in the received string from the buffer and separating it into a predator ID (ID 0 for the green laser and ID 1 for the red laser), along with the laser’s x and y position. We then pulled the correct predator object from the predator array using the ID, and drew black over its current position. Using the lagging predator math described in the previous section, we then calculated updated x and y coordinates of the predator based on the laser pointer coordinates and the predator’s current velocity. Then the new predator was drawn as a circle or a square (for player 1 and player 2, respectively) at the updated coordinate location, and the updated predator object was saved back into the array.</p>
+<p style="text-align: left;padding: 0px 30px">Finally, to enhance our gameplay experience further, we added different sound effects for each predator which played each time that predator ate a boid. We achieved this via direct digital synthesis as in lab 1. Using the same ISR structure as in lab 1, we were able to trigger a sound synthesis interrupt each time a score was incremented in the animation thread by setting note time to 0. In addition, depending on which predator consumed the boid, we set the sound variable to either 1 or 2. This resulted in playing either a 330 Hz or  440 Hz short tone for player 1 or player 2, respectively.</p>
+<p style="text-align: left;padding: 0px 30px">Our original goal was to achieve 2 way serial communication between the PIC32 and the Raspberry Pi, and have the Pi render the game elements so that we could connect to a projector via HDMI. Ultimately, we ran into a variety of issues in achieving two-way communication at a high enough speed to render the whole game in a visually appealing manner, and in our final demonstration we rendered the game onto the TFT screen and projected it in Phillips 101 via a document camera, which worked very well as a quick solution.</p>
+<p style="text-align: left;padding: 0px 30px">
+    While quantitative aspects of our efforts to achieve communication are described further in the results section, we did code our gameplay rendering in a variety of different languages and libraries in each of our different attempts. Our original method was to send each boid’s coordinates and boid ID number from the PIC to the Pi over serial, and read them on the Pi side using the <code>readline()</code>
+    function from the Pyserial library. The rendering of each game element would then occur in Pygame, which we knew to be extremely lightweight since it was written as Python calls down to basic C functions, and we had significant experience and success with the library in projects for ECE 5725. However, we noticed that even with a few boids in the game we would get significant delay and very low frame rate, and after some online research we attributed this delay to the <code>readline()</code>
+    function. We then experimented with a faster implementation of the readline function which was built around the Pyserial <code>read()</code>
+    function, but saw very little improvement. Finally, in a last ditch attempt to make Python work for our rendering and communication scheme, we implemented a serial read program in C using the WiringPi library, which we ran on the Pi to read serial transmissions into a named pipe in Linux. From the named pipe, we attempted to read in and pass information to Pygame, however we still experienced significant lag and poor animation performance. After exhausting our Python implementation options, we then turned to C++ in hopes of achieving faster rendering and reading speeds that could keep up with the PIC’s communication speed and achieve a 30fps frame rate. After extensive research and experimentation with different example animation programs on GitHub, we chose to use the Simple Fast Multimedia Library (SFML). We found a <a href="https://github.com/Terabyte04/Bouncing-Ball-SFML">bouncing ball animation in SFML on GitHub</a>
+    , and extended the object oriented nature of this code to make the ball class render both boids and predators. We also tied in the WiringPi library to perform serial reads directly into the game program, without a named pipe as a conduit. Ultimately, this performed significantly better than our Python implementations, and we were able to achieve a visually passable frame rate with just a few boids. However, when we added boids to the game our frame rate decreased exponentially, and had extremely large lag in animation after about 10 boids. At this point, we elected to pivot to using the document camera in our final demonstration, since we had about a week left to work on the project and had yet to implement any gameplay features or integrate with the OpenCV laser tracking system.
+</p>
+<h3 id="raspi_code">Raspberry Pi Program Design</h3>
+<p style="text-align: left;padding: 0px 30px">The computer vision algorithm was successfully developed as a set of Python scripts, based on OpenCV, running on a Raspberry Pi 3.</p>
+<p style="text-align: left;padding: 0px 30px">First, after several unsuccessful attempts to compile an OpenCV version with a dependency set compatible with a Raspbian Buster image on a Raspberry Pi 3, we eventually found a third-party-maintained, pre-compiled version of OpenCV 3.4.6.27 that installed correctly for Python 3.</p>
+<p style="text-align: left;padding: 0px 30px">The successful install was performed as follows:</p>
+
+<p style="text-align: left;padding: 0px 30px">We confirmed that OpenCV was installed correctly by connecting a webcam (Logitech QuickCam Pro 9000) to the Pi and streaming video to the Pi’s desktop. Once this was confirmed, we started exploring what it would take to remove background noise and isolate just the laser pointer dot in a time-efficient manner.</p>
+<p style="text-align: left;padding: 0px 30px">Our goal with the algorithm was to progressively limit the number of pixels to be considered for further image processing. This would speed up the time taken to find the laser dot per frame and result in a final set of pixels that highly corresponded to the real location of the laser dot in the frame.</p>
+<p style="text-align: left;padding: 0px 30px">Our first step was to restrict the number of pixels considered by the algorithm to a region of interest. We drew a virtual rectangle over each video frame and masked out (i.e. set to zero) pixels outside the box, so that only pixels within the boundaries of the box would be analyzed by subsequent steps. Having the region of interest occupy a small central area of the camera field of view also eased the alignment of the camera to the projector screen.</p>
+<p style="text-align: left;padding: 0px 30px">Next, we applied image filtering by setting upper and lower bounds for the green and red laser pointer dots, masking out pixels outside these bounds, and then observing the resulting image. After experimenting with setting these bounds in the standard RGB space, we found that it was difficult to proceed in a logical way when setting values. From a given set of RGB values, it was difficult to determine what values to change so as to distinguish between shades of the same color, e.g. red in shadow versus red on a brightly-illuminated projector screen. Additionally, we observed a lot of salt-and-pepper noise from ambient lighting that buried the laser pointer dot on the camera feed. Consequently, we decided to move to the HSV  (Hue-Saturation-Value) color space. This color space was designed to closely mimic human visual perception, and therefore offers a way to intuitively think through the steps necessary to isolate the laser pointer dots clearly.</p>
+<p style="text-align: left;padding: 0px 30px">We were able to set the bounds more easily once we remapped the frames to this color space, while not appearing to incur a noticeable time delay.</p>
+<p style="text-align: left;padding: 0px 30px">We observed that the laser dot itself exhibited variation in color, with a near-white spot in the center and red fading away radially from it, which meant color filtering by itself tended to lose parts of the dot or end up allowing a substantial amount of salt-and-pepper noise through. To remedy this, we applied a Gaussian blur to the image before filtering it. This smooths out the color transitions of an image with respect to its spatial dimensions. The net effect for us was that it homogenizes the colors within each laser pointer dot and increases the apparent size of the dot, dramatically improving the effectiveness of subsequent color filtering in isolating the dot.</p>
+<p style="text-align: left;padding: 0px 30px">The downside from this is that this also increases the size of noise artefacts with colors that even slightly overlap with the HSV color space set by the image filtering bounds. Our guiding principle for noise removal therefore was to make sure the laser dot was consistently bigger than any noise artifact on each frame, and this was not fully achieved by this step. Aside from the variation in lighting conditions from room to room, and brightness of the background relative to that from projector to projector, the camera itself had a warm up period. Upon startup of the camera, a reddish tint tended to be visible on the camera feed, and this slowly faded away after about a minute. A key feature of this step is that it converted the original color image to a binary image -- where each pixel was set to true (white/foreground) or false (black/background) based on whether its color was within our color bounds.</p>
+<p style="text-align: left;padding: 0px 30px">While color bound establishment in this way was helpful in removing noise, substantial salt and pepper noise was still present, and the region corresponding to the dot on the masked image remained a cluster of objects rather than one contiguous object. Therefore further processing was needed.</p>
+<p style="text-align: left;padding: 0px 30px">After research into image processing techniques, we determined that to connect the cluster representing the laser dot, our next step needed to be a morphological filter; specifically morphological closing. Morphological closing uses a structuring element (or “kernel”) consisting of a smaller set of pixels to apply dilation and then erosion of an image. As the kernel is moved pixel by pixel across an image, the superimposition of the kernel on the image is checked. At a given position of the kernel, dilation is the operation that turns all pixels under the kernel into foreground when there is at least one foreground pixel under the kernel. Erosion only preserves clusters of foreground pixels larger than the kernel. The net effect of morphological closing is to enlarge foreground objects and shrink background objects.</p>
+<img class="img-rounded" src="img/closebin.gif" alt="Effect of Morphological Closing on a Binary Image" height="400" id="fig3">
+<p>
+    <small>Figure 3. Effect of Morphological Closing on a Binary Image, https://homepages.inf.ed.ac.uk/rbf/HIPR2/close.htm</small>
+</p>
+<p style="text-align: left;padding: 0px 30px">We initially implemented morphological closing with OpenCV’s erosion and dilation functions, but found that several iterations of each step (5 to 8) were needed to remove noise. This incurred a noticeable time delay, setting the output framerate to only around 5 frames per second. We realized that a more time-efficient method was to use a single iteration with a larger kernel. We found that the laser dot size was maximized while noise artifact size was minimized when the kernel was set to a circle, the same shape as the object of interest (i.e. laser dot). Specifically, we used a 6x6 disc.</p>
+<p style="text-align: left;padding: 0px 30px">
+    Once this was done, we used the <code>findContours</code>
+    function from OpenCV and the <code>grab_contours</code>
+    function from imutils to create an array of all foreground objects (i.e. groups of connected foreground pixels). At this point, we observed that the red and green laser pointer dots were of different sizes consistently -- which was unsurprising given the visible difference in brightness between the two. The green dot had a radius of about 30 pixels, while the red dot had a radius of about 10 pixels. At the same time, there were still a few remaining noise artifacts, though these were much smaller than the dots. This suggested that our next step should be an area-based filter.
+</p>
+<p style="text-align: left;padding: 0px 30px">
+    We implemented further processing *only* for the foreground object with the maximum area in a given frame, using an approach based on a simple object tracking example [5]. First, we virtually drew the smallest-area circle that enclosed this object (using the <code>cv2.minEnclosingCircle</code>
+    function from OpenCV). Then, if that object ‘s radius was greater than some value (as a subsequent area-based filter), we calculated the coordinates of the centroid of that circle. The coordinates are then remapped to the PIC32’s coordinate space (referenced to the TFT), and then sent via UART to the PIC32 using the <code>serial</code>
+    module in Python.
+</p>
+<h3 id="hardware">Hardware Design</h3>
+<p style="text-align: left;padding: 0px 30px">Our overall goal in this project was to keep hardware setup minimal, so as to maximize the accessibility of our game to everyone. By the end, the only hardware required were commodity off-the-shelf items: a USB webcam (Logitech QuickCam Pro 9000), a Raspberry Pi 3, a PIC32, a TFT Display, two handheld laser pointers, as well as a document camera connected to a projector (as is commonly found in classrooms). We found that setting up the webcam at a high vantage point facing the screen (e.g. on a tripod) facilitated easy alignment of the projector screen in the webcam’s field of view with minimal distortion of the rectangular region of interest with respect to the computer vision system. However, this requires a long USB cable between the camera and the system set up under the document camera.</p>
+<p style="text-align: left;padding: 0px 30px">One potential improvement to the hardware would be to have a wireless camera instead; this way we would not need to have the long cable. Alternatively, we could have the Pi not just send predator coordinates to the PIC32 but also receive boid coordinates from it and render boids using its onboard HDMI output. A monolithic solution would be to refactor our PIC32 code for a microcontroller with built-in display capabilities. For instance, the RP2040 is such a microcontroller, offering onboard VGA support.</p>
+</div><hr id="results">
+<div style="text-align:center;">
+    <h2>Results</h2>
+    <p style="text-align: left;padding: 0px 30px">Both our PIC32 boids algorithm and our Python OpenCV code had to meet a variety of performance constraints. Additionally, in our early attempts at two way communication between the PIC and the Raspberry Pi, we also had communication constraints which we were unable to meet due to a variety of challenges that will be discussed further below.</p>
+    <h3 id="comms">Early Communications Attempts</h3>
+    <p style="text-align: left;padding: 0px 30px">The most technically challenging aspect of the project was implementing the transfer of boid position data from the PIC to the display medium. The challenge was achieving data transfer at a sufficiently fast rate to render all of the boids, predators, and game scores at an aesthetically pleasing rate (at least 30 fps). We attempted four separate designs for fast communication, listed in the order in which we attempted them:</p>
+    <ol style="text-align: left;padding: 0px 50px">
+        <li>Reading serial in Python, rendering the game in Pygame, and using the Pi to drive a projector</li>
+        <li>Reading serial in C and writing to a FIFO (Linux named pipe), reading the FIFO in Python and rendering the game in Pygame, and using the Pi to drive a projector</li>
+        <li>Reading serial in C++, rendering the game in C++, and using the Pi to drive a projector</li>
+        <li>Rendering the game directly on the TFT and using a document camera to send the TFT display to a projector</li>
+    </ol>
+    <p style="text-align: left;padding: 0px 30px">
+        Communication option 1 suffered from slowness in rendering the game. The PIC, relieved of its duties in driving the TFT, was able to produce data at a high rate (>>30 fps). However, the Python serial library’s <code>readline()</code>
+        method proved incapable of processing the serial transmissions at a rate sufficient to render even 10 fps. We inspected the receive side buffer and found that it grows until overflowing: 
+    </p>
+    <img class="img-rounded" src="img/figure4.png" alt="Receive buffer sizes for various forms of Python serial read" height="400" id="fig4">
+    <p>
+        <small>Figure 4. Receive buffer sizes for various forms of Python serial read</small>
+    </p>
+    <p style="text-align: left;padding: 0px 30px">
+        As shown in <a href="#fig4">Figure 4</a>
+        , the standard Python serial <code>readline()</code>
+        method resulted in rapid buffer increase. The serial <code>read()</code>
+        method, which reads a single character without waiting for a newline character, is much more lightweight and performs better. We implemented a complete serial read and decode solution with our own buffer management without using the <code>readline()</code>
+        method, but even this failed to perform well:
+    </p>
+    <img class="img-rounded" src="img/figure5.png" alt="Receive buffer sizes for readline() vs. complete serial read() implementation" height="400" id="fig5">
+    <p>
+        <small>Figure 5. Receive buffer sizes for readline() vs. complete serial read() implementation</small>
+    </p>
+    <p style="text-align: left;padding: 0px 30px">We observed another errant feature of our serial read Python code: after an initial period lasting on average half of one second in which serial reads were executed quickly (less than 2 ms between reads), the program entered a state in which one in every 45 serial transmissions took between 60 and 80 ms to read. Observation on an oscilloscope exposed no delays in the serial transmission, so the problem was isolated to the Python side. After experimenting with different baud rates and reducing the PIC transmission rate to no avail, we ultimately found no solution to the problem.</p>
+    <p style="text-align: left;padding: 0px 30px">The following video demonstrates the lag in boids rendered using Pygame:</p>
+    <video width="640" height="480" controls>
+        <source src="img/slow_pygame_boids.mp4" type="video/mp4">Your browser does not support the video tag.
+              
+    </video>
+    <img class="img-rounded" src="img/figure6.png" alt="Periodic sharp increases in serial read times in Python" height="400" id="fig5">
+    <p>
+        <small>Figure 6. Periodic sharp increases in serial read times in Python</small>
+    </p>
+    <p style="text-align: left;padding: 0px 30px">
+        After finding no solution to the problem in Python, we turned to option 2 and implemented a C program to complete serial reads and write the results continuously to a FIFO (first in, first out) buffer in the file system of the Raspberry Pi. The serial reads executed quickly (on the order of 5-6 ms between reads). However, the Python program was unable to read the FIFO quickly, and the Python <code>os.read()</code>
+        method became the new bottleneck. Performance was as poor as a direct Python serial read, and we were only able to render boids at a rate of less than 10 fps.
+    </p>
+    <p style="text-align: left;padding: 0px 30px">Upon deciding to eliminate Python from the rendering side of the game entirely, we executed communication option 3 by completing a C++ program to perform serial reads and render boids in a pygame-like window. The program was lightweight and we expected it to improve performance significantly. However, although the performance was marginally better than the Python program, it could only render about 10 boids at a rate over 20 fps. We were targeting 30-50 boids for the final game, and increasing the number of boids to 30 resulted in extremely poor performance.</p>
+    <p style="text-align: left;padding: 0px 30px">For option 4, we decided to shift the burden of rendering the game back to the PIC32 and its robust SPI connection to the TFT, thereby trading complexity in high-speed communication for higher demands in program efficiency to accommodate TFT rendering. The PIC could easily handle 30-50 boids at a 30 fps rate for the simple boids algorithm, but adding the demands of the game and the predator control algorithm, as well as increasing the number of boids to 40 in the final version, would ultimately push the PIC to about 30 fps.</p>
+    <h3 id="c_performance">C Code Performance</h3>
+    <p style="text-align: left;padding: 0px 30px">
+        We measured the performance of our game code based on the frame rate we were able to achieve in animation and the communication speeds we were able to achieve over serial. While we experienced significant lag and did not meet our 30 fps animation requirement with the other communication methods described above, once we pivoted to the document camera projection method where we rendered everything on the TFT and applied the same fixed point optimizations as in lab 2, we were able to achieve 30 fps with 40 boids, as well as 2 predators being read through serial, mathematically positioned with lag, and rendered as a circle and a square respectively. This was measured and indicated in the same manner as we used in lab 2, with a red LED indicator on the PIC32 big board that was on when we met our frame rate specifications. This is shown in <a href="#fig7">Figure 7</a>
+        below. Additionally, once we adopted one way serial communication, we were able to run at a baud rate of 115200 with no issues, indicating that the C program was much faster at serial reading and rendering game objects, since it was a multithreaded implementation.
+    </p>
+    <img class="img-rounded" src="img/red_led.png" alt="Red LED on indicating frame rate specs met" height="400" id="fig7">
+    <p>
+        <small>Figure 7. Red LED on indicating frame rate specs met</small>
+    </p>
+    <h3 id="pycv_performance">Python/CV Code Performance</h3>
+    <p style="text-align: left;padding: 0px 30px">By the end of the project, we were able to realize a computer vision program that tracked the laser pointer dots in near-realtime, with low latency between movement of the laser pointer and movement of the tracker (enclosing circle plus centroid).</p>
+    <img class="img-rounded" src="img/ezgif.com-gif-maker.gif" alt="Two-dot tracking using OpenCV" height="400" id="fig8">
+    <p>
+        <small>Figure 8. Two-dot tracking using OpenCV</small>
+    </p>
+    <p style="text-align: left;padding: 0px 30px">While developing this algorithm, we tried several different sequences of the steps outlined in the Hardware Design section. We found that the first step had to be Gaussian blurring, followed by setting of the color bounds to mask out pixels that were clearly part of the background, in order for the most signal amplification and noise attenuation. Notably, the optimal color bounds that maximized the size of the laser dot while minimizing the size of noise artefacts varied from room to room, based on lighting conditions. As we needed a way to quickly tune the color bounds to the specific environment, we developed a calibration tool, color_detector.py. This tool presented a set of sliders to set upper and lower bounds in the HSV space, with a real-time render of webcam frames masked by those bounds. We had to employ this tool frequently during design and testing.</p>
+    <p style="text-align: left;padding: 0px 30px">Tracking gave frequent false positives before adjusting HSV calibration, as shown in the video below:</p>
+    <video width="640" height="480" controls>
+        <source src="img/openCV_false_positives.mp4" type="video/mp4">Your browser does not support the video tag.
+              
+    </video>
+    <p style="text-align: left;padding: 0px 30px">For the room where we finally performed our demo, Phillips Hall 101, the optimal bounds (in the HSV space) were as follows, in the form of (hue, saturation, value):</p>
+
+    <img class="img-rounded" src="img/figure9.png" alt="Calibration tool" height="400" id="fig9">
+    <p>
+        <small>Figure 9. Calibration tool</small>
+    </p>
+    <p style="text-align: left;padding: 0px 30px">These were the bounds that maximized the size of the signal (green or red laser dot) while minimizing the size of background noise.</p>
+    <p style="text-align: left;padding: 0px 30px">Over the course of the design, we used OpenCV’s built-in functions for the performance-intensive image processing steps (e.g. applying color filtering, finding contours), and we minimized the number of pixel-by-pixel operations throughout image processing (e.g. using large kernel for morphological filtering, limiting pixels by spatial dimensions and color values). Consequently, we found that the computer vision algorithm was actually sending data faster than the PIC32 could process, and so the predator animation was choppy because the PIC32 kept missing predator coordinates updates. Therefore we implemented time delays in two ways. First, we separated the processing for each laser dot. This roughly doubled the time complexity of the computer vision algorithm, since processing originally done on green and red dots together were now done first for the green and then for the red. Second, we implemented a small delay (to further space apart transmission of green and red laser dot coordinates from Pi to PIC32. The optimum delay that provided the smoothest motion on the TFT display was 2 seconds upon program startup, then 1 second for subsequent loops.</p>
+    <p style="text-align: left;padding: 0px 30px">The lag in predator updates caused by a discrepancy in transmission vs read speeds is shown in the video below:</p>
+    <video width="640" height="480" controls>
+        <source src="img/first_integration_of_TFT_and_openCV.mp4" type="video/mp4">Your browser does not support the video tag.
+              
+    </video>
+    <p style="text-align: left;padding: 0px 30px">After adding in delays on the OpenCV side so that the PIC serial reading could keep up, our performance dramatically improved. The improved performance of the computer vision algorithm was visualized by having it draw visible circles around each laser pointer dot </p>
+    <img class="img-rounded" src="img/opencv_game.gif" alt="GIF of final computer vision algorithm" height="400" id="fig10">
+    <p>
+        <small>Figure 10. Visualized performance of final computer vision algorithm </small>
+    </p>
+    <p style="text-align: left;padding: 0px 30px">After adding in delays on the OpenCV side so that the PIC serial reading could keep up, our performance dramatically improved. Our HSV calibration and vision system were even robust enough that players could stand in the back of Phillips 101 and get reliable predator movement and gameplay! This can be seen in the video below:</p>
+    <video width="640" height="480" controls>
+        <source src="img/playing_from_back_of_phillips_101.mp4" type="video/mp4">Your browser does not support the video tag.
+              
+    </video>
+</div>
+<hr id="conclusion">
+<div style="text-align:center;">
+    <h2>Conclusion</h2>
+    <p style="text-align: left;padding: 0px 30px">Overall, we found that our final project was very successful and we were able to successfully realize our original vision, despite many roadblocks along the way. We learned a great deal about the process of integrating and communicating through multi-device systems, which is especially tricky when devices have different processors and are working in different languages. This is a major challenge in designing and working with embedded systems, and our experience in this proejct will be very valuable to apply to future work in similar fields.</p>
+    <h3 id="expectations">Results vs. Expectations and Future Changes</h3>
+    <p style="text-align: left;padding: 0px 30px">Overall, we were able to achieve most of our original expectations for this design. Using the document camera projection system as a workaround for two-way communication allowed us to execute our project almost exactly as we had envisioned it in our proposal. Our animation frame rate met the 30 fps standard set in lab 2, and all of our graphics and gameplay elements came together to create a very enjoyable player experience.</p>
+    <p style="text-align: left;padding: 0px 30px">Looking back on the project experience, it is clear that two-way communication was our biggest barrier to success. While the document camera projector system was more than sufficient, it would have been helpful to have more backup plans using hardware to achieve projection through the PIC rather than being dependent on an external camera. Late in the design process, we did come across a prior student project that created a VGA connection system for the PIC, but we did not have enough time to buy and put together the necessary hardware at that point. In the future, if the class transitions to use the RP2040 microcontroller instead of the PIC32, this would not be as big of an issue because features like Programmable IO would enable a simpler way to connect to a projector via VGA. Finally, while we did spend significant time and effort in hopes that we would be able to achieve two-way communication, it would have been extremely helpful to our overall project result to have pivoted away from that strategy earlier on in the design process. We were able to add a good amount of gameplay elements to the system in the week that we had to work on it, but with a bit more time we would have been able to come up with many more extensions to the game and would have had a lot more to show for the work we put in to our final product.</p>
+    <h3 id="ip">Intellectual Property Considerations</h3>
+    <p style="text-align: left;padding: 0px 30px">This project was developed to be open-source. On the PIC32, our code is based on the Protothreads library, which provides lightweight macros to simplify the process of controlling threads. Protothreads is offered by its creator with a BSD-style license. This is an open-source license that allows both commercial and non-commercial use without restrictions, as long as credit is given in project documentation. On the Raspberry Pi, our computer vision algorithm is based on OpenCV 3.4.6.27, which is also offered with a BSD license.</p>
+    <h3 id="ethics">Ethical Considerations</h3>
+    <p style="text-align: left;padding: 0px 30px">This project was designed with accessibility in mind, particularly for those with red-green colorblindness. Although a person with red-green colorblindness may not be able to differentiate the two lasers by their colors, the two lasers can be told apart by their brightness. Since the green laser is significantly brighter than the red laser, any person unable to identify the colors can differentiate the size of the points on the screen. In addition, the predator positions are denoted by two different shapes: a circle for green and a square for red. All other components of the game are projected in black and white. An additional ethical consideration is that the computer vision technology used in this project can also be used in the unethical application of surveillance through facial recognition. Since this project only tracks objects by color, there is no risk of the project being used for unethical activities.</p>
+    <h3 id="safety">Safety Considerations</h3>
+    <p style="text-align: left;padding: 0px 30px">For safety, all spectators are required to stand behind the players to avoid accidental eye exposure to the lasers. All of the laser pointers used in this game are Class 3A or lower, meaning they are legal and safe for use without eye protection. The green laser is Class 3A, denoting an output power which does not exceed 5 mW and a beam power density which does not exceed 2.5 mW/cm2. Class 3A lasers can be damaging to the retina only after over two minutes of direct exposure. The red laser is Class 2, indicating an output power of less than 1 mW. Class 2 lasers will not cause retinal damage. Children should not be allowed to play the game due to the heightened risk of exposing spectators to the lasers.</p>
+    <h3 id="legal">Legal Considerations</h3>
+    <p style="text-align: left;padding: 0px 30px">According to the United States Food and Drug Administration, lasers for pointing or demonstration use must not exceed 5 mW of output power (the limit for Class 3A laser pointers). All of the laser pointers used in this project are Class 3A or lower and are therefore compliant with federal regulations for their use in this game.</p>
+</div>
+<hr id="work_dist">
+<div style="text-align:center;">
+    <h2>Work Distribution</h2>
+    <p style="text-align: left;padding: 0px 30px">Claire worked on the C code running on the PIC32, including updates to support 2 predators over serial read, updates to the boids animation to reflect predators eating them and scoring points, and direct digital synthesis sound effects. She worked with Alec and Shreyas throughout the communication debugging process. She also implemented the C++ aspects of communication option 3, including the final test implementation with the SFML bouncing ball library and WiringPi serial read. She also collaborated with Alec on coding the TFT game elements to optimize the gameplay experience, such as the scoring and boundary displays, the winning player screen, as well as other attempts at gameplay extensions like a start screen which did not make it into the final implementation.</p>
+    <p style="text-align: left;padding: 0px 30px">Shreyas developed the computer vision system, consisting of Python scripts running on a Raspberry Pi. The system consisted of several stages: video manipulation, image processing, object detection, and centroid estimation. He wrote the code for each stage iteratively, optimizing the sequence and parameters of operations to produce reliable and accurate tracking of two laser dots simultaneously in a range of lighting conditions. He also developed a calibration program that allows quick tuning of image processing parameters to specific indoor environments. In addition, he collaborated with Claire and Alec on developing the various iterations of serial communication on the Pi, and was responsible for color tuning and computer vision setup during full system testing in various classrooms.</p>
+    <p style="text-align: left;padding: 0px 30px">Alec wrote the code for the early attempts to render boids in pygame and incorporated the “laggy predator” design. He worked to debug the serial read problems, implementing several versions of serial read in Python including versions with manual buffer management in the effort to circumvent problems with the readline() method. Alec collected data to troubleshoot the communication problem and produced all of the measurements and plots shown in the Early Communications Attempts section. He worked with Shreyas and Claire to build and test communication options 2 and 3, and he assembled the breadboard and wood block mount for the PIC and the Pi and wired the breadboard for serial communication. He collaborated with Claire to write the game code and optimize the game performance.</p>
+</div>
+<hr id="appendix">
+<div style="text-align:center;">
+    <h2>Appendix</h2>
+    <h3 id="app_a">Appendix A: Permissions</h3>
+    <p style="text-align: left;padding: 0px 30px">The group approves this report for inclusion on the course website.</p>
+    <p style="text-align: left;padding: 0px 30px">The group approves the video for inclusion on the course YouTube channel.</p>
+    <h3 id="app_b">Appendix B: Commented Code</h3>
+    <p style="text-align: left;padding: 0px 30px">
+        The complete project source code is hosted on GitLab: <a href="https://github.com/crcaplan/ece5730/tree/main/final_project">https://github.com/crcaplan/ece5730/tree/main/final_project</a>
+    </p>
+    <h4>C program with comments is given below (extended from TFT_animation_Accum_BRL4.c):</h4>
+
+    <p style="text-align: left;padding: 0px 30px"></p>
+    <p style="text-align: left;padding: 0px 30px"></p>
+    <h4>Python/OpenCV computer vision program with comments is given below (green_and_red_2.py)</h4>
+    <p></p>
+    <p></p>
+    <h4>Python program for vision system calibration is given below (color_detector.py)</h4>
+    <h3 id="app_c">Appendix C: Hardware Schematic</h3>
+    <p style="text-align: left;padding: 0px 30px">Since we focused on software complexity and minimized the hardware complexity of our project, the only hardware connnections required are UART TX, UART RX, and Ground. These can be managed through a USB serial dongle, or handled in a breadboard as we did in our project. The hardware connections are reflected in the schematic below.</p>
+    <img class="img-rounded" src="img/schematic.png" alt="Schematic" height="400" id="fig11">
+    <p>
+        <small>Figure 11. Schematic of UART Connections between PIC32 and Raspberry Pi</small>
+    </p>
+    <h3 id="bom">Bill of Materials</h3>
+    <p style="text-align: left;padding: 0px 30px">A bill of materials for this project, which would be required for one starting completely from scratch, is as follows:</p>
+    <table class="table table-hover" style="width:560px; margin-left:auto; margin-right:auto">
+        <thead>
+            <tr>
+                <th style="text-align:center" width="300px">Material</th>
+                <th style="text-align:center">Source</th>
+                <th style="text-align:center">Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align:left">Red laser pointer</td>
+                <td style="text-align:center">
+                    <a href="https://www.amazon.com/Pinty-Compact-Tactical-Picatinny-Wrenches/dp/B01BPYEAKA/">Amazon</a>
+                </td>
+                <td style="text-align:right">$15.99</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">Green laser pointer</td>
+                <td style="text-align:center">
+                    <a href="https://www.amazon.com/dp/B073S17G51/">Amazon</a>
+                </td>
+                <td style="text-align:right">$19.99</td>
+            </tr>
+            <tr>
+                <td style="text-align:left">Raspberry Pi 3 B
+</a></td><td style="text-align:center">Skovira Lab</td>
+<td style="text-align:right">$0</td>
+</tr>
+<tr>
+    <td style="text-align:left">USB Webcam</td>
+    <td style="text-align:center">Skovira Lab</td>
+    <td style="text-align:right">$0</td>
+</tr>
+<tr>
+    <td style="text-align:left">Projector</td>
+    <td style="text-align:center">Phillips 101 (or other classroom)</td>
+    <td style="text-align:right">$0</td>
+</tr>
+<tr>
+    <td style="text-align:left">Document Camera</td>
+    <td style="text-align:center">Phillips 101 (or other classroom)</td>
+    <td style="text-align:right">$0</td>
+</tr>
+</tbody></table></div><hr id="references">
+<div style="text-align:center">
+    <h2>References</h2>
+    <ol style="text-align: left;padding: 0px 50px">
+        <li id="ref1">Center for Devices and Radiological Health, “Important Information for Laser Pointer Manufacturers,” U.S. Food and Drug Administration, 04-Dec-2017. [Online]. Available: https://www.fda.gov/radiation-emitting-products/laser-products-and-instruments/important-information-laser-pointer-manufacturers#:~:text=This%20means%20that%20pointers%20are,or%20IEC1%20Class%203R. [Accessed: 10-Dec-2021].</li>
+        <li id="ref2">“Laser Classes,” Laser Safety Facts. [Online]. Available: https://www.lasersafetyfacts.com/laserclasses.html. [Accessed: 10-Dec-2021].</li>
+        <li id="ref3">“Does performance differ between Python or C++ coding of opencv?,” NewbeDEV. [Online]. Available: https://newbedev.com/does-performance-differ-between-python-or-c-coding-of-opencv. [Accessed: 12-Dec-2021].</li>
+        <li id="ref4">“Closing,” Morphology, 2003. [Online]. Available: https://homepages.inf.ed.ac.uk/rbf/HIPR2/close.htm. [Accessed: 12-Dec-2021].</li>
+        <li id="ref5">Adrian Rosebrock, “Simple object tracking with OpenCV” PyImageSearch, 2018. [Online]. Available: https://www.pyimagesearch.com/2018/07/23/simple-object-tracking-with-opencv/. [Accessed: 12-Dec-2021].</li>
+    </ol>
+</div>
+<hr>
+</div>
+<script src="./jquery.min.js"></script>
+<script src="./bootstrap.min.js"></script>
+</body></html>
