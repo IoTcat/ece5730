@@ -401,39 +401,18 @@
     <h3 id="legal">Legal Considerations</h3>
     <p style="text-align: left;padding: 0px 30px">According to the United States Food and Drug Administration, lasers for pointing or demonstration use must not exceed 5 mW of output power (the limit for Class 3A laser pointers). All of the laser pointers used in this project are Class 3A or lower and are therefore compliant with federal regulations for their use in this game.</p>
 </div>
-<hr id="work_dist">
-<div style="text-align:center;">
-    <h2>Work Distribution</h2>
-    <p style="text-align: left;padding: 0px 30px">Claire worked on the C code running on the PIC32, including updates to support 2 predators over serial read, updates to the boids animation to reflect predators eating them and scoring points, and direct digital synthesis sound effects. She worked with Alec and Shreyas throughout the communication debugging process. She also implemented the C++ aspects of communication option 3, including the final test implementation with the SFML bouncing ball library and WiringPi serial read. She also collaborated with Alec on coding the TFT game elements to optimize the gameplay experience, such as the scoring and boundary displays, the winning player screen, as well as other attempts at gameplay extensions like a start screen which did not make it into the final implementation.</p>
-    <p style="text-align: left;padding: 0px 30px">Shreyas developed the computer vision system, consisting of Python scripts running on a Raspberry Pi. The system consisted of several stages: video manipulation, image processing, object detection, and centroid estimation. He wrote the code for each stage iteratively, optimizing the sequence and parameters of operations to produce reliable and accurate tracking of two laser dots simultaneously in a range of lighting conditions. He also developed a calibration program that allows quick tuning of image processing parameters to specific indoor environments. In addition, he collaborated with Claire and Alec on developing the various iterations of serial communication on the Pi, and was responsible for color tuning and computer vision setup during full system testing in various classrooms.</p>
-    <p style="text-align: left;padding: 0px 30px">Alec wrote the code for the early attempts to render boids in pygame and incorporated the “laggy predator” design. He worked to debug the serial read problems, implementing several versions of serial read in Python including versions with manual buffer management in the effort to circumvent problems with the readline() method. Alec collected data to troubleshoot the communication problem and produced all of the measurements and plots shown in the Early Communications Attempts section. He worked with Shreyas and Claire to build and test communication options 2 and 3, and he assembled the breadboard and wood block mount for the PIC and the Pi and wired the breadboard for serial communication. He collaborated with Claire to write the game code and optimize the game performance.</p>
-</div>
-<hr id="appendix">
+<hr>
 <div style="text-align:center;">
     <h2>Appendix</h2>
     <h3 id="app_a">Appendix A: Permissions</h3>
     <p style="text-align: left;padding: 0px 30px">The group approves this report for inclusion on the course website.</p>
-    <p style="text-align: left;padding: 0px 30px">The group approves the video for inclusion on the course YouTube channel.</p>
+    <p style="text-align: left;padding: 0px 30px">The group approves the video for inclusion on the course youtube channel.</p>
     <h3 id="app_b">Appendix B: Commented Code</h3>
-    <p style="text-align: left;padding: 0px 30px">
-        The complete project source code is hosted on GitLab: <a href="https://github.com/crcaplan/ece5730/tree/main/final_project">https://github.com/crcaplan/ece5730/tree/main/final_project</a>
-    </p>
-    <h4>C program with comments is given below (extended from TFT_animation_Accum_BRL4.c):</h4>
 
-    <p style="text-align: left;padding: 0px 30px"></p>
-    <p style="text-align: left;padding: 0px 30px"></p>
-    <h4>Python/OpenCV computer vision program with comments is given below (green_and_red_2.py)</h4>
-    <p></p>
-    <p></p>
-    <h4>Python program for vision system calibration is given below (color_detector.py)</h4>
     <h3 id="app_c">Appendix C: Hardware Schematic</h3>
-    <p style="text-align: left;padding: 0px 30px">Since we focused on software complexity and minimized the hardware complexity of our project, the only hardware connnections required are UART TX, UART RX, and Ground. These can be managed through a USB serial dongle, or handled in a breadboard as we did in our project. The hardware connections are reflected in the schematic below.</p>
-    <img class="img-rounded" src="img/schematic.png" alt="Schematic" height="400" id="fig11">
-    <p>
-        <small>Figure 11. Schematic of UART Connections between PIC32 and Raspberry Pi</small>
-    </p>
+
     <h3 id="bom">Bill of Materials</h3>
-    <p style="text-align: left;padding: 0px 30px">A bill of materials for this project, which would be required for one starting completely from scratch, is as follows:</p>
+    <p style="text-align: left;padding: 0px 30px">A bill of materials for this project is as follows:</p>
     <table class="table table-hover" style="width:560px; margin-left:auto; margin-right:auto">
         <thead>
             <tr>
@@ -444,48 +423,24 @@
         </thead>
         <tbody>
             <tr>
-                <td style="text-align:left">Red laser pointer</td>
+                <td style="text-align:left">RPi Pico</td>
                 <td style="text-align:center">
-                    <a href="https://www.amazon.com/Pinty-Compact-Tactical-Picatinny-Wrenches/dp/B01BPYEAKA/">Amazon</a>
+                    Lab
                 </td>
-                <td style="text-align:right">$15.99</td>
+                <td style="text-align:right">-</td>
             </tr>
             <tr>
-                <td style="text-align:left">Green laser pointer</td>
+                <td style="text-align:left">Joystick</td>
                 <td style="text-align:center">
-                    <a href="https://www.amazon.com/dp/B073S17G51/">Amazon</a>
+                    <a href="https://www.amazon.com/dp/B005BIC9QE?ref=ppx_yo2ov_dt_b_product_details&th=1">Amazon</a>
                 </td>
-                <td style="text-align:right">$19.99</td>
+                <td style="text-align:right">$28.95</td>
             </tr>
-            <tr>
-                <td style="text-align:left">Raspberry Pi 3 B
-</a></td><td style="text-align:center">Skovira Lab</td>
-<td style="text-align:right">$0</td>
-</tr>
-<tr>
-    <td style="text-align:left">USB Webcam</td>
-    <td style="text-align:center">Skovira Lab</td>
-    <td style="text-align:right">$0</td>
-</tr>
-<tr>
-    <td style="text-align:left">Projector</td>
-    <td style="text-align:center">Phillips 101 (or other classroom)</td>
-    <td style="text-align:right">$0</td>
-</tr>
-<tr>
-    <td style="text-align:left">Document Camera</td>
-    <td style="text-align:center">Phillips 101 (or other classroom)</td>
-    <td style="text-align:right">$0</td>
-</tr>
 </tbody></table></div><hr id="references">
 <div style="text-align:center">
     <h2>References</h2>
     <ol style="text-align: left;padding: 0px 50px">
-        <li id="ref1">Center for Devices and Radiological Health, “Important Information for Laser Pointer Manufacturers,” U.S. Food and Drug Administration, 04-Dec-2017. [Online]. Available: https://www.fda.gov/radiation-emitting-products/laser-products-and-instruments/important-information-laser-pointer-manufacturers#:~:text=This%20means%20that%20pointers%20are,or%20IEC1%20Class%203R. [Accessed: 10-Dec-2021].</li>
-        <li id="ref2">“Laser Classes,” Laser Safety Facts. [Online]. Available: https://www.lasersafetyfacts.com/laserclasses.html. [Accessed: 10-Dec-2021].</li>
-        <li id="ref3">“Does performance differ between Python or C++ coding of opencv?,” NewbeDEV. [Online]. Available: https://newbedev.com/does-performance-differ-between-python-or-c-coding-of-opencv. [Accessed: 12-Dec-2021].</li>
-        <li id="ref4">“Closing,” Morphology, 2003. [Online]. Available: https://homepages.inf.ed.ac.uk/rbf/HIPR2/close.htm. [Accessed: 12-Dec-2021].</li>
-        <li id="ref5">Adrian Rosebrock, “Simple object tracking with OpenCV” PyImageSearch, 2018. [Online]. Available: https://www.pyimagesearch.com/2018/07/23/simple-object-tracking-with-opencv/. [Accessed: 12-Dec-2021].</li>
+        <li id="ref1">“Suika Game - Play Watermelon Game Online,”, Suika Game. [Online]. Available: https://suikagame.com/. [Accessed: 14-Dec-2023].</li>
     </ol>
 </div>
 <hr>
