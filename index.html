@@ -40,129 +40,27 @@
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li class="inactive">
-                            <a href="#">Home</a>
+                            <a href="#home">Home</a>
                         </li>
                         <li>
                             <a href="#demo_video">Demo</a>
                         </li>
                         <li>
-                            <a href="#objective">Objective</a>
-                        </li>
-                        <li>
                             <a href="#introduction">Intro</a>
                         </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                High Level Design<span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#design">High Level Design</a>
-                                </li>
-                                <li>
-                                    <a href="#boids">Boids Algorithm Background Math</a>
-                                </li>
-                                <li>
-                                    <a href="#predator_lag">Predator Lag Background Math</a>
-                                </li>
-                                <li>
-                                    <a href="#cv_math">Computer Vision Background Math</a>
-                                </li>
-                                <li>
-                                    <a href="#logical_structure">Logical Structure</a>
-                                </li>
-                                <li>
-                                    <a href="#hw_sw">Hardware/Software Tradeoffs</a>
-                                </li>
-                                <li>
-                                    <a href="#standards">Relationship to Standards</a>
-                                </li>
-                            </ul>
+
+                        <li>
+                            <a href="#design">High Level Design</a>
                         </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Program/Hardware Design<span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#prog_hw_design">Program/Hardware Design</a>
-                                </li>
-                                <li>
-                                    <a href="#pic32_code">PIC32 Program Design</a>
-                                </li>
-                                <li>
-                                    <a href="#raspi_code">Raspberry Pi Program Design</a>
-                                </li>
-                                <li>
-                                    <a href="#hardware">Hardware Design</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Results<span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#results">Results</a>
-                                </li>
-                                <li>
-                                    <a href="#comms">Early Two-Way Communications Attempts</a>
-                                </li>
-                                <li>
-                                    <a href="#c_performance">C Code Performance</a>
-                                </li>
-                                <li>
-                                    <a href="#pycv_performance">Python/CV Code Performance</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Conclusion<span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#conclusion">Conclusion</a>
-                                </li>
-                                <li>
-                                    <a href="#expectations">Results vs. Expectations and Future Changes</a>
-                                </li>
-                                <li>
-                                    <a href="#ip">Intellectual Property Considerations</a>
-                                </li>
-                                <li>
-                                    <a href="#ethics">Ethical Considerations</a>
-                                </li>
-                                <li>
-                                    <a href="#safety">Safety Considerations</a>
-                                </li>
-                                <li>
-                                    <a href="#legal">Legal Considerations</a>
-                                </li>
-                            </ul>
+
+                        <li>
+                            <a href="#ddesign">Program/Hardware Design</a>
                         </li>
                         <li>
-                            <a href="#work_dist">Work Distribution</a>
+                            <a href="#results">Results</a>
                         </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Appendix<span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="#app_a">Appendix A: Permissions</a>
-                                </li>
-                                <li>
-                                    <a href="#app_b">Appendix B: Commented Code</a>
-                                </li>
-                                <li>
-                                    <a href="#app_c">Appendix C: Hardware Schematic</a>
-                                </li>
-                                <li>
-                                    <a href="#bom">Bill of Materials</a>
-                                </li>
-                            </ul>
+                        <li>
+                            <a href="#conclusion">Conclusion</a>
                         </li>
                         <li>
                             <a href="#references">References</a>
@@ -173,7 +71,7 @@
             </div>
             <!--/container -->
         </nav>
-        <div class="container">
+        <div class="container" id="home">
             <div style="padding-top: 50px;padding: 40px 15px;text-align: center;">
                 <h1>Watermelon Game</h1>
                 <p class="lead" style="text-align: center;">Implemented on RP2040</p>
@@ -185,18 +83,13 @@
                 <h2>Demonstration Video</h2>
                 <iframe width="560" height="315" src="https://www.youtube.com/embed/ZxyzBawe35w?si=jZU02GvCrLy0e2Tu" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
             </div>
-            <hr id="objective">
-            <div style="text-align:center;">
-                <h2>Objective</h2>
-                <p style="text-align: left;padding: 0px 30px">Our project extends the boids algorithm into a two-player game in which players compete to “eat” the most boids by each steering a predator using a laser pointer tracked by computer vision.</p>
-            </div>
-            <hr id="introduction">
-            <div style="text-align:center;">
+            <hr>
+            <div style="text-align:center;" id="introduction">
                 <h2>Introduction</h2>
                 <p style="text-align: left;padding: 0px 30px">Our final project is to implement a interactive video game called “Watermelon Game” using the Raspberry Pico controller. The rule of the game is pretty simple, the player drops various kinds of fruits, which represent in different radiuses of balls, from the top of the container. The same kind of fruit will merge together when they collide with each other inside the container. The ultimate goal of this game is to get them combine to make the biggest possible fruit, which is the watermelon. The more watermelon you get, the higher score you get in the game.</p>
             </div>
-            <hr id="design">
-            <div style="text-align:center;">
+            <hr>
+            <div style="text-align:center;" id="design">
                 <h2>High Level Design</h2>
                 <p style="text-align: left;padding: 0px 30px">Our concept was inspired by lab2 and an online game sharing the same title. Building upon the code from lab2, we transformed the bounding box into a container to catch fruits falling from above. A top boundary check determines if the game ends.. We also changed the 2x2 pixel boids into different sizes of hollow ball plotted on the VGA screen. We developed 2D Elastic Collison and Gravity Effect on each fruits to simulate the physical collision effect in the game. Background music and sound effects are included using the DAC module, and calculated by the DDS algorithm by core 1 of the Pico. </p>
                 <p style="text-align: left;padding: 0px 30px">
@@ -237,8 +130,8 @@
                 <h3>Design Tradeoffs</h3>
                 <p>There were some design trade offs we need to consider in this project. For example, we need to decide whether to control the game using the keyboard used in lab1 or purchase a dedicated joystick. We decided to go with the later one since we believed that a dedicated joystick would offer a more intuitive and immersive gaming experience for the users as contrast to simply pressing button on the keyboard. In addition, there is also a trade off in the data structure of the fruits. In lab2, we concluded that we can simulate at most around 550 boids running smoothly on the VGA screen. With this in mind and consider the possibility of over a hundred of fruits may present in the container, we decided to inherently use the fix15 type from lab2 for representing the position and velocity attributes for each fruit objects. This decision is to avoid resource starvation, which may occur by using other data types such as int or float.</p>
             </div>
-            <hr id="prog_hw_design">
-            <div style="text-align:center;">
+            <hr>
+            <div style="text-align:center;" id="ddesign">
                 <h2>Program/Hardware Design</h2>
                 <h3>Hardware Details</h3>
                 <p>Our project hardware mainly consists of the Raspberry Pico controller, the MCP4822 DAC module connected with the speaker, a joystick, and a VGA screen for display. Below shows the hardware schematic diagram of the Pico controller. Each channel of the VGA and the joystick is connected with a 330 ohm resister. For GPIO pins, we used 16 and 17 for VGA Vsync and Hsync. GPIO 18/19/20 are for RGB channels, respectively. The joystick uses GPIO 10/11/12/13 to control four directions in the game and the menu. GPIO 4/5/6/7/8 are used for the MCP4822 DAC module. Finally, we uses GPIO 0/1 connected with the UART for putty debug purpose.</p>
@@ -380,8 +273,8 @@
 
 
 
-            </div><hr id="results">
-<div style="text-align:center;">
+            </div><hr>
+<div style="text-align:center;" id="results">
     <h2>Results</h2>
     <p>The development and testing of the interactive ball game on the RP2040 microcontroller demonstrated successful implementation of both the menu UI and the game mechanics in different modes. The game's behavior aligns well with the intended design, offering an engaging and dynamic experience. Below are detailed observations from the testing phase:</p>
         <h3 id="comms">Menu UI</h3>
@@ -408,8 +301,8 @@
 
     
         </div>
-<hr id="conclusion">
-<div style="text-align:center;">
+<hr>
+<div style="text-align:center;" id="conclusion" >
     <h2>Conclusion</h2>
 
     <p>Our project achieved all of our initial goals and expectations. Besides, we completed all additional feature requirements such as merging effect, background music and sound effects. We learned a lot from this project, one of the most significant learnings came from developing the 2D collision algorithms. This required a deep dive into physics principles, particularly elastic collisions, and gravity effects, enhancing our understanding and ability to apply these concepts in a practical setting. While developing the system, a major challenge we encountered and overcame was the overlapping problem during collisions. This pushed us to develop innovative solutions to solve this issue. We also developed an intuitive user interface, making the game easy to navigate and enhancing the overall user experience.</p>
@@ -417,7 +310,7 @@
     <p>Regarding intellectual property considerations, our project was designed to be open-source. The foundational code utilized the Protothreads library, known for its efficient and lightweight macros that aid in managing threads. This library is distributed under a BSD-style license by its creator. Such a license categorizes it as an open-source library.</p>
 </div>
 <hr>
-<div style="text-align:center;">
+<div style="text-align:center;" id=""appendix>
     <h2>Appendix</h2>
     <h3 id="app_a">Appendix A: Permissions</h3>
     <p style="text-align: left;padding: 0px 30px">The group approves this report for inclusion on the course website.</p>
