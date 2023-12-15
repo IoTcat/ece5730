@@ -3,8 +3,7 @@
  * YenHsing Li (yl2924@cornell.edu)
  * Yimian Liu (yl996@cornell.edu)
  * 
- * This demonstration animates two balls bouncing about the screen.
- * Through a serial interface, the user can change the ball color.
+ * ECE 5730 Final Project
  *
  * HARDWARE CONNECTIONS
  *  - GPIO 16 ---> VGA Hsync
@@ -25,8 +24,6 @@
  *
  */
 
-// Include the VGA grahics library
-#include "lib/vga_graphics.h"
 // Include standard libraries
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,42 +38,35 @@
 #include "hardware/dma.h"
 #include "hardware/clocks.h"
 #include "hardware/pll.h"
+#include "hardware/spi.h"
 // Include protothreads
 #include "lib/pt_cornell_rp2040_v1.h"
 // Include fixed point library
 #include "lib/fix15.h"
+// Include the VGA grahics library
+#include "lib/vga_graphics.h"
 
+// Include config file
 #include "config.h"
-
+// Include components
 #include "components/box.c"
 #include "components/ball.c"
 #include "components/ball_list.c"
-
 #include "components/ball_physics.c"
 #include "components/box_physics.c"
-
 #include "components/display.c"
 #include "components/menu.c"
-
 #include "components/gpio.c"
 
-#include "hardware/spi.h"
 
-
-
-
-
-
+// state machine for the entire game
 enum play_state {MENU, PLAYING, GAME_OVER};
 enum play_state g_play_state = MENU;
 
+// state machine for the ball spawning mode
 enum ball_control_mode {RANDOM_MODE, CONTROL_MODE};
 enum ball_control_mode b_mode = RANDOM_MODE;
 enum ball_control_mode prev_b_mode = RANDOM_MODE;
-
-int ball_drop = 0;
-
-int g_core1_spare_time = 0;
 
 //Direct Digital Synthesis (DDS) parameters
 #define two32 4294967296.0  // 2^32 (a constant)
@@ -102,12 +92,9 @@ fix15 decay_inc ;                       // rate at which sound ramps down
 fix15 current_amplitude_0 = 0 ;         // current amplitude (modified in ISR)
 fix15 current_amplitude_1 = 0 ;         // current amplitude (modified in ISR)
 
-// Timing parameters for beeps (units of interrupts)
+// Timing parameters for notes (units of interrupts)
 #define ATTACK_TIME             200
 #define DECAY_TIME              200
-#define SUSTAIN_TIME            10000
-#define BEEP_DURATION           10400
-#define BEEP_REPEAT_INTERVAL    40000
 // State machine variables
 volatile unsigned int STATE_0 = 0 ;
 volatile unsigned int count_0 = 0 ;
@@ -128,7 +115,6 @@ uint16_t DAC_data_0 ; // output value
 #define PIN_SCK  6
 #define PIN_MOSI 7
 #define LDAC     8
-#define LED      25
 #define SPI_PORT spi0
 
 // Two variables to store core number
@@ -137,62 +123,70 @@ volatile int corenum_0  ;
 // Global counter for spinlock experimenting
 volatile int global_counter = 0 ;
 
-struct beep {
+// Note structure
+struct note {
     unsigned int frequency ;
     unsigned int duration ;
-    struct beep *next ;
+    struct note *next ;
 } ;
 
+// Linked list of notes
+struct note *note_head = NULL ;
 
-struct beep *beep_head = NULL ;
+// Linked list of music
+struct note *music1_head = NULL ;
+struct note *music2_head = NULL ;
 
-struct beep *music1_head = NULL ;
-struct beep *music2_head = NULL ;
-
-
+// Peace for background music
 unsigned int peace = 4000;
 
+// attach a note to the end of a linked list
+void attach_note(unsigned int frequency, unsigned int duration, struct note **head) {
+    struct note *new_note = malloc(sizeof(struct note)) ;
+    new_note->frequency = frequency ;
+    new_note->duration = duration ;
+    new_note->next = NULL ;
 
-
-
-void attach_beep(unsigned int frequency, unsigned int duration, struct beep **head) {
-    struct beep *new_beep = malloc(sizeof(struct beep)) ;
-    new_beep->frequency = frequency ;
-    new_beep->duration = duration ;
-    new_beep->next = NULL ;
-
+    // If the list is empty, make the new note the head
     if (*head == NULL) {
-        *head = new_beep ;
+        *head = new_note ;
     }
+    // Otherwise, attach the note to the end of the list
     else {
-        struct beep *current = *head ;
+        struct note *current = *head ;
         while (current->next != NULL) {
             current = current->next ;
         }
-        current->next = new_beep ;
+        current->next = new_note ;
     }
 }
 
-void detach_beep(struct beep **head) {
+// detach the first note from a linked list
+void detach_note(struct note **head) {
+    // If the list is empty, do nothing
     if (*head == NULL) {
         return ;
     }
+    // else free the first note and make the next note the head
     else {
-        struct beep *current = *head ;
+        struct note *current = *head ;
         *head = (*head)->next ;
         free(current) ;
     }
 }
 
-void update_beep(unsigned int frequency, unsigned int duration, struct beep **head) {
+// update the first note in a linked list
+void update_note(unsigned int frequency, unsigned int duration, struct note **head) {
+    // If the list is empty, create a new note
     if (*head == NULL) {
-        struct beep *new_beep = malloc(sizeof(struct beep)) ;
-        new_beep->frequency = frequency ;
-        new_beep->duration = duration ;
-        new_beep->next = NULL ;
-        *head = new_beep ;
+        struct note *new_note = malloc(sizeof(struct note)) ;
+        new_note->frequency = frequency ;
+        new_note->duration = duration ;
+        new_note->next = NULL ;
+        *head = new_note ;
         return ;
     }
+    // else update the first note
     else {
         (*head)->frequency = frequency ;
         (*head)->duration = duration ;
@@ -200,15 +194,10 @@ void update_beep(unsigned int frequency, unsigned int duration, struct beep **he
 }
 
 
-
-
-
-
-
-
 // This timer ISR is called on core 0
 bool repeating_timer_callback_core_1(struct repeating_timer *t) {
 
+    // if bgm is off, return
     if(g_bgm == 0){
       return true;
     }
@@ -216,8 +205,10 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
     static unsigned int freq = 0 ;
     static fix15 amplitude = 0 ;
 
-    if(beep_head == NULL){
+    // if no note is playing, play background music
+    if(note_head == NULL){
       if(g_play_state == PLAYING){
+        // which bgm to play depends on the mode
         if(g_mode == 0){
           freq = music1_head->frequency ;
         } else {
@@ -228,16 +219,15 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
       }
       amplitude = float2fix15(0.3) ;
     } else {
-      freq = beep_head->frequency ;
+      freq = note_head->frequency ;
       amplitude = float2fix15(1) ;
     }
 
+    // Calculate the phase increment
     phase_incr_main_0 = ((freq)*two32)/Fs ;
-    
     phase_accum_main_0 += phase_incr_main_0  ;
     DAC_output_0 = fix2int15(multfix15(amplitude,
         sin_table[phase_accum_main_0>>24])) + 2048 ;
-
 
     // Mask with DAC control bits
     DAC_data_0 = (DAC_config_chan_B | (DAC_output_0 & 0xffff))  ;
@@ -246,15 +236,16 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
     spi_write16_blocking(SPI_PORT, &DAC_data_0, 1) ;
 
     // Increment the counter
-    beep_head->duration -= 1 ;
+    note_head->duration -= 1 ;
     music1_head->duration -= 1 ;
     music2_head->duration -= 1 ;
 
-    // State transition?
-    if (beep_head->duration <= 0) {
-        detach_beep(&beep_head) ;
+    // If the note is done, detach it
+    if (note_head->duration <= 0) {
+        detach_note(&note_head) ;
     }
 
+    // if the music is done, loop back to the beginning
     if (music1_head->duration <= 0) {
         music1_head->duration = music1_head->next->duration;
         music1_head = music1_head->next;
@@ -265,14 +256,13 @@ bool repeating_timer_callback_core_1(struct repeating_timer *t) {
         music2_head = music2_head->next;
     }
 
-
     // retrieve core number of execution
     corenum_0 = get_core_num() ;
 
     return true;
 }
 
-// Animation on core 0
+// core 0 main thread
 static PT_THREAD (protothread_anim(struct pt *pt))
 {
     // Mark beginning of thread
@@ -284,6 +274,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
     static int counter = 0;
     static int total_score = 0;
     
+    //init a ball
     ball a = {
       .x = int2fix15(SCREEN_WIDTH/2),
       .y = int2fix15(DROP_Y),
@@ -292,7 +283,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       .type = &ball_types[rand() % 3],
     };
   
-    
+    // init a ball list
     initBallNode(int2fix15(200), &ball_types[0]);
     initBallNode(int2fix15(400), &ball_types[1]);
     initBallNode(int2fix15(300), &ball_types[2]);
@@ -308,8 +299,10 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       while (current1 != NULL) {
         // skip non-collidable balls
         if(current1->data.collidable == false){
+          // decrease ttl
           current1->data.ttl -= 1;
           node* next = current1->next;
+          // remove the ball if it out of ttl
           if(current1->data.ttl <= -100){
             drawBall(&current1->data, BLACK);
             deleteBall(&(current1->data));
@@ -318,14 +311,14 @@ static PT_THREAD (protothread_anim(struct pt *pt))
           continue;
         }
         node* current2 = head;
+        // check collision with other balls in the list
         while (current2 != current1 && current2 != NULL) {
           // skip non-collidable balls
           if(current2->data.collidable == false){
             current2 = current2->next;
             continue;
           }
-          // if(fix15abs(current1->data.x - current2->data.x) < current1->data.type->radius + current2->data.type->radius && fix15abs(current1->data.y - current2->data.y) < current1->data.type->radius + current2->data.type->radius){
-          // printf("%d\n", overlaps(&current1->data, &current2->data));
+          // check if two balls overlap
           if(overlaps(&current1->data, &current2->data)){
             //merge two balls if they have same radius and the ball is not the last type (DANGER)
             // DANGER@!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -333,17 +326,21 @@ static PT_THREAD (protothread_anim(struct pt *pt))
               node* next = current2->next;
               // merge two balls
               merge_function(&current1->data, &current2->data);
-              update_beep(1000-fix2int15(current1->data.type->radius)*10, 1000, &beep_head);
+              // play merge sound
+              update_note(1000-fix2int15(current1->data.type->radius)*10, 1000, &note_head);
+              // add the score by the type of merged balls
               total_score += current1->data.type->score;
               total_score -= current2->data.type->score;
               // remove the second ball
               deleteBall(&(current2->data));
               current2 = next;
-
+              // generate merge animation
               genEffectBalls(current1->data.x, current1->data.y, current1->data.type->color);
               continue;
             }
+            // avoid overlap
             avoid_overlap(&current1->data, &current2->data);
+            // collision
             collide_function(&current1->data, &current2->data);
 
           }
@@ -357,12 +354,15 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       // move balls
       node* current = head;
       fix15 v_sum = int2fix15(0);
+      // only move balls when the game is playing
       if(g_play_state == PLAYING || g_play_state == MENU){
         while (current != NULL) {
           if(g_play_state == PLAYING){
+            // bounce when hit the wall
             bounce_function(&current->data);
           }
           move_balls(&current->data);
+          // check if the ball is out of the top boundary
           if(current->data.collidable && hitTop(current->data.y-current->data.type->radius) && current->data.vy < 0){
             g_play_state = GAME_OVER;
             counter = 0;
@@ -379,10 +379,13 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         // initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
       }
 
+      // menu control
       if(g_play_state == MENU){
+        // when right joystick is pressed, select the menu item
         if(gpio_edge(RIGHT)){
           menu_select();
           if(g_menu_index == 0){
+          // reset state and parameters
           g_play_state = PLAYING;
           clearBallList();
           total_score = 0;
@@ -403,6 +406,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       }
       else b_mode = CONTROL_MODE;
       
+      // spawn random balls
       if((g_play_state == MENU || g_play_state == PLAYING) && b_mode == RANDOM_MODE && counter == 30){
         initBallNode(int2fix15(rand() % (BOX_RIGHT - BOX_LEFT) + BOX_LEFT), &ball_types[rand() % 3]);
         //add the score by the type of spawned balls
@@ -432,6 +436,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       
       prev_b_mode = b_mode;
 
+      // when mode is changed, reset the game
       if(g_play_state == GAME_OVER && (counter == 300 || counter>40 &&(gpio_edge(DOWN) || gpio_edge(UP) || gpio_edge(LEFT) || gpio_edge(RIGHT)))){
         // remove all balls
         clearBallList();
@@ -446,7 +451,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         g_friction = float2fix15(FRICTION_MENU);
       }
 
-      
+      // draw boundary
       if(g_play_state == PLAYING){
         drawBoundary();
       }
@@ -454,7 +459,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
       // delay in accordance with frame rate
       spare_time = FRAME_RATE - (time_us_32() - begin_time) ;
 
-
+      // what to print on the left top corner
       struct list_Item left_list[6] = {
         {"", WHITE, BLACK, 65, 0, 1},
         {"", WHITE, BLACK, 65, 10, 1},
@@ -487,6 +492,7 @@ static PT_THREAD (protothread_anim(struct pt *pt))
         drawBall(&a, a.type->color);
       }
       
+      // print game over
       if(g_play_state == GAME_OVER){
         struct list_Item game_over_list[1] = {
           {"GAME OVER", WHITE, BLACK, 190, 200, 5},
@@ -573,51 +579,53 @@ int main(){
          sin_table[ii] = float2fix15(2047*sin((float)ii*6.283/(float)sine_table_size));
     }
 
-
-    attach_beep(329, peace, &music1_head); // G4
-    attach_beep(0, peace, &music1_head);
-    attach_beep(329, peace, &music1_head); // G4
-    attach_beep(0, peace, &music1_head);
-    attach_beep(659, peace, &music1_head); // E5
-    attach_beep(0, peace, &music1_head);
-    attach_beep(659, peace, &music1_head); // E5
-    attach_beep(0, peace, &music1_head);
-    attach_beep(587, peace, &music1_head); // D5
-    attach_beep(0, peace, &music1_head);
-    attach_beep(587, peace, &music1_head); // D5
-    attach_beep(0, peace, &music1_head);
-    attach_beep(523, peace, &music1_head); // C5
-    attach_beep(0, peace, &music1_head);
-    attach_beep(523, peace, &music1_head); // C5
-    attach_beep(0, peace, &music1_head);
+    // background music 1
+    attach_note(329, peace, &music1_head); // G4
+    attach_note(0, peace, &music1_head);
+    attach_note(329, peace, &music1_head); // G4
+    attach_note(0, peace, &music1_head);
+    attach_note(659, peace, &music1_head); // E5
+    attach_note(0, peace, &music1_head);
+    attach_note(659, peace, &music1_head); // E5
+    attach_note(0, peace, &music1_head);
+    attach_note(587, peace, &music1_head); // D5
+    attach_note(0, peace, &music1_head);
+    attach_note(587, peace, &music1_head); // D5
+    attach_note(0, peace, &music1_head);
+    attach_note(523, peace, &music1_head); // C5
+    attach_note(0, peace, &music1_head);
+    attach_note(523, peace, &music1_head); // C5
+    attach_note(0, peace, &music1_head);
 
     // loop back to the beginning
-    struct beep *current = music1_head;
+    // make the linked list for the bgm 1
+    struct note *current = music1_head;
     while(current->next != NULL){
       current = current->next;
     }
     current->next = music1_head;
 
 
-
-    attach_beep(783, peace, &music2_head); // G5
-    attach_beep(0, peace, &music2_head);
-    attach_beep(783, peace, &music2_head); // G5
-    attach_beep(0, peace, &music2_head);
-    attach_beep(493, peace, &music2_head); // B4
-    attach_beep(0, peace, &music2_head);
-    attach_beep(493, peace, &music2_head); // B4
-    attach_beep(0, peace, &music2_head);
-    attach_beep(587, peace, &music2_head); // D5
-    attach_beep(0, peace, &music2_head);
-    attach_beep(587, peace, &music2_head); // D5
-    attach_beep(0, peace, &music2_head);
-    attach_beep(659, peace, &music2_head); // E5
-    attach_beep(0, peace, &music2_head);
-    attach_beep(659, peace, &music2_head); // E5
-    attach_beep(0, peace, &music2_head);
+    // background music 2
+    attach_note(783, peace, &music2_head); // G5
+    attach_note(0, peace, &music2_head);
+    attach_note(783, peace, &music2_head); // G5
+    attach_note(0, peace, &music2_head);
+    attach_note(493, peace, &music2_head); // B4
+    attach_note(0, peace, &music2_head);
+    attach_note(493, peace, &music2_head); // B4
+    attach_note(0, peace, &music2_head);
+    attach_note(587, peace, &music2_head); // D5
+    attach_note(0, peace, &music2_head);
+    attach_note(587, peace, &music2_head); // D5
+    attach_note(0, peace, &music2_head);
+    attach_note(659, peace, &music2_head); // E5
+    attach_note(0, peace, &music2_head);
+    attach_note(659, peace, &music2_head); // E5
+    attach_note(0, peace, &music2_head);
 
     // loop back to the beginning
+    // make the linked list for the bgm 2
     current = music2_head;
     while(current->next != NULL){
       current = current->next;
