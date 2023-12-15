@@ -22,6 +22,13 @@
             div {
                 scroll-margin-top: 80px;
             }
+
+            @media screen and (max-width: 600px) {
+            .headt {
+                font-size: 12px; /* Smaller font size for screens less than 600px wide */
+            }
+        }
+
         </style>
     </head>
     <body>
@@ -35,7 +42,7 @@
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand" href="#" style="text-align: center">
-                        <b>Watermelon Game Implemented on RP2040</b>
+                        <b class="headt">Watermelon Game Implemented on RP2040</b>
                     </a>
                 </div>
                 <!--/navbar-header -->
