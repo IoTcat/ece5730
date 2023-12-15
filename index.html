@@ -182,7 +182,7 @@
 
 
                 <h4>Collide Detection and Avoiding Overlap</h4>
-                <p>The trickest part is how to deal with the collision while avoid them overlap. In each frame, we traverse through the ball linklist to see if there is any collision occur between two balls. This is achieved by calculating the distance between the centers of two balls and compares it with the sum of their radii. </p>
+                <p>The trickest part is how to deal with the collision while avoid them overlap. In each frame, we traverse through the ball linked list to see if there is any collision occur between two balls. This is achieved by calculating the distance between the centers of two balls and compares it with the sum of their radii. </p>
                 <p>Once a collision is detected, we first check whether the two balls are the same type. If so, we call merge function mentioned previously. Also, an little animation so called “boids” effect is added during the merging process. We will introduce this later in the following session.</p>
                 <p>After that, the avoid_overlap function is used to adjust the positions of the colliding balls so that they no longer overlap. This function calculates the amount of overlap and adjusts the positions of both balls based on their masses. This adjustment ensures that the balls are repositioned as if they just touched each other at the moment of collision.</p>
                 <p>Finally, the collide_function handles the updated response of the balls to the collision. It calculates the new velocities by the elastic collsion formula we mentioned above in the Background section. These functions are called within the main game loop for each pair of balls.</p>
